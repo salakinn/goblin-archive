@@ -13,6 +13,7 @@ book_authors = Table(
     Base.metadata,
     Column("book_id", ForeignKey("books.id", ondelete="CASCADE"), primary_key=True),
     Column("author_id", ForeignKey("authors.id", ondelete="CASCADE"), primary_key=True),
+    Index("ix_book_authors_author_id", "author_id"),
 )
 
 book_genres = Table(
@@ -20,6 +21,7 @@ book_genres = Table(
     Base.metadata,
     Column("book_id", ForeignKey("books.id", ondelete="CASCADE"), primary_key=True),
     Column("genre_id", ForeignKey("genres.id", ondelete="CASCADE"), primary_key=True),
+    Index("ix_book_genres_genre_id", "genre_id"),
 )
 
 book_tags = Table(
@@ -27,6 +29,7 @@ book_tags = Table(
     Base.metadata,
     Column("book_id", ForeignKey("books.id", ondelete="CASCADE"), primary_key=True),
     Column("tag_id", ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True),
+    Index("ix_book_tags_tag_id", "tag_id"),
 )
 
 
@@ -58,6 +61,7 @@ class Book(Base):
         Index("ix_books_isbn", "isbn"),
         Index("ix_books_format", "format"),
         Index("ix_books_series", "series"),
+        Index("ix_books_imported_id", "imported_at", "id"),
     )
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True)
@@ -121,3 +125,12 @@ class IsbnLookupCache(Base):
     key: Mapped[str] = mapped_column(String(64), primary_key=True)
     payload_json: Mapped[str] = mapped_column(Text, nullable=False)
     expires_at: Mapped[float] = mapped_column(Float, nullable=False, index=True)
+
+
+class TranslationJob(Base):
+    __tablename__ = "translation_jobs"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    source_book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), index=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    data_json: Mapped[str] = mapped_column(Text, nullable=False)

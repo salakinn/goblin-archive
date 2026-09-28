@@ -8,8 +8,8 @@ Der MVP arbeitet ausschließlich mit **COPY-Semantik**: Die Originaldatei auf de
 
 ## Architektur
 
-Geplantes Feature: [KI-Buchübersetzung mit Glossar und Qualitätsprofilen](docs/features/book-translation.md)
-(Konzept, noch nicht implementiert).
+[KI-Buchübersetzung für EPUB](docs/features/book-translation.md) mit Kapitelvorschau,
+Glossar, drei Qualitätsprofilen und fortsetzbaren Aufträgen.
 
 - `backend/`: FastAPI, SQLAlchemy, SQLite/FTS5, Import-Pipeline und Provider
 - `frontend/`: React, TypeScript und Vite ohne UI-Framework
@@ -55,6 +55,145 @@ cd frontend && npm run dev
 ```
 
 Die API-Dokumentation liegt unter <http://127.0.0.1:8000/docs>.
+`GET /api/books` liefert standardmäßig 50 Einträge und die Gesamtzahl; mit
+`limit` (maximal 100) und `offset` kann die Bibliothek seitenweise geladen
+werden. Uploads sind standardmäßig auf 200 MiB und 20 Dateien pro Anfrage
+begrenzt. Diese Grenzen lassen sich über `GOBLIN_MAX_UPLOAD_BYTES` und
+`GOBLIN_MAX_UPLOAD_FILES` anpassen.
+
+## Anmeldung
+
+Beim ersten Start wird im Datenverzeichnis eine Datei `auth-setup-code` mit
+Dateimodus `0600` erzeugt. Den Code daraus einmalig in der Weboberfläche
+eingeben und ein Admin-Passwort mit mindestens 12 Zeichen festlegen:
+
+```bash
+cat goblin-data/auth-setup-code
+```
+
+Bei TrueNAS liegt die Datei im gemounteten Dataset
+`/mnt/DEIN_POOL/goblin-archive/auth-setup-code`, beim systemd-Dienst unter
+`~/goblin-archive/data/auth-setup-code`. Nach der Einrichtung wird der Code
+gelöscht. Das Passwort liegt als Scrypt-Hash in `auth.db` im Datenverzeichnis;
+aktive Sitzungen liegen dort ebenfalls und überstehen Neustarts. Über das
+Zahnrad kann man sich abmelden. Ohne Sitzung sind Buchdaten, Downloads,
+Einstellungen und Änderungen an der API gesperrt. `/api/health` bleibt für
+Container- und Update-Prüfungen erreichbar.
+
+Wenn das Passwort verloren geht, im laufenden Container beziehungsweise als
+Dienstbenutzer im Installationsverzeichnis ausführen:
+
+```bash
+python -m backend.auth reset-password
+```
+
+Für den systemd-Dienst aus `~/goblin-archive/current` mit
+`GOBLIN_DATA_DIR="$HOME/goblin-archive/data" .venv/bin/python -m backend.auth reset-password`
+aufrufen; im Container ist `/data` bereits voreingestellt. Der Befehl fragt
+das neue Passwort interaktiv ab und beendet alle bestehenden Sitzungen.
+
+Für Zugriff über ein fremdes Netz HTTPS am Reverse Proxy einrichten und
+`GOBLIN_AUTH_SECURE_COOKIES=true` setzen. Den Port nicht zusätzlich über HTTP
+freigeben. Das Login-Passwort und der Update-Code sind getrennte Geheimnisse.
+
+## Versionen und Updates
+
+Die Weboberfläche prüft alle 15 Minuten auf ein neues veröffentlichtes GitHub
+Release. Das gilt für jede Installation. „Später erinnern“ verschiebt das Popup
+im jeweiligen Browser um 24 Stunden; „Diese Version ignorieren“ blendet es
+bis zur nächsten Version aus. Der Installationsknopf ist aktiv, wenn ein
+passender Update-Weg eingerichtet wurde. Ohne ihn zeigt das Popup die neue
+Version und einen Link zu den Änderungen.
+
+### TrueNAS SCALE
+
+Der Produktionscontainer liefert Weboberfläche und API über denselben Port `8000`.
+Das Image wird bei einem Git-Tag `vX.Y.Z` nach erfolgreichen Tests als
+`ghcr.io/salakinn/goblin-archive:X.Y.Z` und `:stable` veröffentlicht. Danach
+erstellt der Workflow ein GitHub Release für die Versionsanzeige. Ein Push
+ohne Versionstag veröffentlicht kein neues Image. Die Version des Tags muss
+`project.version` in `pyproject.toml` entsprechen. Für eine neue Version zuerst
+die Versionsnummer dort erhöhen, Änderungen committen und danach den passenden
+Tag `vX.Y.Z` erstellen und pushen. Der Workflow baut und veröffentlicht das
+Image; der Tag `:stable` zeigt jeweils auf die letzte freigegebene Version.
+
+Für TrueNAS SCALE 25.04 oder neuer unter **Apps → Discover → Install via YAML** die Vorlage
+[`deploy/truenas-compose.yml`](deploy/truenas-compose.yml) verwenden. Vorher
+`DEIN_POOL` durch den tatsächlichen Poolnamen ersetzen und das Dataset
+`/mnt/DEIN_POOL/goblin-archive` anlegen. Für den Update-Knopf zusätzlich
+`/mnt/DEIN_POOL/goblin-config` mit drei Dateien anlegen:
+
+- `truenas-api-key`: API-Key eines eigenen TrueNAS-Benutzers mit `APPS_READ`
+  und `APPS_WRITE`, als Text ohne Anführungszeichen.
+- `truenas-ca.pem`: CA-Zertifikat, dem das HTTPS-Zertifikat von TrueNAS
+  vertraut. Der Hostname in `GOBLIN_TRUENAS_WS_URL` muss zum Zertifikat passen.
+- `update-password`: ein eigenes, langes Passwort für den Installationsknopf.
+
+Diese Dateien nicht ins Git-Repository legen. `TRUENAS-HOSTNAME` und den
+Benutzernamen in der Compose-Vorlage anpassen. Der Container schreibt Bücher,
+SQLite-Datenbank, Logs und KI-Einstellungen; er läuft mit UID/GID `568:568`.
+Dem Dataset Schreibrechte und den Secret-Dateien Leserechte für diese UID/GID
+geben. Die Weboberfläche ist dann
+unter `http://TRUENAS-IP:30080` erreichbar. Falls das GitHub-Paket privat ist,
+muss TrueNAS Zugang zu GHCR bekommen; bei einem öffentlichen Paket ist keine
+Registry-Anmeldung nötig.
+
+TrueNAS unter **Apps → Settings** nach Docker-Image-Updates suchen lassen.
+Sobald ein neues GitHub Release und ein neues `:stable`-Image vorliegen, zeigt
+Goblin den aktiven Installationsknopf im Update-Popup.
+Der Update-Knopf verlangt das getrennte Passwort und startet über die
+TrueNAS-API `app.upgrade` mit einem Snapshot der eingebundenen Host-Pfade.
+Laufende Importe und Übersetzungen blockieren den Start. Nach dem Neustart
+lädt die Weboberfläche neu. Bei einem Fehler in TrueNAS die vorherige
+Image-Version wählen; falls das Datenbankschema geändert wurde, zusätzlich
+den Dataset-Snapshot wiederherstellen. Ohne die TrueNAS-Zugangsdaten ist der
+Installationsknopf deaktiviert; die Versionsmeldung bleibt verfügbar.
+
+### Linux-Server mit systemd
+
+Für eine Installation ohne Container liegt unter
+[`deploy/goblin-archive.service`](deploy/goblin-archive.service) ein
+`systemd --user`-Dienst und unter
+[`deploy/update-systemd.sh`](deploy/update-systemd.sh) der Update-Helfer.
+Voraussetzungen sind Python 3.12+, Node.js 20+, npm, Git, curl und systemd
+mit User-Diensten. Die Vorlage verwendet `~/goblin-archive` als festen
+Installationsordner und Port `127.0.0.1:8000` für einen Reverse Proxy.
+
+Nach dem ersten veröffentlichten Versionstag, aus einem Checkout dieses
+Repositories heraus:
+
+```bash
+mkdir -p ~/goblin-archive/{releases,data,config} ~/.config/systemd/user
+install -m 600 deploy/goblin-archive.service ~/.config/systemd/user/goblin-archive.service
+umask 077
+openssl rand -base64 36 > ~/goblin-archive/config/update-password
+systemctl --user daemon-reload
+GOBLIN_UPDATE_ROOT="$HOME/goblin-archive" ./deploy/update-systemd.sh v0.1.0
+systemctl --user enable goblin-archive.service
+```
+
+`v0.1.0` durch den tatsächlich veröffentlichten Tag ersetzen. Das Passwort
+aus `~/goblin-archive/config/update-password` wird beim Update-Klick
+eingegeben. Der Helfer lädt den gewählten Tag, installiert Python- und
+Frontend-Abhängigkeiten in einem neuen Versionsordner, baut die Oberfläche,
+schaltet den Symlink `current` um und startet den Dienst neu. Erst nach einem
+erfolgreichen `/api/health`-Check gilt das Update als abgeschlossen. Bei
+einem Startfehler werden der vorherige Symlink sowie die zuvor gesicherten
+SQLite- und KI-Einstellungen wiederhergestellt. Die Sicherungen liegen unter
+`~/goblin-archive/backups`. Bücher und
+KI-Einstellungen liegen in `~/goblin-archive/data` außerhalb der Versionen.
+Fehler des Update-Helfers stehen in `journalctl --user -u 'goblin-update-*'`.
+Für einen Server, der ohne Anmeldung weiterlaufen soll, User-Lingering für
+den Dienstbenutzer aktivieren.
+
+Der eigene Login schützt die API. Für Zugriff aus dem Internet HTTPS und
+einen Reverse Proxy oder VPN verwenden; der direkte HTTP-Port ist für ein
+vertrauenswürdiges lokales Netz gedacht.
+
+Lokal lässt sich das Produktionsimage mit `docker build -t goblin-archive:local .`
+bauen. Beim Start `/data` auf ein beschreibbares Hostverzeichnis mounten und
+Port `8000` veröffentlichen; ohne Mount wären die Archivdaten beim Entfernen
+des Containers verloren.
 
 Für Tests kann das gesamte Archiv interaktiv geleert werden:
 
@@ -70,6 +209,10 @@ Ohne Rückfrage geht dies mit `--yes`. Alternativ steht die Funktion in der WebU
 .venv/bin/pytest -q
 cd frontend && npm run build
 ```
+
+Hintergrund zu Sicherheit und Performance steht im
+[Sicherheitsaudit](docs/security-audit.md) und im
+[Performanceaudit](docs/performance-audit.md).
 
 ## Datenverzeichnis
 
@@ -90,7 +233,9 @@ goblin-data/
 │       └── metadata.json
 ├── staging/
 ├── logs/goblin.log
-└── goblin.db
+├── goblin.db
+├── auth.db
+└── auth-setup-code      # nur bis zur Einrichtung
 ```
 
 `metadata.json` enthält Originaldateiname, Importzeitpunkt, Hash, Dateidaten, alle fachlichen Metadaten und die Quelle jedes Feldes. Der zusätzliche Eintrag `cover` dokumentiert lokalen Dateinamen, Quelle (`embedded` oder `external`), Provider, ISBN, Bildmaße, MIME-Typ sowie bei externen Treffern Abrufzeit und Quell-URL. Ohne Cover ist der Wert `null`. Damit kann die Datenbank später aus dem Archiv rekonstruiert werden.
@@ -120,9 +265,9 @@ Autoren, Beschreibung, Sprache, Reihe und Werkhinweise) sowie vorhandene Tags;
 Buchdateien werden nicht hochgeladen. Bei unzureichenden Angaben darf sie keine
 Tags liefern. Ergebnisse können wie manuelle Tags entfernt werden.
 
-Die Werte aus `.env.example` in eine lokale `.env` übernehmen und
-`GOBLIN_OPENAI_API_KEY` setzen. Danach Backend neu starten. Der Key bleibt im
-Backend. `GOBLIN_AI_TAGGING_MODEL` bestimmt das Modell, `GOBLIN_AI_TIMEOUT` das
+API-Key und Modell können im Zahnrad-Menü gespeichert werden. Alternativ
+`GOBLIN_OPENAI_API_KEY` und `GOBLIN_AI_TAGGING_MODEL` in `.env` setzen und das
+Backend neu starten. Der Key bleibt im Backend. `GOBLIN_AI_TIMEOUT` setzt das
 Zeitlimit je Versuch. Ein vorübergehender Fehler wird höchstens einmal wiederholt.
 API-Aufrufe werden über das OpenAI-API-Konto abgerechnet.
 
@@ -169,6 +314,39 @@ und Proben-Hashes sowie Tokenverbrauch stehen in `language_detection` und
 werden dort nicht gespeichert. Bei Fehlern beim Speichern wird die Änderung
 zurückgerollt. Die Originalbuchdatei wird nicht verändert.
 
+## EPUB übersetzen
+
+Die OpenAI-Anbindung wird im Zahnrad-Menü der Weboberfläche eingerichtet. Dort
+lassen sich API-Key, Modelle und optionale Tokenpreise speichern sowie die
+Verbindung prüfen. Die Einstellungen gelten sofort für neue KI-Anfragen und
+werden lokal in `goblin-data/ai-settings.json` mit Dateirechten `0600` abgelegt.
+Der API-Key wird bei späteren Aufrufen der Einstellungs-API nicht zurückgegeben.
+Vorhandene `.env`-Werte dienen als Ausgangswerte, bis sie in der UI gespeichert
+werden.
+
+In der Buchansicht eines EPUBs „Buch übersetzen“ öffnen, Zielsprache und Profil
+wählen und den Auftrag vorbereiten. Die erste Kapitelvorschau wird separat
+übersetzt. Danach lassen sich Glossarregeln im Format `Original => Übersetzung`
+und Stilvorgaben speichern und die Restübersetzung starten. Der Fortschritt
+bleibt in SQLite erhalten; unterbrochene Aufträge können nach einem Neustart
+fortgesetzt werden. Eine fertig validierte Übersetzung erscheint als eigene
+Ausgabe mit Verweis auf das Original und ohne dessen Ausgaben-ISBN.
+
+`Schnell` nutzt einen Übersetzungsdurchlauf, `Buch` ergänzt einen Prüf- und
+Korrekturdurchlauf und `Literarisch` einen zusätzlichen Lektoratsdurchlauf.
+Die Modelle sind über `GOBLIN_AI_TRANSLATION_MODEL`,
+`GOBLIN_AI_TRANSLATION_QA_MODEL` und `GOBLIN_AI_TRANSLATION_EDITOR_MODEL`
+konfigurierbar. Für Kostenschätzung und optionale Budgetgrenze müssen die
+aktuellen Eingabe- und Ausgabepreise je Million Tokens in den Einstellungen oder
+in `.env` gesetzt werden. Ohne Preise bleibt die Schätzung unbekannt und eine Budgetgrenze ist
+nicht verfügbar. Jeder KI-Aufruf kann Kosten verursachen, auch wenn er abbricht.
+
+Der aktuelle Ablauf unterstützt EPUB-Text und Textattribute, EPUB2-Navigation
+und EPUB3-Navigation. Bilder und andere Ressourcen werden übernommen; Text in
+Bildern wird nicht übersetzt. Eine technische Prüfung kontrolliert ZIP, XML,
+Manifest, interne Verweise und geschützte Formatierungsmarker. Eine sprachliche
+Qualitätsgarantie ist damit nicht verbunden.
+
 ## Externe Metadatenquellen
 
 Die Standardreihenfolge ist:
@@ -196,6 +374,8 @@ Für Cover gilt unabhängig von der konfigurierbaren Metadatenreihenfolge fest:
 ## API-Auswahl
 
 - `GET /api/health`
+- `GET/PUT /api/settings/ai` liest/speichert die lokale KI-Konfiguration ohne Key-Rückgabe
+- `POST /api/settings/ai/test` prüft Key und gewähltes Tagging-Modell
 - `GET /api/books` mit Filtern für Autor, Tag, Jahr, Sprache, Verlag, Format und Reihe
 - `GET /api/books/{id}` und `GET /api/search?q=...`
 - `POST /api/books/{id}/tags` und `DELETE /api/books/{id}/tags/{tag_id}`
@@ -205,6 +385,11 @@ Für Cover gilt unabhängig von der konfigurierbaren Metadatenreihenfolge fest:
 - `POST /api/books/{id}/isbn/search` sucht und bewertet ISBN-Kandidaten
 - `POST /api/books/{id}/isbn/apply` übernimmt eine ausgewählte ISBN als konkrete Ausgabe
 - `POST /api/books/{id}/isbn/reference` speichert sie nur als werkgleiche Referenzausgabe
+- `GET/POST /api/books/{id}/translations` listet/erstellt Übersetzungsaufträge
+- `GET /api/translations/{id}` liefert Fortschritt und Kapitelvorschau
+- `PUT /api/translations/{id}/glossary` speichert Glossar und Stilvorgaben
+- `PUT /api/translations/{id}/budget` ändert oder entfernt eine Budgetgrenze
+- `POST /api/translations/{id}/start|pause|cancel` steuert den Auftrag
 - `POST /api/import` (Multipart, Feldname `files`)
 - `GET /api/imports/{id}` und `GET /api/events`
 - `GET /api/providers`
@@ -218,5 +403,5 @@ Für Cover gilt unabhängig von der konfigurierbaren Metadatenreihenfolge fest:
 - MOBI/AZW3-Metadaten werden direkt aus gängigen MOBI-/EXTH-Feldern gelesen. Bei exotischen Kindle-Varianten kann der Dateiname als Titel-Fallback dienen.
 - PDF-Seiten werden nicht als Cover gerendert. Nur ein explizit eingebettetes PDF-Thumbnail wird verwendet; andernfalls folgen die ISBN-Provider.
 - Exotische EPUB-Guide-Seiten oder Kindle-Container ohne direkt zugänglichen Cover-Record können ein eingebettetes Bild enthalten, das im MVP nicht extrahiert werden kann; externe ISBN-Provider bleiben der Fallback.
-- Kein Metadaten-Editor, keine Konten, Rechteverwaltung, Cloud-Synchronisation oder Desktop-Hülle.
+- Kein Metadaten-Editor, keine Mehrbenutzer-Konten, Rechteverwaltung, Cloud-Synchronisation oder Desktop-Hülle. Der [Sicherheitsaudit](docs/security-audit.md) beschreibt den Stand vor Einführung der Admin-Anmeldung.
 - Provider-Treffer werden bewusst einfach ausgewählt: erster plausibler Treffer in der konfigurierten Reihenfolge.

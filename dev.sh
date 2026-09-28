@@ -18,7 +18,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 cd "$ROOT_DIR"
-"$ROOT_DIR/.venv/bin/uvicorn" backend.main:app --reload --host 127.0.0.1 --port 8000 &
+"$ROOT_DIR/.venv/bin/uvicorn" backend.main:app --reload --timeout-graceful-shutdown 3 --host 127.0.0.1 --port 8000 &
 BACKEND_PID=$!
 
 cd "$ROOT_DIR/frontend"
@@ -27,4 +27,3 @@ FRONTEND_PID=$!
 
 echo "Goblin Archivar läuft: http://127.0.0.1:5173"
 wait -n "$BACKEND_PID" "$FRONTEND_PID"
-

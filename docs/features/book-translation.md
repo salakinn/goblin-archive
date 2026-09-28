@@ -1,7 +1,13 @@
 # KI-Buchübersetzung
 
-Status: Konzept, noch nicht implementiert. Festgehalten am 27.09.2026.
-Die Umsetzung ist für den nächsten Entwicklungsschritt vorgesehen.
+Status: Erste EPUB-Implementierung vorhanden (28.09.2026). Dieses Dokument
+beschreibt weiterhin auch geplante Ausbaustufen. Bereits vorhanden sind
+Kapitelvorschau, Glossar und Stilvorgaben pro Auftrag, drei Durchlaufprofile,
+dauerhafte Aufträge mit Pause/Fortsetzen, Budgetgrenze bei konfigurierten
+Tokenpreisen, EPUB-Rekonstruktion und technische Validierung. Noch offen sind
+eigenständige wiederverwendbare Glossarressourcen, automatische Glossarvorschläge,
+fortlaufende Kapitelkontextanalyse, gezielte Reparatur einzelner Segmente,
+semantische QA-Schwellen und eine EPUBCheck-Integration.
 
 ## Ziel und erste Ausbaustufe
 

@@ -1,5 +1,30 @@
 export type SourceValue<T = unknown> = { value: T | null; source: string | null }
 
+export type AiSettings = {
+  provider: 'openai'
+  key_configured: boolean
+  ai_tagging_model: string
+  ai_language_model: string
+  ai_translation_model: string
+  ai_translation_qa_model: string
+  ai_translation_editor_model: string
+  ai_translation_input_usd_per_million: number
+  ai_translation_output_usd_per_million: number
+  ai_translation_qa_input_usd_per_million: number | null
+  ai_translation_qa_output_usd_per_million: number | null
+  ai_translation_editor_input_usd_per_million: number | null
+  ai_translation_editor_output_usd_per_million: number | null
+}
+
+export type UpdateStatus = {
+  enabled: boolean
+  available: boolean
+  install_ready: boolean
+  install_mode: 'truenas' | 'systemd' | null
+  current_version: string
+  latest_version: string | null
+}
+
 export type CoverMetadata = {
   filename: string
   source: 'embedded' | 'external'
@@ -81,6 +106,26 @@ export type Book = {
   language_detection?: { status: string; language: string | null; created_at: string; assessments: { sample_id: number; language: string; status: string; reason: string }[] } | null
   cover?: CoverMetadata | null
   work_match?: WorkMatch | null
+  translation?: { source_book_id: string; target_language: string; job_id: string } | null
+}
+
+export type BookPage = { items: Book[]; total: number; limit: number; offset: number }
+
+export type TranslationJob = {
+  id: string
+  status: string
+  target_language: string
+  profile: string
+  budget_usd: number | null
+  estimated_cost_usd: number | null
+  cost_usd: number
+  total_segments: number
+  completed_segments: number
+  glossary: { source: string; target: string }[]
+  style: string
+  preview: { source: string; translated: string }[]
+  error: string | null
+  output_book_id: string | null
 }
 
 export type Tag = {

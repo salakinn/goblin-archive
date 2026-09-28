@@ -11,6 +11,16 @@ from backend.models import Book
 from backend.repository import get_or_create_author, get_or_create_tag, insert_book
 
 
+@pytest.fixture(autouse=True)
+def legacy_api_auth(request, monkeypatch):
+    """Existing endpoint tests cover business behavior; auth tests use the real middleware."""
+    if request.node.get_closest_marker("auth"):
+        return
+    from backend import auth
+    monkeypatch.setattr(auth, "require_request_auth", lambda *_: None)
+    monkeypatch.setattr(auth, "check_csrf", lambda *_: None)
+
+
 @pytest.fixture
 def db_context(tmp_path):
     settings = Settings(data_dir=tmp_path / "data")

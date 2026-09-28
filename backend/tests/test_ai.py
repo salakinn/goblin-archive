@@ -170,6 +170,6 @@ def test_provider_errors_are_safe(monkeypatch, error, message):
 
 
 def test_missing_api_key():
-    with pytest.raises(AIError, match="GOBLIN_OPENAI_API_KEY"):
+    with pytest.raises(AIError, match="Einstellungen"):
         OpenAIProvider(Settings(openai_api_key="")).generate(
             model="test", instructions="", context={}, schema=TaggingOutput)

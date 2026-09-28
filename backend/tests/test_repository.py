@@ -1,5 +1,6 @@
 from backend.repository import (
     add_book_tag,
+    count_books,
     find_by_hash,
     get_book,
     list_authors,
@@ -26,6 +27,18 @@ def test_year_and_tag_filters(db_context):
         add_book(session, book_id="bk_new0001", title="Sachbuch", year=2022, genres=["Wissen"])
         assert [book.id for book in list_books(session, year_from=2000)] == ["bk_new0001"]
         assert [book.id for book in list_books(session, tag="Fantasy")] == ["bk_old0001"]
+
+
+def test_book_pagination_and_count_keep_stable_order(db_context):
+    _settings, factory = db_context
+    with factory() as session:
+        add_book(session, book_id="bk_first001", title="Erstes")
+        add_book(session, book_id="bk_second01", title="Zweites")
+        add_book(session, book_id="bk_third001", title="Drittes")
+        page = list_books(session, limit=2, offset=1)
+        assert len(page) == 2
+        assert count_books(session) == 3
+        assert [book.id for book in page] == ["bk_second01", "bk_first001"]
 
 
 def test_full_text_search(db_context):

@@ -26,23 +26,24 @@ class AIResult:
 
 class AIProvider(Protocol):
     def generate(self, *, model: str, instructions: str, context: dict,
-                 schema: type[BaseModel]) -> AIResult: ...
+                 schema: type[BaseModel], max_output_tokens: int = 1200,
+                 timeout: float | None = None) -> AIResult: ...
 
 
 class OpenAIProvider:
     def __init__(self, settings: Settings):
         self.settings = settings
 
-    def generate(self, *, model, instructions, context, schema):
+    def generate(self, *, model, instructions, context, schema, max_output_tokens=1200, timeout=None):
         key = self.settings.openai_api_key.get_secret_value()
         if not key:
-            raise AIError("OpenAI ist noch nicht eingerichtet. GOBLIN_OPENAI_API_KEY in .env setzen und Backend neu starten.")
+            raise AIError("OpenAI ist noch nicht eingerichtet. Bitte den API-Key in den Einstellungen hinterlegen.")
         try:
-            with OpenAI(api_key=key, timeout=self.settings.ai_timeout, max_retries=1) as client:
+            with OpenAI(api_key=key, timeout=timeout or self.settings.ai_timeout, max_retries=1) as client:
                 response = client.responses.parse(
                     model=model, instructions=instructions,
                     input=json.dumps(context, ensure_ascii=False),
-                    text_format=schema, max_output_tokens=1200, store=False,
+                    text_format=schema, max_output_tokens=max_output_tokens, store=False,
                 )
             if response.status != "completed" or response.output_parsed is None:
                 raise AIError("Die KI hat kein vollständiges Ergebnis geliefert. Bitte erneut versuchen.")

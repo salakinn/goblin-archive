@@ -1,0 +1,31 @@
+services:
+  goblin-archive:
+    image: ghcr.io/salakinn/goblin-archive:stable
+    restart: unless-stopped
+    ports:
+      - "30080:8000"
+    volumes:
+      - /mnt/DEIN_POOL/goblin-archive:/data
+    environment:
+      GOBLIN_TRUENAS_WS_URL: wss://TRUENAS-HOSTNAME/api/current
+      GOBLIN_TRUENAS_USERNAME: goblin-updater
+      GOBLIN_TRUENAS_APP_NAME: goblin-archive
+      GOBLIN_TRUENAS_API_KEY_FILE: /run/secrets/truenas-api-key
+      GOBLIN_TRUENAS_CA_FILE: /run/secrets/truenas-ca
+      GOBLIN_UPDATE_PASSWORD_FILE: /run/secrets/update-password
+    secrets:
+      - truenas-api-key
+      - truenas-ca
+      - update-password
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+secrets:
+  truenas-api-key:
+    file: /mnt/DEIN_POOL/goblin-config/truenas-api-key
+  truenas-ca:
+    file: /mnt/DEIN_POOL/goblin-config/truenas-ca.pem
+  update-password:
+    file: /mnt/DEIN_POOL/goblin-config/update-password

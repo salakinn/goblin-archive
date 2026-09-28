@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { addTag, applyIsbn, applyIsbnReference, clearArchive, detectLanguage, generateTags, getBook, getBooks, getFilterOptions, getImport, getIsbnCandidates, refreshCover, removeTag, searchIsbn, uploadBooks } from './api'
 import { compatibleBookFiles, filesFromDrop } from './drop'
+import { TranslationPanel } from './TranslationPanel'
+import { AiSettingsPanel } from './AiSettingsPanel'
+import { UpdatePrompt } from './UpdatePrompt'
 import type { Book, FilterOption, FilterOptions, ImportJob, ImportItem, IsbnCandidate } from './types'
 
 const eventLabels: Record<string, string> = {
@@ -229,6 +232,7 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
         <div><p className="eyebrow">{book.format} · {formatBytes(book.file_size)}</p><h2>{book.title}</h2><p className="detail-author">{book.authors.join(', ') || 'Unbekannter Autor'}</p><p className="cover-source">Cover: {coverSource}</p><button className="refresh-cover" disabled={refreshing} onClick={searchCover}>{refreshing ? 'Cover wird gesucht…' : 'Cover neu suchen'}</button>{coverNotice && <small className="cover-notice">{coverNotice}</small>}</div>
       </div>
       {book.description && <p className="description">{book.description}</p>}
+      {book.translation && <p className="tag-notice">KI-Übersetzung von <a href={`/books/${book.translation.source_book_id}`}>Originalbuch öffnen</a></p>}
       <section className="tag-editor">
         <h3 className="section-title">Tags</h3>
         <button type="button" disabled={tagSaving || languageDetecting} onClick={setTagsWithAI}>{aiTagging ? 'KI analysiert…' : 'Tags per KI setzen'}</button>
@@ -249,6 +253,7 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
         {languageNotice && <p className="tag-notice" role="status">{languageNotice}</p>}
         {book.language_detection && <details><summary>Letzte Sprachprüfung: {book.language_detection.status === 'detected' ? 'eindeutig' : 'unklar'}</summary>{book.language_detection.assessments.map(sample => <p key={sample.sample_id}>Probe {sample.sample_id}: {sample.language === 'xx' ? 'unklar / mehrsprachig' : sample.language.toUpperCase()} — {sample.reason}</p>)}</details>}
       </section>
+      <TranslationPanel book={book} finished={() => refreshed(book)} />
       <section className="isbn-resolver">
         <div className="isbn-heading"><div><h3>Werk- und ISBN-Auflösung</h3><p>Eine Ausgaben-ISBN gehört exakt zur Datei. Eine Referenz-ISBN bezeichnet nur dasselbe Werk und dient der späteren Metadatenanreicherung.</p></div><div className="isbn-actions"><button disabled={isbnSearching || Boolean(isbnApplying)} onClick={() => findIsbn(false)}>{isbnSearching ? 'Suche läuft…' : 'Werk suchen'}</button>{(isbnCandidates.length > 0 || isbnNotice) && <button className="quiet" disabled={isbnSearching || Boolean(isbnApplying)} onClick={() => findIsbn(true)}>Neu abfragen</button>}</div></div>
         {isbnNotice && <p className="isbn-notice">{isbnNotice}</p>}
@@ -278,8 +283,11 @@ function ImportPanel({ jobs, collapsed, toggle }: { jobs: ImportJob[]; collapsed
   </aside>
 }
 
-export default function App() {
+export default function App({ onLogout }: { onLogout: () => void }) {
   const [books, setBooks] = useState<Book[]>([])
+  const [totalBooks, setTotalBooks] = useState(0)
+  const [page, setPage] = useState(0)
+  const pageSize = 50
   const [filterOptions, setFilterOptions] = useState<FilterOptions>(emptyFilterOptions)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -294,17 +302,45 @@ export default function App() {
   const [notice, setNotice] = useState('')
   const [coverVersions, setCoverVersions] = useState<Record<string, number>>({})
   const dragDepth = useRef(0)
+  const listAbort = useRef<AbortController | null>(null)
+  const importRefreshTimer = useRef<number | null>(null)
+  const completedRefreshes = useRef<Set<string>>(new Set())
 
   const params = useMemo(() => {
     const result = new URLSearchParams()
     if (query.trim()) result.set('q', query.trim())
-    else Object.entries(filters).forEach(([key, value]) => value && result.set(key, value))
+    else {
+      Object.entries(filters).forEach(([key, value]) => value && result.set(key, value))
+      result.set('limit', String(pageSize))
+      result.set('offset', String(page * pageSize))
+    }
     return result
-  }, [query, filters])
+  }, [query, filters, page])
+
+  const filterSignature = useMemo(() => JSON.stringify([query, filters]), [query, filters])
+  const previousFilterSignature = useRef(filterSignature)
+  useEffect(() => {
+    if (previousFilterSignature.current !== filterSignature) {
+      previousFilterSignature.current = filterSignature
+      setPage(0)
+    }
+  }, [filterSignature])
 
   const loadBooks = useCallback(async () => {
-    try { setError(''); setBooks(await getBooks(params)) }
-    catch (err) { setError(err instanceof Error ? err.message : 'Bibliothek konnte nicht geladen werden') }
+    listAbort.current?.abort()
+    const controller = new AbortController()
+    listAbort.current = controller
+    try {
+      setError('')
+      const result = await getBooks(params, controller.signal)
+      setBooks(result.items)
+      setTotalBooks(result.total)
+    }
+    catch (err) {
+      if (!(err instanceof DOMException && err.name === 'AbortError')) {
+        setError(err instanceof Error ? err.message : 'Bibliothek konnte nicht geladen werden')
+      }
+    }
     finally { setLoading(false) }
   }, [params])
 
@@ -313,8 +349,20 @@ export default function App() {
     catch (err) { setError(err instanceof Error ? err.message : 'Filter konnten nicht geladen werden') }
   }, [])
 
+  const refreshAfterImport = useCallback(() => {
+    if (importRefreshTimer.current) window.clearTimeout(importRefreshTimer.current)
+    importRefreshTimer.current = window.setTimeout(() => {
+      void Promise.all([loadBooks(), loadFilterOptions()])
+    }, 250)
+  }, [loadBooks, loadFilterOptions])
+
   useEffect(() => { const timer = window.setTimeout(loadBooks, 180); return () => clearTimeout(timer) }, [loadBooks])
   useEffect(() => { loadFilterOptions() }, [loadFilterOptions])
+  useEffect(() => {
+    if (!query.trim() && totalBooks > 0 && page > 0 && page * pageSize >= totalBooks) {
+      setPage(Math.max(0, Math.ceil(totalBooks / pageSize) - 1))
+    }
+  }, [page, query, totalBooks])
 
   useEffect(() => {
     const source = new EventSource('/api/events')
@@ -329,13 +377,15 @@ export default function App() {
         } catch { /* job may have vanished after a backend restart */ }
       }
       if (event.type === 'import.finished' || event.type === 'import.duplicate') {
-        loadBooks()
-        loadFilterOptions()
+        if (payload.import_id && !completedRefreshes.current.has(payload.import_id)) {
+          completedRefreshes.current.add(payload.import_id)
+          refreshAfterImport()
+        }
       }
     }
     names.forEach(name => source.addEventListener(name, onEvent))
     return () => source.close()
-  }, [loadBooks, loadFilterOptions])
+  }, [loadBooks, loadFilterOptions, refreshAfterImport])
 
   useEffect(() => {
     const active = jobs.filter(job => job.status === 'queued' || job.status === 'running')
@@ -345,16 +395,18 @@ export default function App() {
       let newlyFinished = false
       setJobs(current => current.map(job => {
         const update = updates.find(candidate => candidate.id === job.id)
-        if (update && job.status !== 'finished' && update.status === 'finished') newlyFinished = true
+        if (update && job.status !== 'finished' && update.status === 'finished' && !completedRefreshes.current.has(job.id)) {
+          completedRefreshes.current.add(job.id)
+          newlyFinished = true
+        }
         return update || job
       }))
       if (newlyFinished) {
-        loadBooks()
-        loadFilterOptions()
+        refreshAfterImport()
       }
     }, 1200)
     return () => clearInterval(timer)
-  }, [jobs, loadBooks, loadFilterOptions])
+  }, [jobs, loadBooks, loadFilterOptions, refreshAfterImport])
 
   async function importFiles(files: File[]) {
     if (!files.length) { setError('Keine unterstützten E-Books gefunden.'); return }
@@ -423,11 +475,16 @@ export default function App() {
     <header>
       <a className="brand" href="/"><span className="goblin">G</span><span><strong>Goblin</strong><small>ARCHIVAR</small></span></a>
       <div className="settings-wrap">
+        <UpdatePrompt />
         <button className="settings" title="Einstellungen" aria-expanded={settingsOpen} onClick={() => setSettingsOpen(!settingsOpen)}>⚙</button>
         {settingsOpen && <div className="settings-menu">
+          <AiSettingsPanel />
+          <div className="settings-danger"><button className="danger-button" onClick={onLogout}>Abmelden</button></div>
+          <div className="settings-danger">
           <strong>Entwicklung</strong>
           <p>Entfernt alle importierten Bücher und Dateien aus dem lokalen Archiv.</p>
           <button className="danger-button" disabled={clearing} onClick={deleteEverything}>{clearing ? 'Archiv wird geleert…' : 'Gesamtes Archiv leeren'}</button>
+          </div>
         </div>}
       </div>
     </header>
@@ -453,7 +510,14 @@ export default function App() {
       </section>
       {error && <div className="error-banner">{error}<button onClick={() => setError('')}>×</button></div>}
       {notice && <div className="notice-banner">{notice}<button onClick={() => setNotice('')}>×</button></div>}
-      {loading ? <div className="empty">Der Goblin blättert durch das Archiv…</div> : books.length ? <section className="book-grid">{books.map(book => <BookCard key={book.id} book={book} coverVersion={coverVersions[book.id]} onClick={() => openBook(book.id)} onTagClick={filterByTag} />)}</section> : <div className="empty"><span>🧌</span><h2>Das Archiv ist noch hungrig</h2><p>Ziehe EPUB-, PDF-, MOBI- oder AZW3-Dateien hierher.</p></div>}
+      {loading ? <div className="empty">Der Goblin blättert durch das Archiv…</div> : books.length ? <>
+        <section className="book-grid">{books.map(book => <BookCard key={book.id} book={book} coverVersion={coverVersions[book.id]} onClick={() => openBook(book.id)} onTagClick={filterByTag} />)}</section>
+        {!query.trim() && totalBooks > pageSize && <nav className="pagination" aria-label="Seitennavigation">
+          <button disabled={page === 0} onClick={() => setPage(current => Math.max(0, current - 1))}>← Zurück</button>
+          <span>Seite {page + 1} von {Math.ceil(totalBooks / pageSize)} · {totalBooks} Bücher</span>
+          <button disabled={(page + 1) * pageSize >= totalBooks} onClick={() => setPage(current => current + 1)}>Weiter →</button>
+        </nav>}
+      </> : <div className="empty"><span>🧌</span><h2>Das Archiv ist noch hungrig</h2><p>Ziehe EPUB-, PDF-, MOBI- oder AZW3-Dateien hierher.</p></div>}
     </main>
     {dragging && <div className="drop-overlay"><div><span>🧌</span><h2>Bücher dem Goblin verfüttern</h2><p>Dateien oder Ordner hier ablegen</p></div></div>}
     <ImportPanel jobs={jobs} collapsed={collapsed} toggle={() => setCollapsed(!collapsed)} />

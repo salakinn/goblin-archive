@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import re
+import time
+from threading import Lock
 from typing import Any
 
 from sqlalchemy import delete, func, select, text
@@ -9,6 +11,15 @@ from sqlalchemy.orm import Session, selectinload
 
 from backend.metadata import clean_tag_name, language_label, normalize_language, normalize_tag_name
 from backend.models import Author, Book, Genre, Tag, book_authors, book_tags
+
+_filter_cache: tuple[str, float, dict[str, list[dict[str, Any]]]] | None = None
+_filter_cache_lock = Lock()
+
+
+def invalidate_filter_cache() -> None:
+    global _filter_cache
+    with _filter_cache_lock:
+        _filter_cache = None
 
 
 def book_to_dict(book: Book, detail: bool = False) -> dict[str, Any]:
@@ -44,6 +55,7 @@ def book_to_dict(book: Book, detail: bool = False) -> dict[str, Any]:
             "language_detection": raw.get("language_detection"),
             "cover": raw.get("cover"),
             "work_match": json.loads(book.work_match_json) if book.work_match_json else raw.get("work_match"),
+            "translation": raw.get("translation"),
         })
     return data
 
@@ -164,6 +176,19 @@ def list_filter_options(session: Session) -> dict[str, list[dict[str, Any]]]:
     }
 
 
+def cached_filter_options(session: Session) -> dict[str, list[dict[str, Any]]]:
+    global _filter_cache
+    cache_key = str(session.get_bind().url)
+    with _filter_cache_lock:
+        if (_filter_cache is not None and _filter_cache[0] == cache_key and
+                time.monotonic() - _filter_cache[1] < 60):
+            return _filter_cache[2]
+    value = list_filter_options(session)
+    with _filter_cache_lock:
+        _filter_cache = (cache_key, time.monotonic(), value)
+    return value
+
+
 def _language_counts(session: Session) -> dict[str, int]:
     counts: dict[str, int] = {}
     for language, count in session.execute(
@@ -216,23 +241,17 @@ def remove_book_tag(session: Session, book: Book, tag_id: int) -> None:
 
 
 def find_by_hash(session: Session, sha256: str) -> Book | None:
-    return session.scalar(select(Book).where(Book.sha256 == sha256))
+    book_id = find_book_id_by_hash(session, sha256)
+    return session.get(Book, book_id) if book_id else None
 
 
-def list_books(
-    session: Session,
-    *, author: str | None = None,
-    tag: str | None = None,
-    year_from: int | None = None,
-    year_to: int | None = None,
-    language: str | None = None,
-    publisher: str | None = None,
-    format: str | None = None,
-    series: str | None = None,
-) -> list[Book]:
-    query = select(Book).options(
-        selectinload(Book.authors), selectinload(Book.genres), selectinload(Book.tags),
-    ).order_by(Book.imported_at.desc())
+def find_book_id_by_hash(session: Session, sha256: str) -> str | None:
+    return session.scalar(select(Book.id).where(Book.sha256 == sha256))
+
+
+def _book_query(*, author=None, tag=None, year_from=None, year_to=None,
+                language=None, publisher=None, format=None, series=None):
+    query = select(Book)
     if author:
         query = query.where(Book.authors.any(Author.name == author))
     if tag:
@@ -249,6 +268,33 @@ def list_books(
         query = query.where(Book.format == format.lower())
     if series:
         query = query.where(Book.series == series)
+    return query
+
+
+def count_books(session: Session, **filters) -> int:
+    query = _book_query(**filters).with_only_columns(func.count(Book.id)).order_by(None)
+    return int(session.scalar(query) or 0)
+
+
+def list_books(
+    session: Session,
+    *, author: str | None = None,
+    tag: str | None = None,
+    year_from: int | None = None,
+    year_to: int | None = None,
+    language: str | None = None,
+    publisher: str | None = None,
+    format: str | None = None,
+    series: str | None = None,
+    limit: int | None = None,
+    offset: int = 0,
+) -> list[Book]:
+    query = _book_query(author=author, tag=tag, year_from=year_from, year_to=year_to,
+                        language=language, publisher=publisher, format=format, series=series).options(
+        selectinload(Book.authors), selectinload(Book.genres), selectinload(Book.tags),
+    ).order_by(Book.imported_at.desc(), Book.id.desc()).offset(max(0, offset))
+    if limit is not None:
+        query = query.limit(limit)
     return list(session.scalars(query).unique())
 
 

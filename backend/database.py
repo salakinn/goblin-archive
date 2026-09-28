@@ -55,6 +55,10 @@ def init_db(db_engine=engine) -> None:
         if "work_match_json" not in columns:
             connection.execute(text("ALTER TABLE books ADD COLUMN work_match_json TEXT"))
         connection.execute(text("CREATE INDEX IF NOT EXISTS ix_books_series ON books (series)"))
+        connection.execute(text("CREATE INDEX IF NOT EXISTS ix_books_imported_id ON books (imported_at DESC, id DESC)"))
+        connection.execute(text("CREATE INDEX IF NOT EXISTS ix_book_authors_author_id ON book_authors (author_id)"))
+        connection.execute(text("CREATE INDEX IF NOT EXISTS ix_book_genres_genre_id ON book_genres (genre_id)"))
+        connection.execute(text("CREATE INDEX IF NOT EXISTS ix_book_tags_tag_id ON book_tags (tag_id)"))
         for book_id, language in connection.execute(text(
             "SELECT id, language FROM books WHERE language IS NOT NULL"
         )):

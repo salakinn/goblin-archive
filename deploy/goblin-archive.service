@@ -1,0 +1,18 @@
+[Unit]
+Description=Goblin Archivar
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/goblin-archive/current
+Environment=GOBLIN_DATA_DIR=%h/goblin-archive/data
+Environment=GOBLIN_UPDATE_MODE=systemd
+Environment=GOBLIN_UPDATE_ROOT=%h/goblin-archive
+Environment=GOBLIN_UPDATE_SERVICE=goblin-archive.service
+Environment=GOBLIN_UPDATE_PASSWORD_FILE=%h/goblin-archive/config/update-password
+ExecStart=%h/goblin-archive/current/.venv/bin/uvicorn backend.main:app --host 127.0.0.1 --port 8000 --workers 1 --timeout-graceful-shutdown 3
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

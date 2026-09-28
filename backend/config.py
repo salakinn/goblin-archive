@@ -15,10 +15,32 @@ class Settings(BaseSettings):
     provider_timeout: float = 5.0
     ai_provider: str = "openai"
     openai_api_key: SecretStr = SecretStr("")
-    ai_tagging_model: str = "gpt-4o-mini"
-    ai_language_model: str = "gpt-4o-mini"
+    ai_tagging_model: str = "gpt-5.4-nano"
+    ai_language_model: str = "gpt-5.4-nano"
+    ai_translation_model: str = "gpt-5.4-mini"
+    ai_translation_qa_model: str = "gpt-5.4-mini"
+    ai_translation_editor_model: str = "gpt-5.4"
+    ai_translation_input_usd_per_million: float = Field(default=0, ge=0)
+    ai_translation_output_usd_per_million: float = Field(default=0, ge=0)
+    ai_translation_qa_input_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_translation_qa_output_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_translation_editor_input_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_translation_editor_output_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_translation_timeout: float = Field(default=180.0, gt=0, le=600)
     ai_timeout: float = Field(default=30.0, gt=0, le=120)
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    truenas_ws_url: str = ""
+    truenas_username: str = ""
+    truenas_api_key_file: Path | None = None
+    truenas_ca_file: Path | None = None
+    truenas_app_name: str = ""
+    update_password_file: Path | None = None
+    update_mode: str = ""
+    update_root: Path | None = None
+    update_service: str = "goblin-archive.service"
+    auth_secure_cookies: bool = False
+    max_upload_bytes: int = Field(default=200 * 1024 * 1024, ge=1, le=2 * 1024 * 1024 * 1024)
+    max_upload_files: int = Field(default=20, ge=1, le=100)
 
     @property
     def library_dir(self) -> Path:
@@ -47,4 +69,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    from backend.ai_config import load_ai_config
+    return load_ai_config(Settings())

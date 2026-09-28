@@ -23,7 +23,8 @@ from backend.metadata import BookMetadata, fallback_title, normalize_language, s
 from backend.maintenance import clear_archive
 from backend.models import Book
 from backend.providers import ProviderChain
-from backend.repository import find_by_hash, get_book, get_or_create_author, get_or_create_tag, insert_book
+from backend.repository import (find_book_id_by_hash, get_book, get_or_create_author, get_or_create_tag,
+                                insert_book, invalidate_filter_cache)
 
 logger = logging.getLogger(__name__)
 
@@ -135,6 +136,7 @@ class ImportManager:
         try:
             result = await asyncio.to_thread(clear_archive, self.settings, self.session_factory)
             self.jobs.clear()
+            invalidate_filter_cache()
             await self.events.publish("archive.cleared", result)
             return result
         finally:
@@ -157,13 +159,13 @@ class ImportManager:
             digest = await asyncio.to_thread(sha256_file, staging_path)
             item.sha256 = digest
             with self.session_factory() as session:
-                duplicate = find_by_hash(session, digest)
-                if duplicate:
+                duplicate_id = find_book_id_by_hash(session, digest)
+                if duplicate_id:
                     item.status = "duplicate"
-                    item.book_id = duplicate.id
+                    item.book_id = duplicate_id
                     item.message = "Identische Datei ist bereits archiviert"
-                    await self._emit(job, item, "import.duplicate", book_id=duplicate.id, sha256=digest)
-                    logger.info("Duplicate import filename=%r sha256=%s book_id=%s", item.filename, digest, duplicate.id)
+                    await self._emit(job, item, "import.duplicate", book_id=duplicate_id, sha256=digest)
+                    logger.info("Duplicate import filename=%r sha256=%s book_id=%s", item.filename, digest, duplicate_id)
                     return
 
             file_format, extracted = await asyncio.to_thread(detect_and_extract, staging_path, item.filename)
@@ -205,6 +207,7 @@ class ImportManager:
             item.status = "finished"
             item.book_id = book_id
             item.message = "Archiviert"
+            invalidate_filter_cache()
             await self._emit(job, item, "import.finished", book_id=book_id, path=str(target))
         except (InvalidBookError, OSError, SQLAlchemyError, ValueError) as exc:
             item.status = "failed"
@@ -386,6 +389,7 @@ class ImportManager:
         auto = result.get("auto_candidate")
         if auto:
             await asyncio.to_thread(self.isbn_resolver.apply, book_id, auto["isbn13"])
+            invalidate_filter_cache()
             result["auto_applied"] = True
             with self.session_factory() as session:
                 book = get_book(session, book_id)
@@ -400,6 +404,7 @@ class ImportManager:
             await asyncio.to_thread(
                 self.isbn_resolver.apply_reference, book_id, reference["isbn13"],
             )
+            invalidate_filter_cache()
             result["reference_applied"] = True
             await self.events.publish("book.work.resolved", {
                 "book_id": book_id,
@@ -413,6 +418,7 @@ class ImportManager:
         if not self.isbn_resolver:
             raise RuntimeError("ISBN-Auflösung ist nicht verfügbar")
         candidate = await asyncio.to_thread(self.isbn_resolver.apply, book_id, isbn)
+        invalidate_filter_cache()
         with self.session_factory() as session:
             book = get_book(session, book_id)
             needs_cover = bool(book and not book.has_cover)
@@ -426,6 +432,7 @@ class ImportManager:
         if not self.isbn_resolver:
             raise RuntimeError("ISBN-Auflösung ist nicht verfügbar")
         result = await asyncio.to_thread(self.isbn_resolver.apply_reference, book_id, isbn)
+        invalidate_filter_cache()
         await self.events.publish("book.work.resolved", {
             "book_id": book_id,
             "reference_isbn": result["candidate"]["isbn13"],
