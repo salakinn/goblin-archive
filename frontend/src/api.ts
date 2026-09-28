@@ -31,6 +31,14 @@ export async function removeTag(id: string, tagId: number): Promise<Book> {
   return json<Book>(await fetch(`/api/books/${id}/tags/${tagId}`, { method: 'DELETE' }))
 }
 
+export async function generateTags(id: string): Promise<{ book: Book; added: number; cached: boolean }> {
+  return json(await fetch(`/api/books/${id}/ai/tags`, { method: 'POST' }))
+}
+
+export async function detectLanguage(id: string): Promise<{ book: Book; status: 'detected' | 'unclear' | 'protected' | 'insufficient_text'; applied: boolean; cached: boolean }> {
+  return json(await fetch(`/api/books/${id}/ai/language`, { method: 'POST' }))
+}
+
 export async function getAuthors(): Promise<Author[]> {
   return (await json<{ items: Author[] }>(await fetch('/api/authors'))).items
 }

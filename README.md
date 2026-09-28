@@ -8,6 +8,9 @@ Der MVP arbeitet ausschließlich mit **COPY-Semantik**: Die Originaldatei auf de
 
 ## Architektur
 
+Geplantes Feature: [KI-Buchübersetzung mit Glossar und Qualitätsprofilen](docs/features/book-translation.md)
+(Konzept, noch nicht implementiert).
+
 - `backend/`: FastAPI, SQLAlchemy, SQLite/FTS5, Import-Pipeline und Provider
 - `frontend/`: React, TypeScript und Vite ohne UI-Framework
 - `goblin-data/`: lokale Nutzdaten, Archiv, Staging, Logs und Datenbank
@@ -108,6 +111,63 @@ Goblin unterscheidet ausdrücklich zwei Identitäten:
 Eine Ausgabenübernahme aktualisiert Datenbank, Volltextindex und `metadata.json` atomar und stößt bei fehlendem Titelbild die Cover-Pipeline an. Eine Werkreferenz aktualisiert nur Werkdaten und `metadata.json`; sie verändert weder Editions-ISBN noch Cover. Positive Treffer werden 30 Tage, vollständig negative Treffer sieben Tage in SQLite gecacht. Provider-Ausfälle werden nicht als negative Treffer gespeichert. „Neu abfragen“ umgeht den Cache.
 
 Die ISBN-Auflösung ist vom Dateiimport getrennt, damit große Ordnerimporte nicht durch Kataloganfragen oder Rate-Limits ausgebremst werden. Google Books ist wegen der gegenwärtig nicht verfügbaren API-Quote nicht Bestandteil der ISBN-Kandidatensuche; die Architektur erlaubt einen späteren zusätzlichen Provider.
+
+## KI-Tags mit OpenAI
+
+In der Buchansicht ergänzt „Tags per KI setzen“ direkt bis zu fünf passende Tags.
+Bestehende Tags bleiben erhalten. Die KI erhält begrenzte Buchmetadaten (Titel,
+Autoren, Beschreibung, Sprache, Reihe und Werkhinweise) sowie vorhandene Tags;
+Buchdateien werden nicht hochgeladen. Bei unzureichenden Angaben darf sie keine
+Tags liefern. Ergebnisse können wie manuelle Tags entfernt werden.
+
+Die Werte aus `.env.example` in eine lokale `.env` übernehmen und
+`GOBLIN_OPENAI_API_KEY` setzen. Danach Backend neu starten. Der Key bleibt im
+Backend. `GOBLIN_AI_TAGGING_MODEL` bestimmt das Modell, `GOBLIN_AI_TIMEOUT` das
+Zeitlimit je Versuch. Ein vorübergehender Fehler wird höchstens einmal wiederholt.
+API-Aufrufe werden über das OpenAI-API-Konto abgerechnet.
+
+Herkunft, Modell, Zeitpunkt und Begründung neuer Tags werden pro Buch unter
+`tag_sources` in Datenbank-Metadaten und `metadata.json` gespeichert; `ai_tagging`
+enthält zusätzlich den Tokenverbrauch des letzten erfolgreichen Laufs. Unveränderte
+Buchdaten werden bei erneutem Klick nicht nochmals angefragt. Auch manuell entfernte
+KI-Tags werden dadurch nicht sofort erneut gesetzt. Änderungen an Buchkontext,
+Modell oder Prompt-Version ermöglichen eine neue Analyse. Fehler werden nicht gecacht.
+
+`POST /api/books/{id}/ai/tags` liefert das aktualisierte Buch, die Anzahl neuer Tags
+und einen Cache-Hinweis. Pro Backend-Prozess läuft höchstens eine Tagging-Anfrage
+gleichzeitig. Die Verarbeitung erfolgt unabhängig vom Import. Die gemeinsame
+Provider-Schnittstelle in `backend/ai.py` kann auch weitere KI-Funktionen bedienen.
+
+## Sprache per KI ermitteln
+
+Die Buchansicht bietet eine getrennte Sprachprüfung über
+`POST /api/books/{id}/ai/language`. Goblin liest lokal drei unterschiedliche,
+nicht überlappende Textproben aus verschiedenen Stellen der Buchdatei (je höchstens
+1.600 Zeichen und mindestens 500 Buchstaben). EPUB-Proben folgen der Lesereihenfolge;
+Navigation und erkennbare Titel-/Impressumsdateien werden übersprungen. Bei längeren
+PDFs werden die ersten zwei Seiten ausgelassen. Die Stichprobe ist begrenzt und
+kann eine Sprache in unberücksichtigten Buchteilen übersehen.
+
+Nur die Textproben gehen an OpenAI, ohne Titel, Klappentext oder bisherige
+Sprachangabe. Das Modell bewertet jede Probe getrennt. Goblin übernimmt einen
+validierten ISO-639-1-Code nur, wenn alle drei Proben eindeutig dieselbe Sprache
+ergeben. Bei Mehrsprachigkeit, widersprüchlichen Ergebnissen oder zu wenig Text
+bleibt die bisherige Sprache erhalten. Eine manuell bestätigte Angabe
+(`metadata.language.source` gleich `manual`/`user` oder `confirmed: true`) ist geschützt.
+
+Unterstützt sind EPUB, PDFs mit Text und unverschlüsselte MOBI/AZW3-Dateien mit
+unkomprimiertem oder einfachem PalmDOC-Text. Andere Kindle-Kompressionen und
+Textstrukturen werden mit einem Hinweis abgelehnt. Es erfolgt keine DRM-Umgehung
+und keine OCR für gescannte PDFs. Datei- und Abschnittsgrößen sind begrenzt.
+
+`GOBLIN_AI_LANGUAGE_MODEL` konfiguriert das Modell unabhängig vom Tagging. API-Key
+und Zeitlimit werden gemeinsam verwendet. Wiederholte Aufrufe mit denselben
+Proben und derselben Modell-/Prompt-Konfiguration nutzen das gespeicherte Ergebnis.
+Fehler werden nicht gecacht. Herkunft, alte Sprachangabe, Bewertungen, Probenpositionen
+und Proben-Hashes sowie Tokenverbrauch stehen in `language_detection` und
+`language_detection_history` in Datenbank und `metadata.json`; Probenvolltexte
+werden dort nicht gespeichert. Bei Fehlern beim Speichern wird die Änderung
+zurückgerollt. Die Originalbuchdatei wird nicht verändert.
 
 ## Externe Metadatenquellen
 

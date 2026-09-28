@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { addTag, applyIsbn, applyIsbnReference, clearArchive, getBook, getBooks, getFilterOptions, getImport, getIsbnCandidates, refreshCover, removeTag, searchIsbn, uploadBooks } from './api'
+import { addTag, applyIsbn, applyIsbnReference, clearArchive, detectLanguage, generateTags, getBook, getBooks, getFilterOptions, getImport, getIsbnCandidates, refreshCover, removeTag, searchIsbn, uploadBooks } from './api'
 import { compatibleBookFiles, filesFromDrop } from './drop'
 import type { Book, FilterOption, FilterOptions, ImportJob, ImportItem, IsbnCandidate } from './types'
 
@@ -84,7 +84,10 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
   const [isbnNotice, setIsbnNotice] = useState('')
   const [tagName, setTagName] = useState('')
   const [tagSaving, setTagSaving] = useState(false)
+  const [aiTagging, setAiTagging] = useState(false)
   const [tagNotice, setTagNotice] = useState('')
+  const [languageDetecting, setLanguageDetecting] = useState(false)
+  const [languageNotice, setLanguageNotice] = useState('')
   const coverSource = book.cover_source === 'embedded' ? 'Embedded'
     : book.cover_provider === 'openlibrary' ? 'Open Library'
     : book.cover_provider === 'googlebooks' ? 'Google Books' : '—'
@@ -168,6 +171,37 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
       setTagNotice(err instanceof Error ? err.message : 'Tag konnte nicht gespeichert werden.')
     } finally { setTagSaving(false) }
   }
+  async function setTagsWithAI() {
+    try {
+      setTagSaving(true)
+      setAiTagging(true)
+      setTagNotice('')
+      const result = await generateTags(book.id)
+      refreshed(result.book)
+      setTagNotice(result.cached ? 'Diese Buchdaten wurden bereits analysiert. Kein weiterer KI-Aufruf.'
+        : result.added ? `${result.added} Tags per KI ergänzt.` : 'Keine weiteren passenden Tags gefunden.')
+    } catch (err) {
+      setTagNotice(err instanceof Error ? err.message : 'KI-Tags konnten nicht gesetzt werden.')
+    } finally { setTagSaving(false); setAiTagging(false) }
+  }
+  async function findLanguage() {
+    try {
+      setLanguageDetecting(true)
+      setLanguageNotice('')
+      const result = await detectLanguage(book.id)
+      refreshed(result.book)
+      const messages = {
+        detected: result.cached ? `Bereits analysiert: ${result.book.language_detection?.language?.toUpperCase() || 'eindeutig'}. Kein weiterer KI-Aufruf; aktuelle Sprachangabe bleibt erhalten.`
+          : `Erkannte Sprache: ${result.book.language_label || result.book.language}. Direkt gespeichert.`,
+        unclear: 'Die Textproben ergeben keine eindeutige Sprache. Bisherige Angabe bleibt erhalten.',
+        protected: 'Die Sprachangabe wurde manuell bestätigt und bleibt erhalten.',
+        insufficient_text: 'Keine drei ausreichend langen Textproben gefunden. Bei gescannten PDFs ist zunächst OCR nötig.',
+      }
+      setLanguageNotice(messages[result.status])
+    } catch (err) {
+      setLanguageNotice(err instanceof Error ? err.message : 'Sprache konnte nicht ermittelt werden.')
+    } finally { setLanguageDetecting(false) }
+  }
   async function deleteTag(tagId: number) {
     try {
       setTagSaving(true)
@@ -197,16 +231,24 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
       {book.description && <p className="description">{book.description}</p>}
       <section className="tag-editor">
         <h3 className="section-title">Tags</h3>
+        <button type="button" disabled={tagSaving || languageDetecting} onClick={setTagsWithAI}>{aiTagging ? 'KI analysiert…' : 'Tags per KI setzen'}</button>
+        <p className="tag-notice">Übermittelt Buchmetadaten an OpenAI und ergänzt passende Tags direkt.</p>
         {book.tags.length > 0 && <div className="detail-tags">{book.tags.map(tag => <span key={tag.id}><button className="tag-filter" onClick={() => filterByTag(tag.name)}>{tag.name}</button><button className="tag-remove" disabled={tagSaving} onClick={() => deleteTag(tag.id)} aria-label={`${tag.name} entfernen`}>×</button></span>)}</div>}
         <form onSubmit={event => { event.preventDefault(); saveTag() }}>
           <input list="available-tags" value={tagName} maxLength={200} onChange={event => setTagName(event.target.value)} placeholder="Tag hinzufügen…" aria-label="Tag hinzufügen" />
           <datalist id="available-tags">{tagOptions.map(tag => <option key={tag} value={tag} />)}</datalist>
           <button disabled={tagSaving || !tagName.trim()}>{tagSaving ? 'Speichert…' : 'Hinzufügen'}</button>
         </form>
-        {tagNotice && <small className="tag-notice">{tagNotice}</small>}
+        {tagNotice && <small className="tag-notice" role="status">{tagNotice}</small>}
       </section>
       <h3 className="section-title">Metadaten</h3>
       <dl className="metadata-list">{fields.map(([name, value, source]) => <div key={name}><dt>{name}</dt><dd>{value}</dd><small>{source || '—'}</small></div>)}</dl>
+      <section className="language-detection">
+        <button type="button" disabled={languageDetecting || aiTagging || isbnSearching || Boolean(isbnApplying)} onClick={findLanguage}>{languageDetecting ? 'Sprache wird geprüft…' : 'Sprache per KI ermitteln'}</button>
+        <p className="tag-notice">Prüft drei Textproben aus der Buchdatei mit OpenAI. Nur bei eindeutiger Übereinstimmung wird die Sprache gespeichert.</p>
+        {languageNotice && <p className="tag-notice" role="status">{languageNotice}</p>}
+        {book.language_detection && <details><summary>Letzte Sprachprüfung: {book.language_detection.status === 'detected' ? 'eindeutig' : 'unklar'}</summary>{book.language_detection.assessments.map(sample => <p key={sample.sample_id}>Probe {sample.sample_id}: {sample.language === 'xx' ? 'unklar / mehrsprachig' : sample.language.toUpperCase()} — {sample.reason}</p>)}</details>}
+      </section>
       <section className="isbn-resolver">
         <div className="isbn-heading"><div><h3>Werk- und ISBN-Auflösung</h3><p>Eine Ausgaben-ISBN gehört exakt zur Datei. Eine Referenz-ISBN bezeichnet nur dasselbe Werk und dient der späteren Metadatenanreicherung.</p></div><div className="isbn-actions"><button disabled={isbnSearching || Boolean(isbnApplying)} onClick={() => findIsbn(false)}>{isbnSearching ? 'Suche läuft…' : 'Werk suchen'}</button>{(isbnCandidates.length > 0 || isbnNotice) && <button className="quiet" disabled={isbnSearching || Boolean(isbnApplying)} onClick={() => findIsbn(true)}>Neu abfragen</button>}</div></div>
         {isbnNotice && <p className="isbn-notice">{isbnNotice}</p>}

@@ -4,6 +4,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field, SecretStr
 
 
 class Settings(BaseSettings):
@@ -12,6 +13,11 @@ class Settings(BaseSettings):
     data_dir: Path = Path("goblin-data")
     provider_order: str = "lobid,openlibrary,googlebooks"
     provider_timeout: float = 5.0
+    ai_provider: str = "openai"
+    openai_api_key: SecretStr = SecretStr("")
+    ai_tagging_model: str = "gpt-4o-mini"
+    ai_language_model: str = "gpt-4o-mini"
+    ai_timeout: float = Field(default=30.0, gt=0, le=120)
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
 
     @property
@@ -42,4 +48,3 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-

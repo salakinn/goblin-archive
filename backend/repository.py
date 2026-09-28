@@ -40,6 +40,8 @@ def book_to_dict(book: Book, detail: bool = False) -> dict[str, Any]:
             "library_path": book.library_path,
             "sha256": book.sha256,
             "metadata": raw.get("metadata", {}),
+            "tag_sources": raw.get("tag_sources", {}),
+            "language_detection": raw.get("language_detection"),
             "cover": raw.get("cover"),
             "work_match": json.loads(book.work_match_json) if book.work_match_json else raw.get("work_match"),
         })

@@ -77,6 +77,8 @@ export type Book = {
   sha256?: string
   library_path?: string
   metadata?: Record<string, SourceValue>
+  tag_sources?: Record<string, { source: string; provider: string; model: string; created_at: string; reason: string }>
+  language_detection?: { status: string; language: string | null; created_at: string; assessments: { sample_id: number; language: string; status: string; reason: string }[] } | null
   cover?: CoverMetadata | null
   work_match?: WorkMatch | null
 }

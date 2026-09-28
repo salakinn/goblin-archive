@@ -4,6 +4,8 @@ import json
 import logging
 import os
 import uuid
+from datetime import datetime, timezone
+from threading import Lock
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -12,9 +14,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from backend.config import get_settings
+from backend.ai import (AIError, TAGGING_VERSION, generate_tags, make_ai_provider,
+                        tagging_context, tagging_fingerprint)
+from backend.metadata import normalize_tag_name
+from backend.models import Tag
+from backend.language import (VERSION as LANGUAGE_VERSION, TextExtractionError,
+                              agreed_language, detect_language, extract_language_samples,
+                              language_fingerprint)
 from backend.covers import make_cover_service
 from backend.database import SessionLocal, get_db, init_db
 from backend.imports import ArchiveBusyError, ImportManager
@@ -32,6 +42,7 @@ from backend.repository import (
 )
 
 settings = get_settings()
+ai_tagging_lock = Lock()
 
 
 def configure_logging() -> None:
@@ -135,11 +146,18 @@ class TagSelection(BaseModel):
     name: str
 
 
-def _persist_book_tags(db: Session, book) -> None:
+def _persist_book_tags(db: Session, book, document: dict | None = None) -> None:
     metadata_path = (settings.library_dir / book.library_path).parent / "metadata.json"
     old_metadata = metadata_path.read_bytes()
-    document = json.loads(book.metadata_json)
+    if document is None:
+        document = json.loads(book.metadata_json)
     document["tags"] = [tag.name for tag in book.tags]
+    current_names = {tag.normalized_name for tag in book.tags}
+    if "tag_sources" in document:
+        document["tag_sources"] = {
+            name: source for name, source in document["tag_sources"].items()
+            if name in current_names
+        }
     metadata_text = json.dumps(document, ensure_ascii=False, indent=2)
     temporary = metadata_path.with_name(f".metadata-tags-{uuid.uuid4().hex}.tmp")
     temporary.write_text(metadata_text + "\n", encoding="utf-8")
@@ -169,6 +187,62 @@ def create_book_tag(book_id: str, selection: TagSelection, db: Session = Depends
     return book_to_dict(get_book(db, book_id), detail=True)
 
 
+@app.post("/api/books/{book_id}/ai/tags")
+def generate_book_tags(book_id: str, db: Session = Depends(get_db)):
+    if not ai_tagging_lock.acquire(blocking=False):
+        raise HTTPException(409, detail={"message": "Eine KI-Anfrage läuft bereits. Bitte kurz warten."})
+    try:
+        book = get_book(db, book_id)
+        if not book:
+            raise HTTPException(404, detail={"message": "Buch nicht gefunden"})
+        context = tagging_context(book)
+        fingerprint = tagging_fingerprint(context, settings)
+        document = json.loads(book.metadata_json)
+        if document.get("ai_tagging", {}).get("fingerprint") == fingerprint:
+            return {"book": book_to_dict(book, detail=True), "added": 0, "cached": True}
+        context["existing_tags"] = [tag.name for tag in book.tags[:100]]
+        context["library_tags"] = list(db.scalars(select(Tag.name).order_by(Tag.normalized_name).limit(200)))
+        # Do not hold a database transaction across the network request.
+        db.rollback()
+        try:
+            result = generate_tags(make_ai_provider(settings), settings, context)
+        except AIError as exc:
+            raise HTTPException(503, detail={"code": "ai_error", "message": str(exc)}) from exc
+        db.expire_all()
+        book = get_book(db, book_id)
+        if not book:
+            raise HTTPException(404, detail={"message": "Buch wurde inzwischen entfernt"})
+        if tagging_fingerprint(tagging_context(book), settings) != fingerprint:
+            raise HTTPException(409, detail={"message": "Buchdaten wurden inzwischen geändert. Bitte erneut versuchen."})
+        document = json.loads(book.metadata_json)
+        sources = document.setdefault("tag_sources", {})
+        existing = {tag.normalized_name for tag in book.tags}
+        timestamp = datetime.now(timezone.utc).isoformat()
+        added = 0
+        for tag in result.value.tags:
+            normalized = normalize_tag_name(tag.name)
+            if normalized in existing:
+                continue
+            add_book_tag(db, book, tag.name)
+            existing.add(normalized)
+            sources[normalized] = {
+                "source": "ai", "provider": settings.ai_provider,
+                "model": settings.ai_tagging_model, "created_at": timestamp,
+                "reason": tag.reason, "prompt_version": TAGGING_VERSION,
+            }
+            added += 1
+        document["ai_tagging"] = {
+            "fingerprint": fingerprint, "provider": settings.ai_provider,
+            "model": settings.ai_tagging_model, "created_at": timestamp,
+            "prompt_version": TAGGING_VERSION,
+            "input_tokens": result.input_tokens, "output_tokens": result.output_tokens,
+        }
+        _persist_book_tags(db, book, document)
+        return {"book": book_to_dict(book, detail=True), "added": added, "cached": False}
+    finally:
+        ai_tagging_lock.release()
+
+
 @app.delete("/api/books/{book_id}/tags/{tag_id}")
 def delete_book_tag(book_id: str, tag_id: int, db: Session = Depends(get_db)):
     book = get_book(db, book_id)
@@ -191,6 +265,90 @@ def _safe_library_file(relative_path: str) -> Path:
     if not candidate.is_file():
         raise HTTPException(404, detail="Datei nicht gefunden")
     return candidate
+
+
+@app.post("/api/books/{book_id}/ai/language")
+def detect_book_language(book_id: str, db: Session = Depends(get_db)):
+    if not ai_tagging_lock.acquire(blocking=False):
+        raise HTTPException(409, detail={"message": "Eine KI-Anfrage läuft bereits. Bitte kurz warten."})
+    try:
+        book = get_book(db, book_id)
+        if not book:
+            raise HTTPException(404, detail={"message": "Buch nicht gefunden"})
+        document = json.loads(book.metadata_json)
+        previous_field = document.get("metadata", {}).get("language", {})
+        if previous_field.get("source") in {"manual", "user"} or previous_field.get("confirmed"):
+            return {"book": book_to_dict(book, detail=True), "status": "protected",
+                    "applied": False, "cached": False}
+        previous_language = book.language
+        path = _safe_library_file(book.library_path)
+        file_format, file_hash = book.format, book.sha256
+        before = path.stat()
+        file_signature = (before.st_size, before.st_mtime_ns, before.st_ino)
+        db.rollback()
+        try:
+            samples = extract_language_samples(path, file_format)
+        except TextExtractionError as exc:
+            raise HTTPException(422, detail={"message": str(exc)}) from exc
+        if len(samples) < 3:
+            book = get_book(db, book_id)
+            if not book:
+                raise HTTPException(404, detail={"message": "Buch wurde inzwischen entfernt"})
+            return {"book": book_to_dict(book, detail=True),
+                    "status": "insufficient_text", "applied": False, "cached": False}
+        fingerprint = language_fingerprint(samples, settings)
+        last = document.get("language_detection", {})
+        if last.get("fingerprint") == fingerprint:
+            book = get_book(db, book_id)
+            if not book:
+                raise HTTPException(404, detail={"message": "Buch wurde inzwischen entfernt"})
+            return {"book": book_to_dict(book, detail=True),
+                    "status": last["status"], "applied": False, "cached": True}
+        db.rollback()
+        try:
+            result = detect_language(make_ai_provider(settings), settings, samples)
+        except AIError as exc:
+            raise HTTPException(503, detail={"code": "ai_error", "message": str(exc)}) from exc
+        db.expire_all()
+        book = get_book(db, book_id)
+        if not book:
+            raise HTTPException(404, detail={"message": "Buch wurde inzwischen entfernt"})
+        document = json.loads(book.metadata_json)
+        current_field = document.get("metadata", {}).get("language", {})
+        try:
+            after = path.stat()
+        except FileNotFoundError as exc:
+            raise HTTPException(409, detail={"message": "Die Buchdatei wurde inzwischen entfernt."}) from exc
+        if (book.language != previous_language or current_field != previous_field
+                or book.sha256 != file_hash or book.format != file_format
+                or (settings.library_dir / book.library_path).resolve() != path
+                or file_signature != (after.st_size, after.st_mtime_ns, after.st_ino)):
+            raise HTTPException(409, detail={"message": "Buchdaten wurden inzwischen geändert. Bitte erneut versuchen."})
+        language = agreed_language(result.value)
+        status = "detected" if language else "unclear"
+        timestamp = datetime.now(timezone.utc).isoformat()
+        record = {
+            "fingerprint": fingerprint, "status": status, "language": language,
+            "provider": settings.ai_provider, "model": settings.ai_language_model,
+            "created_at": timestamp, "prompt_version": LANGUAGE_VERSION,
+            "previous_language": previous_language, "previous_field": previous_field,
+            "samples": [sample.evidence() for sample in samples],
+            "assessments": result.value.model_dump()["samples"],
+            "input_tokens": result.input_tokens, "output_tokens": result.output_tokens,
+        }
+        document["language_detection"] = record
+        document.setdefault("language_detection_history", []).append(record)
+        if language:
+            book.language = language
+            document.setdefault("metadata", {})["language"] = {
+                "value": language, "source": "ai", "provider": settings.ai_provider,
+                "model": settings.ai_language_model, "created_at": timestamp,
+            }
+        _persist_book_tags(db, book, document)
+        return {"book": book_to_dict(book, detail=True), "status": status,
+                "applied": bool(language), "cached": False}
+    finally:
+        ai_tagging_lock.release()
 
 
 @app.get("/api/books/{book_id}/download")
