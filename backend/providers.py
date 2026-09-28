@@ -156,6 +156,8 @@ class ProviderChain:
         for name in target.__dataclass_fields__:
             current = getattr(target, name)
             incoming = getattr(source, name)
+            if current.source == "manual":
+                continue
             # ISBN inference is handled separately by IsbnResolver so ambiguous editions
             # are never silently selected as a side effect of metadata enrichment.
             if name == "isbn":

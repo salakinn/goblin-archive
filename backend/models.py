@@ -134,3 +134,66 @@ class TranslationJob(Base):
     source_book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), index=True)
     status: Mapped[str] = mapped_column(String(32), nullable=False)
     data_json: Mapped[str] = mapped_column(Text, nullable=False)
+    revision: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+
+class ImportPreview(Base):
+    __tablename__ = "import_previews"
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    group_id: Mapped[str] = mapped_column(String(32), index=True)
+    filename: Mapped[str] = mapped_column(String(500), nullable=False)
+    staging_path: Mapped[str] = mapped_column(Text, nullable=False)
+    cover_path: Mapped[str | None] = mapped_column(Text)
+    embedded_cover_path: Mapped[str | None] = mapped_column(Text)
+    embedded_cover_json: Mapped[str | None] = mapped_column(Text)
+    external_cover_path: Mapped[str | None] = mapped_column(Text)
+    external_cover_json: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    status: Mapped[str] = mapped_column(String(24), nullable=False, default="queued")
+    metadata_json: Mapped[str | None] = mapped_column(Text)
+    cover_json: Mapped[str | None] = mapped_column(Text)
+    providers_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    file_format: Mapped[str | None] = mapped_column(String(10))
+    sha256: Mapped[str | None] = mapped_column(String(64))
+    duplicate_book_id: Mapped[str | None] = mapped_column(String(32))
+    book_id: Mapped[str | None] = mapped_column(String(32))
+    error: Mapped[str | None] = mapped_column(Text)
+    revision: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    edited: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+
+
+class TranslationGlossary(Base):
+    __tablename__ = "translation_glossaries"
+    __table_args__ = (Index("ix_translation_glossaries_languages", "source_language", "target_language"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    source_language: Mapped[str] = mapped_column(String(30), nullable=False)
+    target_language: Mapped[str] = mapped_column(String(30), nullable=False)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    entries_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    style: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class AIUsage(Base):
+    __tablename__ = "ai_usage"
+    __table_args__ = (Index("ix_ai_usage_created_at", "created_at"),
+                      Index("ix_ai_usage_feature", "feature"))
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    feature: Mapped[str] = mapped_column(String(50), nullable=False)
+    job_id: Mapped[str | None] = mapped_column(String(32), index=True)
+    book_id: Mapped[str | None] = mapped_column(String(32), index=True)
+    model: Mapped[str] = mapped_column(String(120), nullable=False)
+    input_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    output_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    cost_usd: Mapped[float] = mapped_column(Float, nullable=False, default=0)
+    reserved_usd: Mapped[float] = mapped_column(Float, nullable=False, default=0)
+    input_rate: Mapped[float | None] = mapped_column(Float)
+    output_rate: Mapped[float | None] = mapped_column(Float)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="completed")
+    error: Mapped[str | None] = mapped_column(Text)

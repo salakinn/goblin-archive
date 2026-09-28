@@ -18,6 +18,9 @@ AI_FIELDS = (
     "ai_translation_input_usd_per_million", "ai_translation_output_usd_per_million",
     "ai_translation_qa_input_usd_per_million", "ai_translation_qa_output_usd_per_million",
     "ai_translation_editor_input_usd_per_million", "ai_translation_editor_output_usd_per_million",
+    "ai_tagging_input_usd_per_million", "ai_tagging_output_usd_per_million",
+    "ai_language_input_usd_per_million", "ai_language_output_usd_per_million",
+    "ai_daily_limit_usd", "ai_monthly_limit_usd", "ai_warning_percent",
 )
 MODEL_FIELDS = AI_FIELDS[:5]
 CONFIG_LOCK = Lock()
@@ -36,6 +39,13 @@ class AIConfigUpdate(BaseModel):
     ai_translation_qa_output_usd_per_million: float | None = Field(default=None, ge=0)
     ai_translation_editor_input_usd_per_million: float | None = Field(default=None, ge=0)
     ai_translation_editor_output_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_tagging_input_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_tagging_output_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_language_input_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_language_output_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_daily_limit_usd: float | None = Field(default=None, ge=0)
+    ai_monthly_limit_usd: float | None = Field(default=None, ge=0)
+    ai_warning_percent: int | None = Field(default=None, ge=1, le=100)
 
     @field_validator(*MODEL_FIELDS)
     @classmethod
@@ -86,7 +96,9 @@ def save_ai_config(settings: Settings, update: AIConfigUpdate) -> dict:
         if "api_key" in changes:
             current_key = changes.pop("api_key") or ""
         if any(changes.get(field) is None for field in (*MODEL_FIELDS,
-                "ai_translation_input_usd_per_million", "ai_translation_output_usd_per_million")
+                "ai_translation_input_usd_per_million", "ai_translation_output_usd_per_million",
+                "ai_tagging_input_usd_per_million", "ai_tagging_output_usd_per_million",
+                "ai_language_input_usd_per_million", "ai_language_output_usd_per_million")
                if field in changes):
             raise ValueError("Modellname und Grundpreise dürfen nicht leer sein")
         current.update(changes)

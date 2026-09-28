@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import asyncio
+import re
 import uuid
 from importlib.metadata import PackageNotFoundError, version as package_version
 from datetime import datetime, timezone
@@ -18,21 +19,26 @@ from fastapi.responses import FileResponse, JSONResponse, StreamingResponse, Res
 from pydantic import BaseModel, Field
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from backend.config import get_settings
 from backend.ai_config import AIConfigUpdate, public_config, save_ai_config
 from backend.ai import (AIError, TAGGING_VERSION, generate_tags, make_ai_provider,
                         tagging_context, tagging_fingerprint)
-from backend.metadata import normalize_tag_name
-from backend.models import Tag
+from backend.metadata import normalize_language, normalize_tag_name
+from backend.metadata_store import MetadataConflict, persist_metadata, recover_metadata
+from backend.models import Tag, TranslationGlossary
+from backend.usage import records as ai_usage_records, summary as ai_usage_summary
+from backend.usage import AILimitError, expire_reservations, fail as fail_ai_usage
+from backend.usage import finish as finish_ai_usage, reserve as reserve_ai_usage
 from backend.language import (VERSION as LANGUAGE_VERSION, TextExtractionError,
                               agreed_language, detect_language, extract_language_samples,
                               language_fingerprint)
 from backend.covers import make_cover_service
 from backend.database import SessionLocal, get_db, init_db
 from backend.imports import ArchiveBusyError, ImportManager
-from backend.isbn import make_isbn_resolver
+from backend.previews import PreviewConflict, PreviewManager
+from backend.isbn import canonical_isbn13, make_isbn_resolver
 from backend.providers import make_provider_chain
 from backend.repository import (
     add_book_tag,
@@ -45,6 +51,8 @@ from backend.repository import (
     count_books,
     cached_filter_options,
     invalidate_filter_cache,
+    replace_book_fts,
+    get_or_create_author,
 )
 from backend.translation import TranslationManager, TranslationError
 from backend.updater import UpdateError, install_update, update_status
@@ -78,14 +86,28 @@ async def lifespan(app: FastAPI):
     configure_logging()
     auth.ensure_setup_code(settings.data_dir.resolve())
     init_db()
+    recover_metadata(settings, SessionLocal)
+    expire_reservations(SessionLocal)
     chain = make_provider_chain(settings.providers, settings.provider_timeout)
     cover_service = make_cover_service(settings.provider_timeout)
     isbn_resolver = make_isbn_resolver(settings, SessionLocal, settings.provider_timeout)
     app.state.import_manager = ImportManager(
         settings, SessionLocal, chain, cover_service, isbn_resolver,
     )
+    app.state.preview_manager = PreviewManager(app.state.import_manager)
+    app.state.preview_manager.resume()
+    async def expire_previews():
+        while True:
+            await asyncio.sleep(300)
+            await asyncio.to_thread(app.state.preview_manager.cleanup)
+    cleanup_task = asyncio.create_task(expire_previews())
     app.state.translation_manager = TranslationManager(settings, SessionLocal)
     yield
+    cleanup_task.cancel()
+    try:
+        await cleanup_task
+    except asyncio.CancelledError:
+        pass
     await chain.close()
     await cover_service.close()
     await isbn_resolver.close()
@@ -186,6 +208,11 @@ async def database_error(_request: Request, exc: SQLAlchemyError):
     return JSONResponse(status_code=500, content={"error": {"code": "database_error", "message": "Datenbankfehler"}})
 
 
+@app.exception_handler(MetadataConflict)
+async def metadata_conflict(_request: Request, exc: MetadataConflict):
+    return JSONResponse(status_code=409, content={"detail": {"code": "metadata_conflict", "message": str(exc)}})
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok", "version": app.version}
@@ -207,6 +234,7 @@ class InstallUpdateRequest(BaseModel):
 def install_available_update(body: InstallUpdateRequest, request: Request):
     if (request.app.state.translation_manager.running or
             request.app.state.import_manager.has_active_imports() or
+            request.app.state.preview_manager.busy() or
             request.app.state.import_manager.maintenance_active):
         raise HTTPException(409, detail={"code": "archive_busy", "message": "Bitte laufende Importe und Übersetzungen zuerst beenden."})
     try:
@@ -302,6 +330,7 @@ class TranslationRequest(BaseModel):
     target_language: str
     profile: str = "buch"
     budget_usd: float | None = None
+    glossary_id: int | None = None
 
 
 class GlossaryUpdate(BaseModel):
@@ -311,6 +340,14 @@ class GlossaryUpdate(BaseModel):
 
 class BudgetUpdate(BaseModel):
     budget_usd: float | None = None
+
+
+class GlossaryResourceRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=200)
+    source_language: str = Field(min_length=2, max_length=30)
+    target_language: str = Field(min_length=2, max_length=30)
+    glossary: list[dict[str, str]] = Field(default_factory=list, max_length=200)
+    style: str = Field(default="", max_length=2000)
 
 
 def _translation_error(exc):
@@ -328,7 +365,7 @@ def list_translations(book_id: str, request: Request):
 @app.post("/api/books/{book_id}/translations")
 def create_translation(book_id: str, body: TranslationRequest, request: Request):
     try:
-        return request.app.state.translation_manager.create(book_id, body.target_language, body.profile, body.budget_usd)
+        return request.app.state.translation_manager.create(book_id, body.target_language, body.profile, body.budget_usd, body.glossary_id)
     except (KeyError, TranslationError) as exc:
         _translation_error(exc)
 
@@ -337,6 +374,15 @@ def create_translation(book_id: str, body: TranslationRequest, request: Request)
 def translation_status(job_id: str, request: Request):
     try:
         return request.app.state.translation_manager.public(job_id)
+    except KeyError as exc:
+        _translation_error(exc)
+
+
+@app.get("/api/translations/{job_id}/segments")
+def translation_segments(job_id: str, request: Request,
+                         offset: int = Query(0, ge=0), limit: int = Query(50, ge=1, le=100)):
+    try:
+        return request.app.state.translation_manager.segments(job_id, offset, limit)
     except KeyError as exc:
         _translation_error(exc)
 
@@ -355,6 +401,68 @@ def update_translation_budget(job_id: str, body: BudgetUpdate, request: Request)
         return request.app.state.translation_manager.update_budget(job_id, body.budget_usd)
     except (KeyError, TranslationError) as exc:
         _translation_error(exc)
+
+
+@app.post("/api/translations/{job_id}/segments/{segment_id}/repair")
+def repair_translation_segment(job_id: str, segment_id: str, request: Request):
+    try:
+        return request.app.state.translation_manager.repair_segment(job_id, segment_id)
+    except (KeyError, TranslationError) as exc:
+        _translation_error(exc)
+    except AILimitError as exc:
+        raise HTTPException(409, detail={"code": "ai_limit", "message": str(exc)}) from exc
+    except AIError as exc:
+        raise HTTPException(503, detail={"code": "ai_error", "message": str(exc)}) from exc
+
+
+def _usage_factory(db: Session):
+    return sessionmaker(bind=db.get_bind(), expire_on_commit=False)
+
+
+@app.get("/api/ai/usage")
+def ai_usage(feature: str | None = None, book_id: str | None = None, db: Session = Depends(get_db)):
+    return ai_usage_summary(_usage_factory(db), settings, feature=feature, book_id=book_id)
+
+
+@app.get("/api/ai/usage/records")
+def ai_usage_detail(limit: int = Query(100, ge=1, le=500), feature: str | None = None,
+                    book_id: str | None = None, db: Session = Depends(get_db)):
+    return {"items": ai_usage_records(_usage_factory(db), limit=limit, feature=feature, book_id=book_id)}
+
+
+@app.get("/api/glossaries")
+def list_glossaries(db: Session = Depends(get_db)):
+    rows = db.scalars(select(TranslationGlossary).order_by(TranslationGlossary.name)).all()
+    return {"items": [{"id": row.id, "name": row.name, "source_language": row.source_language,
+                       "target_language": row.target_language, "version": row.version,
+                       "glossary": json.loads(row.entries_json), "style": row.style} for row in rows]}
+
+
+@app.post("/api/glossaries")
+def create_glossary(body: GlossaryResourceRequest, db: Session = Depends(get_db)):
+    now = datetime.now(timezone.utc)
+    row = TranslationGlossary(name=body.name, source_language=body.source_language,
+                              target_language=body.target_language, version=1,
+                              entries_json=json.dumps(body.glossary, ensure_ascii=False), style=body.style,
+                              created_at=now, updated_at=now)
+    db.add(row); db.commit(); db.refresh(row)
+    return {"id": row.id, "name": row.name, "source_language": row.source_language,
+            "target_language": row.target_language, "version": row.version,
+            "glossary": body.glossary, "style": body.style}
+
+
+@app.put("/api/glossaries/{glossary_id}")
+def update_glossary_resource(glossary_id: int, body: GlossaryResourceRequest, db: Session = Depends(get_db)):
+    row = db.get(TranslationGlossary, glossary_id)
+    if row is None:
+        raise HTTPException(404, detail={"code": "not_found", "message": "Glossar nicht gefunden"})
+    row.name, row.source_language, row.target_language = body.name, body.source_language, body.target_language
+    row.entries_json, row.style = json.dumps(body.glossary, ensure_ascii=False), body.style
+    row.version += 1; row.updated_at = datetime.now(timezone.utc)
+    db.commit()
+    return {"id": row.id, "name": row.name, "source_language": row.source_language,
+            "target_language": row.target_language, "version": row.version,
+            "glossary": body.glossary, "style": body.style}
 
 
 @app.post("/api/translations/{job_id}/start")
@@ -385,9 +493,85 @@ class TagSelection(BaseModel):
     name: str
 
 
+class BookMetadataUpdate(BaseModel):
+    title: str = Field(min_length=1, max_length=500)
+    authors: list[str] = Field(default_factory=list, max_length=30)
+    publication_year: int | None = Field(default=None, ge=0, le=9999)
+    language: str | None = Field(default=None, max_length=30)
+    publisher: str | None = Field(default=None, max_length=300)
+    isbn: str | None = Field(default=None, max_length=20)
+    reference_isbn: str | None = Field(default=None, max_length=20)
+    series: str | None = Field(default=None, max_length=300)
+    description: str | None = Field(default=None, max_length=100000)
+
+
+@app.put("/api/books/{book_id}/metadata")
+def update_book_metadata(book_id: str, body: BookMetadataUpdate, db: Session = Depends(get_db)):
+    book = get_book(db, book_id)
+    if not book:
+        raise HTTPException(404, detail={"code": "not_found", "message": "Buch nicht gefunden"})
+    language = normalize_language(body.language)
+    if body.language and (not language or not re.fullmatch(r"[a-z]{2,3}", language)):
+        raise HTTPException(400, detail={"code": "invalid_metadata", "message": "Ungültige Sprache"})
+    title = body.title.strip()
+    if not title:
+        raise HTTPException(400, detail={"code": "invalid_metadata", "message": "Titel darf nicht leer sein"})
+    if any(not name.strip() or len(name.strip()) > 300 for name in body.authors):
+        raise HTTPException(400, detail={"code": "invalid_metadata", "message": "Ungültiger Autorenname"})
+    authors = []
+    seen = set()
+    for raw in body.authors:
+        name = " ".join(raw.split()).strip()
+        if name and name.casefold() not in seen:
+            authors.append(get_or_create_author(db, name))
+            seen.add(name.casefold())
+    document = json.loads(book.metadata_json)
+    metadata = document.setdefault("metadata", {})
+    isbn = body.isbn.strip() if body.isbn else None
+    reference_isbn = body.reference_isbn.strip() if body.reference_isbn else None
+    if isbn != book.isbn:
+        isbn = canonical_isbn13(isbn) if isbn else None
+        if body.isbn and not isbn:
+            raise HTTPException(400, detail={"code": "invalid_metadata", "message": "Ungültige Ausgaben-ISBN"})
+    if reference_isbn != book.reference_isbn:
+        reference_isbn = canonical_isbn13(reference_isbn) if reference_isbn else None
+        if body.reference_isbn and not reference_isbn:
+            raise HTTPException(400, detail={"code": "invalid_metadata", "message": "Ungültige Referenz-ISBN"})
+    values = {"title": title, "authors": [author.name for author in authors],
+              "publication_year": body.publication_year, "language": language,
+              "publisher": body.publisher.strip() if body.publisher else None,
+              "isbn": isbn, "reference_isbn": reference_isbn,
+              "series": body.series.strip() if body.series else None,
+              "description": body.description.strip() if body.description else None}
+    previous = {"title": book.title, "authors": [author.name for author in book.authors],
+                "publication_year": book.publication_year, "language": normalize_language(book.language),
+                "publisher": book.publisher, "isbn": book.isbn,
+                "reference_isbn": book.reference_isbn, "series": book.series,
+                "description": book.description}
+    changed = {field for field, value in values.items() if value != previous[field]}
+    if not changed:
+        return book_to_dict(book, detail=True)
+    for field in changed:
+        metadata[field] = {"value": values[field], "source": "manual"}
+    book.title = values["title"]
+    book.publication_year = values["publication_year"]
+    book.language = values["language"]
+    book.publisher = values["publisher"]
+    book.isbn = values["isbn"]
+    book.reference_isbn = values["reference_isbn"]
+    book.series = values["series"]
+    book.description = values["description"]
+    book.authors = authors
+    try:
+        persist_metadata(db, book, document, settings, before_commit=lambda: replace_book_fts(db, book))
+    except MetadataConflict:
+        db.rollback()
+        raise
+    invalidate_filter_cache()
+    return book_to_dict(book, detail=True)
+
+
 def _persist_book_tags(db: Session, book, document: dict | None = None) -> None:
-    metadata_path = (settings.library_dir / book.library_path).parent / "metadata.json"
-    old_metadata = metadata_path.read_bytes()
     if document is None:
         document = json.loads(book.metadata_json)
     document["tags"] = [tag.name for tag in book.tags]
@@ -397,19 +581,7 @@ def _persist_book_tags(db: Session, book, document: dict | None = None) -> None:
             name: source for name, source in document["tag_sources"].items()
             if name in current_names
         }
-    metadata_text = json.dumps(document, ensure_ascii=False, indent=2)
-    temporary = metadata_path.with_name(f".metadata-tags-{uuid.uuid4().hex}.tmp")
-    temporary.write_text(metadata_text + "\n", encoding="utf-8")
-    try:
-        os.replace(temporary, metadata_path)
-        book.metadata_json = metadata_text
-        db.commit()
-    except Exception:
-        db.rollback()
-        metadata_path.write_bytes(old_metadata)
-        raise
-    finally:
-        temporary.unlink(missing_ok=True)
+    persist_metadata(db, book, document, settings)
     invalidate_filter_cache()
 
 
@@ -421,6 +593,9 @@ def create_book_tag(book_id: str, selection: TagSelection, db: Session = Depends
     try:
         add_book_tag(db, book, selection.name)
         _persist_book_tags(db, book)
+    except MetadataConflict:
+        db.rollback()
+        raise
     except ValueError as exc:
         db.rollback()
         raise HTTPException(400, detail={"code": "invalid_tag", "message": str(exc)}) from exc
@@ -445,10 +620,26 @@ def generate_book_tags(book_id: str, db: Session = Depends(get_db)):
         context["library_tags"] = list(db.scalars(select(Tag.name).order_by(Tag.normalized_name).limit(200)))
         # Do not hold a database transaction across the network request.
         db.rollback()
+        usage_factory = _usage_factory(db)
+        try:
+            usage_id = reserve_ai_usage(
+                usage_factory, settings, feature="tagging", model=settings.ai_tagging_model,
+                estimated_input_tokens=len(json.dumps(context, ensure_ascii=False).encode("utf-8")) + 1500,
+                max_output_tokens=1200,
+                rate=(settings.ai_tagging_input_usd_per_million, settings.ai_tagging_output_usd_per_million),
+                book_id=book_id)
+        except AILimitError as exc:
+            raise HTTPException(409, detail={"code": "ai_limit", "message": str(exc)}) from exc
         try:
             result = generate_tags(make_ai_provider(settings), settings, context)
         except AIError as exc:
+            fail_ai_usage(usage_factory, usage_id)
             raise HTTPException(503, detail={"code": "ai_error", "message": str(exc)}) from exc
+        except Exception:
+            fail_ai_usage(usage_factory, usage_id)
+            raise
+        finish_ai_usage(usage_factory, usage_id, input_tokens=result.input_tokens,
+                        output_tokens=result.output_tokens, usage_known=result.usage_known)
         db.expire_all()
         book = get_book(db, book_id)
         if not book:
@@ -547,10 +738,26 @@ def detect_book_language(book_id: str, db: Session = Depends(get_db)):
             return {"book": book_to_dict(book, detail=True),
                     "status": last["status"], "applied": False, "cached": True}
         db.rollback()
+        usage_factory = _usage_factory(db)
+        try:
+            usage_id = reserve_ai_usage(
+                usage_factory, settings, feature="language-detection", model=settings.ai_language_model,
+                estimated_input_tokens=sum(len(sample.text.encode("utf-8")) for sample in samples) + 1500,
+                max_output_tokens=1200,
+                rate=(settings.ai_language_input_usd_per_million, settings.ai_language_output_usd_per_million),
+                book_id=book_id)
+        except AILimitError as exc:
+            raise HTTPException(409, detail={"code": "ai_limit", "message": str(exc)}) from exc
         try:
             result = detect_language(make_ai_provider(settings), settings, samples)
         except AIError as exc:
+            fail_ai_usage(usage_factory, usage_id)
             raise HTTPException(503, detail={"code": "ai_error", "message": str(exc)}) from exc
+        except Exception:
+            fail_ai_usage(usage_factory, usage_id)
+            raise
+        finish_ai_usage(usage_factory, usage_id, input_tokens=result.input_tokens,
+                        output_tokens=result.output_tokens, usage_known=result.usage_known)
         db.expire_all()
         book = get_book(db, book_id)
         if not book:
@@ -667,6 +874,8 @@ async def apply_book_isbn(book_id: str, selection: IsbnSelection, request: Reque
         return await manager.apply_isbn(book_id, selection.isbn)
     except KeyError as exc:
         raise HTTPException(404, detail={"code": "not_found", "message": "Buch nicht gefunden"}) from exc
+    except MetadataConflict:
+        raise
     except ValueError as exc:
         raise HTTPException(400, detail={"code": "invalid_isbn", "message": str(exc)}) from exc
 
@@ -678,12 +887,13 @@ async def apply_book_isbn_reference(book_id: str, selection: IsbnSelection, requ
         return await manager.apply_isbn_reference(book_id, selection.isbn)
     except KeyError as exc:
         raise HTTPException(404, detail={"code": "not_found", "message": "Buch nicht gefunden"}) from exc
+    except MetadataConflict:
+        raise
     except ValueError as exc:
         raise HTTPException(400, detail={"code": "invalid_isbn", "message": str(exc)}) from exc
 
 
-@app.post("/api/import", status_code=202)
-async def import_files(request: Request, files: list[UploadFile] = File(...)):
+async def _store_uploads(request: Request, files: list[UploadFile]) -> list[tuple[str, Path]]:
     if not files:
         raise HTTPException(400, detail={"code": "empty_upload", "message": "Keine Dateien übergeben"})
     if len(files) > settings.max_upload_files:
@@ -725,6 +935,12 @@ async def import_files(request: Request, files: list[UploadFile] = File(...)):
         if current_path:
             current_path.unlink(missing_ok=True)
         raise HTTPException(507, detail={"code": "staging_failed", "message": f"Upload konnte nicht gespeichert werden: {exc}"}) from exc
+    return stored
+
+
+@app.post("/api/import", status_code=202)
+async def import_files(request: Request, files: list[UploadFile] = File(...)):
+    stored = await _store_uploads(request, files)
     manager: ImportManager = request.app.state.import_manager
     try:
         job = manager.create_job(stored)
@@ -733,6 +949,128 @@ async def import_files(request: Request, files: list[UploadFile] = File(...)):
             path.unlink(missing_ok=True)
         raise HTTPException(409, detail={"code": "archive_busy", "message": str(exc)}) from exc
     return job.as_dict()
+
+
+class PreviewEdit(BaseModel):
+    revision: int
+    changes: dict[str, object] = Field(default_factory=dict)
+    cover_choice: str | None = None
+
+
+@app.post("/api/import/previews", status_code=202)
+async def create_previews(request: Request, files: list[UploadFile] = File(...)):
+    stored = await _store_uploads(request, files)
+    try:
+        return {"items": request.app.state.preview_manager.create(stored)}
+    except PreviewConflict as exc:
+        for _, path in stored:
+            path.unlink(missing_ok=True)
+        raise HTTPException(409, detail={"code": "archive_busy", "message": str(exc)}) from exc
+    except Exception:
+        for _, path in stored:
+            path.unlink(missing_ok=True)
+        raise
+
+
+@app.get("/api/import/previews")
+def list_previews(request: Request):
+    return {"items": request.app.state.preview_manager.list()}
+
+
+@app.get("/api/import/previews/{preview_id}")
+def get_preview(preview_id: str, request: Request):
+    try:
+        return request.app.state.preview_manager.get(preview_id)
+    except KeyError as exc:
+        raise HTTPException(404, detail={"code": "not_found", "message": "Vorschau nicht gefunden"}) from exc
+
+
+@app.put("/api/import/previews/{preview_id}")
+def edit_preview(preview_id: str, body: PreviewEdit, request: Request):
+    try:
+        return request.app.state.preview_manager.edit(preview_id, body.changes, body.revision, body.cover_choice)
+    except PreviewConflict as exc:
+        raise HTTPException(409, detail={"code": "preview_conflict", "message": str(exc)}) from exc
+    except ValueError as exc:
+        raise HTTPException(400, detail={"code": "invalid_preview", "message": str(exc)}) from exc
+
+
+@app.post("/api/import/previews/{preview_id}/enrich", status_code=202)
+async def enrich_preview(preview_id: str, request: Request):
+    manager: PreviewManager = request.app.state.preview_manager
+    try:
+        await manager.analyze(preview_id, enrich=True)
+        return manager.get(preview_id)
+    except PreviewConflict as exc:
+        raise HTTPException(409, detail={"code": "preview_conflict", "message": str(exc)}) from exc
+
+
+@app.post("/api/import/previews/{preview_id}/reanalyze", status_code=202)
+async def reanalyze_preview(preview_id: str, request: Request):
+    manager: PreviewManager = request.app.state.preview_manager
+    try:
+        await manager.analyze(preview_id)
+        return manager.get(preview_id)
+    except PreviewConflict as exc:
+        raise HTTPException(409, detail={"code": "preview_conflict", "message": str(exc)}) from exc
+
+
+@app.post("/api/import/previews/{preview_id}/cover/search")
+async def search_preview_cover(preview_id: str, request: Request):
+    try:
+        return await request.app.state.preview_manager.search_external(preview_id)
+    except PreviewConflict as exc:
+        raise HTTPException(409, detail={"code": "preview_conflict", "message": str(exc)}) from exc
+
+
+@app.get("/api/import/previews/{preview_id}/cover")
+def preview_cover(preview_id: str, request: Request, choice: str = Query("selected", pattern="^(selected|embedded|external)$")):
+    manager: PreviewManager = request.app.state.preview_manager
+    with manager.session_factory() as db:
+        from backend.models import ImportPreview
+        row = db.get(ImportPreview, preview_id)
+        if not row or row.expires_at.replace(tzinfo=timezone.utc) <= datetime.now(timezone.utc):
+            raise HTTPException(404, detail={"code": "no_cover", "message": "Kein Cover vorhanden"})
+        raw_path = row.cover_path if choice == "selected" else getattr(row, f"{choice}_cover_path")
+        raw_info = row.cover_json if choice == "selected" else getattr(row, f"{choice}_cover_json")
+        if not raw_path or not raw_info:
+            raise HTTPException(404, detail={"code": "no_cover", "message": "Kein Cover vorhanden"})
+        path = Path(raw_path)
+        if not path.is_relative_to(settings.staging_dir.resolve()) or not path.is_file():
+            raise HTTPException(404, detail={"code": "no_cover", "message": "Kein Cover vorhanden"})
+        return FileResponse(path, media_type=json.loads(raw_info)["mime_type"])
+
+
+@app.post("/api/import/previews/{preview_id}/confirm")
+async def confirm_preview(preview_id: str, request: Request):
+    try:
+        return await request.app.state.preview_manager.confirm(preview_id)
+    except PreviewConflict as exc:
+        raise HTTPException(409, detail={"code": "preview_conflict", "message": str(exc)}) from exc
+
+
+@app.post("/api/import/previews/{preview_id}/discard")
+def discard_preview(preview_id: str, request: Request):
+    try:
+        return request.app.state.preview_manager.discard(preview_id)
+    except PreviewConflict as exc:
+        raise HTTPException(409, detail={"code": "preview_conflict", "message": str(exc)}) from exc
+
+
+@app.post("/api/import/previews/{preview_id}/skip")
+def skip_preview(preview_id: str, request: Request):
+    try:
+        return request.app.state.preview_manager.skip(preview_id)
+    except PreviewConflict as exc:
+        raise HTTPException(409, detail={"code": "preview_conflict", "message": str(exc)}) from exc
+
+
+@app.post("/api/import/previews/{preview_id}/resume")
+def resume_preview(preview_id: str, request: Request):
+    try:
+        return request.app.state.preview_manager.resume_one(preview_id)
+    except PreviewConflict as exc:
+        raise HTTPException(409, detail={"code": "preview_conflict", "message": str(exc)}) from exc
 
 
 @app.delete("/api/archive")
@@ -745,6 +1083,8 @@ async def delete_archive(request: Request, confirmation: str = Query(...)):
     manager: ImportManager = request.app.state.import_manager
     if request.app.state.translation_manager.running:
         raise HTTPException(409, detail={"code": "archive_busy", "message": "Übersetzung läuft"})
+    if request.app.state.preview_manager.busy():
+        raise HTTPException(409, detail={"code": "archive_busy", "message": "Vorschau wird gerade bearbeitet"})
     try:
         return await manager.clear()
     except ArchiveBusyError as exc:

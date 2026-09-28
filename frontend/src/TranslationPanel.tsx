@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { createTranslation, getTranslation, listTranslations, saveTranslationBudget, saveTranslationGlossary, translationAction } from './api'
-import type { Book, TranslationJob } from './types'
+import { createTranslation, getTranslation, getTranslationSegments, listGlossaries, listTranslations, repairTranslationSegment, saveTranslationBudget, saveTranslationGlossary, translationAction } from './api'
+import type { Book, TranslationGlossary, TranslationJob, TranslationSegments } from './types'
 
 const statusLabels: Record<string, string> = {
   ready: 'Vorbereitet', preview: 'Vorschau läuft', awaiting_glossary: 'Vorschau bereit',
@@ -18,12 +18,22 @@ export function TranslationPanel({ book, finished }: { book: Book; finished: () 
   const [notice, setNotice] = useState('')
   const [glossary, setGlossary] = useState('')
   const [style, setStyle] = useState('')
+  const [glossaries, setGlossaries] = useState<TranslationGlossary[]>([])
+  const [glossaryId, setGlossaryId] = useState('')
+  const [segmentOffset, setSegmentOffset] = useState(0)
+  const [segmentPage, setSegmentPage] = useState<TranslationSegments | null>(null)
   const active = jobs[0]
+  useEffect(() => { setSegmentOffset(0); setSegmentPage(null) }, [active?.id])
   useEffect(() => {
     let cancelled = false
     listTranslations(book.id).then(items => { if (!cancelled) setJobs(items) }).catch(err => { if (!cancelled) setNotice(String(err)) })
     return () => { cancelled = true }
   }, [book.id])
+  useEffect(() => { listGlossaries().then(setGlossaries).catch(() => undefined) }, [])
+  useEffect(() => {
+    if (!active || !['paused', 'failed', 'awaiting_glossary'].includes(active.status)) return
+    getTranslationSegments(active.id, segmentOffset).then(setSegmentPage).catch(() => setSegmentPage(null))
+  }, [active?.id, active?.status, segmentOffset])
   useEffect(() => {
     if (!active || !['preview', 'translating', 'assembling'].includes(active.status)) return
     const timer = window.setInterval(() => {
@@ -37,7 +47,7 @@ export function TranslationPanel({ book, finished }: { book: Book; finished: () 
   async function create() {
     try {
       setBusy(true); setNotice('')
-      const job = await createTranslation(book.id, language, profile, budget ? Number(budget) : null)
+      const job = await createTranslation(book.id, language, profile, budget ? Number(budget) : null, glossaryId ? Number(glossaryId) : null)
       setJobs(current => [job, ...current])
     } catch (err) { setNotice(err instanceof Error ? err.message : 'Auftrag konnte nicht erstellt werden') }
     finally { setBusy(false) }
@@ -76,6 +86,17 @@ export function TranslationPanel({ book, finished }: { book: Book; finished: () 
     } catch (err) { setNotice(err instanceof Error ? err.message : 'Budget konnte nicht gespeichert werden') }
     finally { setBusy(false) }
   }
+  async function repair(segmentId: string) {
+    if (!active) return
+    try {
+      setBusy(true); setNotice('')
+      const updated = await repairTranslationSegment(active.id, segmentId)
+      setJobs(current => current.map(item => item.id === updated.id ? updated : item))
+      setSegmentPage(await getTranslationSegments(active.id, segmentOffset))
+      setNotice('Segment wurde erneut durch alle Profilstufen bearbeitet.')
+    } catch (err) { setNotice(err instanceof Error ? err.message : 'Reparatur fehlgeschlagen') }
+    finally { setBusy(false) }
+  }
   useEffect(() => {
     if (active) { setGlossary(active.glossary.map(item => `${item.source} => ${item.target}`).join('\n')); setStyle(active.style); setBudget(active.budget_usd?.toString() || '') }
   }, [active?.id])
@@ -86,6 +107,7 @@ export function TranslationPanel({ book, finished }: { book: Book; finished: () 
       <label>Zielsprache <select value={language} onChange={e => setLanguage(e.target.value)}><option value="de">Deutsch</option><option value="en">Englisch</option><option value="fr">Französisch</option><option value="es">Spanisch</option><option value="it">Italienisch</option></select></label>
       <label>Profil <select value={profile} onChange={e => setProfile(e.target.value)}><option value="schnell">Schnell</option><option value="buch">Buch</option><option value="literarisch">Literarisch</option></select></label>
       <label>Budgetgrenze (USD, optional) <input type="number" min="0.01" step="0.01" value={budget} onChange={e => setBudget(e.target.value)} /></label>
+      <label>Glossar (optional) <select value={glossaryId} onChange={e => setGlossaryId(e.target.value)}><option value="">Keines</option>{glossaries.filter(item => item.source_language === (book.language || '') && item.target_language === language).map(item => <option key={item.id} value={item.id}>{item.name} (v{item.version})</option>)}</select></label>
       <button disabled={busy || language === book.language} onClick={create}>Übersetzung vorbereiten</button>
     </div> : null}
     {active && <div className="translation-job">
@@ -104,6 +126,10 @@ export function TranslationPanel({ book, finished }: { book: Book; finished: () 
       {['ready', 'awaiting_glossary', 'paused', 'failed'].includes(active.status) && <div className="translation-controls"><label>Budgetgrenze (USD, leer = keine) <input type="number" min="0.01" step="0.01" value={budget} onChange={e => setBudget(e.target.value)} /></label><button disabled={busy} onClick={saveBudget}>Budget speichern</button></div>}
       {['preview', 'translating', 'assembling'].includes(active.status) && <button disabled={busy} onClick={() => act('pause')}>Pausieren</button>}
       {['paused', 'failed'].includes(active.status) && <button disabled={busy} onClick={() => act('start')}>Fortsetzen</button>}
+      {['paused', 'failed', 'awaiting_glossary'].includes(active.status) && segmentPage && <details className="translation-segments"><summary>Einzelne Textstellen prüfen und reparieren</summary>
+        {segmentPage.items.map(segment => <article key={segment.id}><small>{segment.file} · {segment.id}</small><p>{visibleText(segment.source)}</p><strong>{visibleText(segment.translated || segment.draft || 'Noch nicht übersetzt')}</strong><button type="button" disabled={busy || (!segment.translated && !segment.draft && active.status !== 'failed')} onClick={() => repair(segment.id)}>Erneut übersetzen</button></article>)}
+        <div><button type="button" disabled={busy || segmentOffset === 0} onClick={() => setSegmentOffset(Math.max(0, segmentOffset - 50))}>Zurück</button>{' '}<span>{segmentOffset + 1}–{Math.min(segmentOffset + 50, segmentPage.total)} von {segmentPage.total}</span>{' '}<button type="button" disabled={busy || segmentOffset + 50 >= segmentPage.total} onClick={() => setSegmentOffset(segmentOffset + 50)}>Weiter</button></div>
+      </details>}
       {!['completed', 'cancelled'].includes(active.status) && <button className="quiet" disabled={busy} onClick={() => act('cancel')}>Abbrechen</button>}
       {active.output_book_id && <a href={`/api/books/${active.output_book_id}/download`}>Übersetztes EPUB herunterladen</a>}
     </div>}

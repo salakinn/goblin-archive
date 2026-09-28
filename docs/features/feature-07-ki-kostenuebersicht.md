@@ -1,5 +1,11 @@
 # Feature 07: KI-Kostenübersicht und Limits
 
+Status: Weitgehend umgesetzt. Die Installation speichert Nutzungsdaten und
+Preis-Snapshots für Tagging, Spracherkennung und Übersetzung. Reservierungen
+sichern Tages- und Monatsgrenzen bei parallelen Anfragen. Unbekannte Kosten
+werden ausgewiesen; Warnschwellen und ein filterbarer Verlauf sind vorhanden.
+CSV-Export und frei wählbare Zeiträume bleiben Erweiterungen.
+
 ## Ziel
 
 KI-Verbrauch und Kosten sollen nachvollziehbar sein und durch globale Limits

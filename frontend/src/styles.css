@@ -179,6 +179,15 @@ main { width: min(1440px, 92vw); margin: 0 auto; padding: 58px 0 110px; }
 .metadata-list dt { color: #717a6d; font-size: 11px; }
 .metadata-list dd { margin: 0; font-size: 12px; }
 .metadata-list small { color: #83a152; text-align: right; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
+.metadata-editor { display: grid; gap: 10px; margin: 14px 0 18px; padding: 14px; border: 1px solid #2e352b; background: #171c16; }
+.metadata-editor label { display: grid; gap: 5px; color: #aeb6a8; font-size: 11px; }
+.metadata-editor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.metadata-editor input, .metadata-editor textarea { width: 100%; box-sizing: border-box; }
+.translation-segments { margin: 16px 0; }
+.translation-segments article { border-top: 1px solid #2e352b; padding: 10px 0; display: grid; gap: 6px; }
+.translation-segments article p { margin: 0; }
+.translation-segments article button { justify-self: start; }
+@media (max-width: 620px) { .metadata-editor-grid { grid-template-columns: 1fr; } }
 .isbn-resolver { margin-top: 34px; padding-top: 26px; border-top: 1px solid #2e352b; }
 .isbn-heading { display: flex; justify-content: space-between; gap: 18px; align-items: start; }
 .isbn-heading h3 { margin: 0; font: 600 18px 'Fraunces', serif; }
@@ -204,6 +213,36 @@ main { width: min(1440px, 92vw); margin: 0 auto; padding: 58px 0 110px; }
 .candidate-actions { display: flex; gap: 6px; flex-shrink: 0; }
 .file-info { margin-top: 28px; display: grid; grid-template-columns: 100px 1fr; gap: 8px 14px; color: #697164; font-size: 10px; }
 .file-info strong { min-width: 0; color: #939c8d; font-weight: 500; overflow-wrap: anywhere; }
+.preview-panel { margin: 24px 0 30px; padding: 20px; border: 1px solid #455638; border-radius: 12px; background: #1b2218; }
+.preview-title { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+.preview-title h2 { margin: 0 0 5px; font: 600 22px 'Fraunces', serif; }
+.preview-title p { margin: 0; color: #9aa890; font-size: 11px; }
+.preview-title > div:last-child, .preview-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.preview-panel button { padding: 8px 11px; border: 1px solid #59723d; border-radius: 7px; background: #26321f; color: #c5dca5; cursor: pointer; font-size: 11px; }
+.preview-panel button:disabled { cursor: default; opacity: .5; }
+.preview-list { display: grid; gap: 14px; margin-top: 18px; }
+.preview-card { padding: 16px; border: 1px solid #34412e; border-radius: 9px; background: #171d15; }
+.preview-head { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+.preview-head strong { overflow-wrap: anywhere; }
+.preview-head span { color: #9cb777; font-size: 11px; white-space: nowrap; }
+.preview-content { display: grid; grid-template-columns: minmax(0, 1fr) 130px; gap: 18px; }
+.preview-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.preview-fields label { display: grid; gap: 5px; color: #aebca5; font-size: 11px; }
+.preview-fields label:has(textarea) { grid-column: 1 / -1; }
+.preview-fields label span { display: flex; justify-content: space-between; gap: 4px; }
+.preview-fields small { color: #748a68; }
+.preview-fields input, .preview-fields textarea { width: 100%; box-sizing: border-box; min-width: 0; padding: 8px; border: 1px solid #3c4a35; border-radius: 6px; background: #11170f; color: #e0e9d8; font: inherit; }
+.preview-fields textarea { min-height: 65px; resize: vertical; }
+.preview-cover { display: flex; flex-direction: column; gap: 7px; align-items: stretch; }
+.preview-cover img, .preview-no-cover { width: 100%; height: 175px; object-fit: contain; border: 1px solid #33402d; border-radius: 6px; }
+.preview-no-cover { display: grid; place-items: center; box-sizing: border-box; color: #74836c; font-size: 11px; }
+.preview-cover small, .preview-hint { color: #819776; font-size: 10px; }
+.preview-cover-option { display: grid; grid-template-columns: 36px 1fr; align-items: center; gap: 6px; }
+.preview-cover-option img { width: 36px; height: 48px; object-fit: contain; }
+.preview-actions { margin-top: 14px; }
+.preview-warning { color: #e1a798; font-size: 11px; }
+@media (max-width: 760px) { .preview-title { flex-direction: column; } .preview-content { grid-template-columns: 1fr; } .preview-fields { grid-template-columns: 1fr 1fr; } .preview-cover { max-width: 140px; } }
+@media (max-width: 500px) { .preview-fields { grid-template-columns: 1fr; } }
 
 @media (max-width: 760px) {
   header { grid-template-columns: 1fr auto; height: 68px; padding: 0 18px; gap: 12px; }

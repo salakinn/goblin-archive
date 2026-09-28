@@ -20,6 +20,7 @@ from backend.covers import CoverAsset, CoverService
 from backend.extractors import InvalidBookError, detect_and_extract
 from backend.isbn import IsbnResolver
 from backend.metadata import BookMetadata, fallback_title, normalize_language, sanitize_component
+from backend.metadata_store import persist_metadata
 from backend.maintenance import clear_archive
 from backend.models import Book
 from backend.providers import ProviderChain
@@ -348,28 +349,20 @@ class ImportManager:
             final_path = book_dir / cover.filename
             temporary = book_dir / f".cover-{uuid.uuid4().hex}.tmp"
             old_path = self.settings.library_dir / book.cover_path if book.cover_path else None
-            metadata_path = book_dir / "metadata.json"
-            old_metadata = metadata_path.read_bytes()
             old_cover = old_path.read_bytes() if old_path and old_path.is_file() else None
             temporary.write_bytes(cover.content)
             try:
                 os.replace(temporary, final_path)
                 document = json.loads(book.metadata_json)
-                document["file"]["cover_filename"] = cover.filename
+                document.setdefault("file", {})["cover_filename"] = cover.filename
                 document["cover"] = cover.metadata()
-                metadata_text = json.dumps(document, ensure_ascii=False, indent=2)
-                metadata_tmp = book_dir / f".metadata-{uuid.uuid4().hex}.tmp"
-                metadata_tmp.write_text(metadata_text + "\n", encoding="utf-8")
-                os.replace(metadata_tmp, metadata_path)
                 book.cover_path = final_path.relative_to(self.settings.library_dir).as_posix()
                 book.has_cover = True
                 book.cover_source = cover.source
                 book.cover_provider = cover.provider
-                book.metadata_json = metadata_text
-                session.commit()
+                persist_metadata(session, book, document, self.settings)
             except Exception:
                 session.rollback()
-                metadata_path.write_bytes(old_metadata)
                 if old_path and old_cover is not None:
                     old_path.write_bytes(old_cover)
                 if final_path != old_path:

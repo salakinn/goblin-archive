@@ -1,4 +1,4 @@
-import type { AiSettings, Author, Book, BookPage, CoverMetadata, FilterOptions, ImportJob, IsbnCandidate, IsbnSearchResult, TranslationJob, UpdateStatus } from './types'
+import type { AiSettings, AIUsageSummary, Author, Book, BookMetadataUpdate, BookPage, CoverMetadata, FilterOptions, ImportJob, ImportPreview, IsbnCandidate, IsbnSearchResult, TranslationGlossary, TranslationJob, TranslationSegments, UpdateStatus } from './types'
 
 let csrfToken = ''
 export function setCsrfToken(token: string) { csrfToken = token }
@@ -31,6 +31,9 @@ export async function getBooks(params: URLSearchParams, signal?: AbortSignal): P
 export async function getBook(id: string): Promise<Book> {
   return json<Book>(await apiFetch(`/api/books/${id}`))
 }
+export async function updateBookMetadata(id: string, values: BookMetadataUpdate): Promise<Book> {
+  return json<Book>(await apiFetch(`/api/books/${id}/metadata`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(values) }))
+}
 
 export async function getAiSettings(): Promise<AiSettings> {
   return json(await apiFetch('/api/settings/ai'))
@@ -43,6 +46,8 @@ export async function saveAiSettings(settings: Partial<AiSettings> & { api_key?:
 export async function testAiSettings(): Promise<{ ok: boolean; model: string }> {
   return json(await apiFetch('/api/settings/ai/test', { method: 'POST' }))
 }
+export async function getAiUsage(): Promise<AIUsageSummary> { return json(await apiFetch('/api/ai/usage')) }
+export async function listGlossaries(): Promise<TranslationGlossary[]> { return (await json<{ items: TranslationGlossary[] }>(await apiFetch('/api/glossaries'))).items }
 
 export async function getUpdateStatus(): Promise<UpdateStatus> {
   return json(await apiFetch('/api/update', { cache: 'no-store' }))
@@ -79,12 +84,15 @@ export async function listTranslations(bookId: string): Promise<TranslationJob[]
   return (await json<{ items: TranslationJob[] }>(await apiFetch(`/api/books/${bookId}/translations`))).items
 }
 
-export async function createTranslation(bookId: string, target_language: string, profile: string, budget_usd: number | null): Promise<TranslationJob> {
-  return json(await apiFetch(`/api/books/${bookId}/translations`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ target_language, profile, budget_usd }) }))
+export async function createTranslation(bookId: string, target_language: string, profile: string, budget_usd: number | null, glossary_id?: number | null): Promise<TranslationJob> {
+  return json(await apiFetch(`/api/books/${bookId}/translations`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ target_language, profile, budget_usd, glossary_id }) }))
 }
 
 export async function getTranslation(id: string): Promise<TranslationJob> {
   return json(await apiFetch(`/api/translations/${id}`))
+}
+export async function getTranslationSegments(id: string, offset = 0): Promise<TranslationSegments> {
+  return json(await apiFetch(`/api/translations/${id}/segments?offset=${offset}&limit=50`))
 }
 
 export async function translationAction(id: string, action: 'start' | 'pause' | 'cancel'): Promise<TranslationJob> {
@@ -97,6 +105,9 @@ export async function saveTranslationGlossary(id: string, glossary: { source: st
 
 export async function saveTranslationBudget(id: string, budget_usd: number | null): Promise<TranslationJob> {
   return json(await apiFetch(`/api/translations/${id}/budget`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ budget_usd }) }))
+}
+export async function repairTranslationSegment(id: string, segmentId: string): Promise<TranslationJob> {
+  return json(await apiFetch(`/api/translations/${id}/segments/${encodeURIComponent(segmentId)}/repair`, { method: 'POST' }))
 }
 
 export async function getAuthors(): Promise<Author[]> {
@@ -139,6 +150,21 @@ export async function uploadBooks(files: File[]): Promise<ImportJob> {
   const form = new FormData()
   for (const file of files) form.append('files', file, file.name)
   return json<ImportJob>(await apiFetch('/api/import', { method: 'POST', body: form }))
+}
+
+export async function uploadPreviews(files: File[]): Promise<ImportPreview[]> {
+  const form = new FormData()
+  for (const file of files) form.append('files', file, file.name)
+  return (await json<{ items: ImportPreview[] }>(await apiFetch('/api/import/previews', { method: 'POST', body: form }))).items
+}
+export async function listPreviews(): Promise<ImportPreview[]> {
+  return (await json<{ items: ImportPreview[] }>(await apiFetch('/api/import/previews'))).items
+}
+export async function editPreview(id: string, revision: number, changes: Record<string, unknown>, coverChoice?: string): Promise<ImportPreview> {
+  return json(await apiFetch(`/api/import/previews/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ revision, changes, cover_choice: coverChoice }) }))
+}
+export async function previewAction(id: string, action: 'confirm' | 'discard' | 'enrich' | 'reanalyze' | 'cover/search' | 'skip' | 'resume'): Promise<ImportPreview> {
+  return json(await apiFetch(`/api/import/previews/${id}/${action}`, { method: 'POST' }))
 }
 
 export async function getImport(id: string): Promise<ImportJob> {

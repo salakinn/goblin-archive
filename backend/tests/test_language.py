@@ -15,6 +15,7 @@ from backend.language import (LanguageOutput, SampleLanguage, TextExtractionErro
                               TextSample, _palmdoc, agreed_language, detect_language,
                               extract_language_samples)
 from backend.repository import get_book, list_books
+from backend.usage import records
 from backend.tests.conftest import add_book
 
 
@@ -61,6 +62,18 @@ def test_epub_samples_follow_main_text_and_exclude_metadata(tmp_path):
     assert all("traveller" in s.text and "Wanderer" not in s.text for s in samples)
     assert all("chapter" in s.location and len(s.text) <= 1600 for s in samples)
     assert "chapter0" in samples[0].location and "chapter2" in samples[-1].location
+
+
+def test_language_detection_obeys_global_cost_limit(language_api):
+    client, provider, _path, factory = language_api
+    main.settings.ai_language_input_usd_per_million = 100
+    main.settings.ai_language_output_usd_per_million = 100
+    main.settings.ai_daily_limit_usd = 0.001
+    assert client.post('/api/books/bk_test0001/ai/language').status_code == 409
+    provider.generate.assert_not_called()
+    main.settings.ai_daily_limit_usd = 1
+    assert client.post('/api/books/bk_test0001/ai/language').status_code == 200
+    assert records(factory)[0]['cost_usd'] == 0.013
 
 
 def test_short_epub_has_insufficient_samples(tmp_path):

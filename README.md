@@ -8,8 +8,8 @@ Der MVP arbeitet ausschließlich mit **COPY-Semantik**: Die Originaldatei auf de
 
 ## Architektur
 
-[KI-Buchübersetzung für EPUB](docs/features/book-translation.md) mit Kapitelvorschau,
-Glossar, drei Qualitätsprofilen und fortsetzbaren Aufträgen.
+Die EPUB-Übersetzung bietet Kapitelvorschau, Glossar, drei Qualitätsprofile
+und fortsetzbare Aufträge.
 
 - `backend/`: FastAPI, SQLAlchemy, SQLite/FTS5, Import-Pipeline und Provider
 - `frontend/`: React, TypeScript und Vite ohne UI-Framework

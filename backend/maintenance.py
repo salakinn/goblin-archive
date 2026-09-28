@@ -9,7 +9,7 @@ from sqlalchemy import delete, func, select, text
 from sqlalchemy.orm import Session
 
 from backend.config import Settings
-from backend.models import Author, Book, Genre, IsbnCandidateRecord, IsbnLookupCache, Tag, TranslationJob
+from backend.models import Author, Book, Genre, ImportPreview, IsbnCandidateRecord, IsbnLookupCache, Tag, TranslationJob
 
 
 def _move_aside(directory: Path, data_dir: Path) -> Path:
@@ -33,6 +33,7 @@ def clear_archive(settings: Settings, session_factory: Callable[[], Session]) ->
             session.execute(text("DELETE FROM books_fts"))
             session.execute(delete(IsbnCandidateRecord))
             session.execute(delete(TranslationJob))
+            session.execute(delete(ImportPreview))
             session.execute(delete(Book))
             session.execute(delete(Author))
             session.execute(delete(Genre))

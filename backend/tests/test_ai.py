@@ -12,6 +12,7 @@ from backend.ai import AIError, AIResult, GeneratedTag, OpenAIProvider, TaggingO
 from backend.config import Settings
 from backend.database import get_db
 from backend.repository import get_book, search_books
+from backend.usage import records
 from backend.tests.conftest import add_book
 
 
@@ -68,6 +69,21 @@ def test_direct_tagging_persists_and_caches(tagging_api):
     assert json.loads(path.read_text())["tag_sources"] == {}
     assert client.post(URL).json()["added"] == 0
     assert provider.generate.call_count == 1
+
+
+def test_tagging_uses_same_database_and_global_cost_limit(tagging_api):
+    client, provider, _path, factory = tagging_api
+    main.settings.ai_tagging_input_usd_per_million = 100
+    main.settings.ai_tagging_output_usd_per_million = 100
+    main.settings.ai_daily_limit_usd = 0.001
+    assert client.post(URL).status_code == 409
+    provider.generate.assert_not_called()
+    main.settings.ai_daily_limit_usd = 1
+    assert client.post(URL).status_code == 200
+    usage = records(factory)
+    assert len(usage) == 1
+    assert usage[0]['cost_usd'] == 0.013
+    assert usage[0]['book_id'] == 'bk_test0001'
 
 
 def test_failure_leaves_metadata_unchanged_and_can_retry(tagging_api):

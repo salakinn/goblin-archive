@@ -4,9 +4,7 @@ import asyncio
 import hashlib
 import json
 import logging
-import os
 import time
-import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from difflib import SequenceMatcher
@@ -19,6 +17,7 @@ from sqlalchemy.orm import Session
 
 from backend.config import Settings
 from backend.metadata import normalize_language, normalize_text, year_from
+from backend.metadata_store import persist_metadata
 from backend.models import Book, IsbnCandidateRecord, IsbnLookupCache
 
 logger = logging.getLogger(__name__)
@@ -608,23 +607,8 @@ class IsbnResolver:
         work_match: dict[str, Any],
     ) -> None:
         document["work_match"] = work_match
-        metadata_text = json.dumps(document, ensure_ascii=False, indent=2)
-        book_dir = (self.settings.library_dir / book.library_path).parent
-        metadata_path = book_dir / "metadata.json"
-        old_metadata = metadata_path.read_bytes()
-        temporary = book_dir / f".metadata-{uuid.uuid4().hex}.tmp"
-        temporary.write_text(metadata_text + "\n", encoding="utf-8")
-        try:
-            os.replace(temporary, metadata_path)
-            book.work_match_json = json.dumps(work_match, ensure_ascii=False)
-            book.metadata_json = metadata_text
-            session.commit()
-        except Exception:
-            session.rollback()
-            metadata_path.write_bytes(old_metadata)
-            raise
-        finally:
-            temporary.unlink(missing_ok=True)
+        book.work_match_json = json.dumps(work_match, ensure_ascii=False)
+        persist_metadata(session, book, document, self.settings)
 
     def apply(self, book_id: str, isbn: str) -> dict[str, Any]:
         """Explicitly assign a candidate as the exact edition ISBN."""

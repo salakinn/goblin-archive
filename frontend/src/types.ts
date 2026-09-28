@@ -1,5 +1,28 @@
 export type SourceValue<T = unknown> = { value: T | null; source: string | null }
 
+export type ImportPreview = {
+  id: string
+  group_id: string
+  filename: string
+  created_at: string
+  expires_at: string
+  status: 'queued' | 'analyzing' | 'ready' | 'cover_search' | 'archiving' | 'archived' | 'failed' | 'skipped' | 'discarded'
+  metadata: Record<string, SourceValue> | null
+  cover: CoverMetadata | null
+  embedded_cover: CoverMetadata | null
+  external_cover: CoverMetadata | null
+  cover_selected: boolean
+  providers: string[]
+  format: string | null
+  sha256: string | null
+  duplicate_book_id: string | null
+  duplicate_preview_id: string | null
+  book_id: string | null
+  error: string | null
+  revision: number
+  edited: boolean
+}
+
 export type AiSettings = {
   provider: 'openai'
   key_configured: boolean
@@ -14,7 +37,17 @@ export type AiSettings = {
   ai_translation_qa_output_usd_per_million: number | null
   ai_translation_editor_input_usd_per_million: number | null
   ai_translation_editor_output_usd_per_million: number | null
+  ai_tagging_input_usd_per_million: number
+  ai_tagging_output_usd_per_million: number
+  ai_language_input_usd_per_million: number
+  ai_language_output_usd_per_million: number
+  ai_daily_limit_usd: number
+  ai_monthly_limit_usd: number
+  ai_warning_percent: number
 }
+
+export type AIUsageSummary = { day_usd: number; month_usd: number; reserved_usd: number; warning: { day: boolean; month: boolean }; by_feature: Record<string, { requests: number; input_tokens: number; output_tokens: number; cost_usd: number; unpriced_requests: number }> }
+export type TranslationGlossary = { id: number; name: string; source_language: string; target_language: string; version: number; glossary: { source: string; target: string }[]; style: string }
 
 export type UpdateStatus = {
   enabled: boolean
@@ -109,6 +142,8 @@ export type Book = {
   translation?: { source_book_id: string; target_language: string; job_id: string } | null
 }
 
+export type BookMetadataUpdate = Pick<Book, 'title' | 'publication_year' | 'language' | 'publisher' | 'isbn' | 'reference_isbn' | 'series' | 'description'> & { authors: string[] }
+
 export type BookPage = { items: Book[]; total: number; limit: number; offset: number }
 
 export type TranslationJob = {
@@ -127,6 +162,8 @@ export type TranslationJob = {
   error: string | null
   output_book_id: string | null
 }
+export type TranslationSegment = { id: string; source: string; file: string; translated: string | null; draft: string | null }
+export type TranslationSegments = { total: number; offset: number; items: TranslationSegment[] }
 
 export type Tag = {
   id: number

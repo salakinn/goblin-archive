@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getAiSettings, saveAiSettings, testAiSettings } from './api'
+import { getAiSettings, getAiUsage, saveAiSettings, testAiSettings } from './api'
 import type { AiSettings } from './types'
 
 const models = [
@@ -13,6 +13,10 @@ const models = [
 const modelOptions = ['gpt-5.4-nano', 'gpt-5.4-mini', 'gpt-5.4']
 
 const prices = [
+  ['ai_tagging_input_usd_per_million', 'Tags: Eingabe'],
+  ['ai_tagging_output_usd_per_million', 'Tags: Ausgabe'],
+  ['ai_language_input_usd_per_million', 'Spracherkennung: Eingabe'],
+  ['ai_language_output_usd_per_million', 'Spracherkennung: Ausgabe'],
   ['ai_translation_input_usd_per_million', 'Übersetzung: Eingabe'],
   ['ai_translation_output_usd_per_million', 'Übersetzung: Ausgabe'],
   ['ai_translation_qa_input_usd_per_million', 'Prüfung: Eingabe'],
@@ -27,12 +31,14 @@ export function AiSettingsPanel() {
   const [busy, setBusy] = useState(false)
   const [testing, setTesting] = useState(false)
   const [notice, setNotice] = useState('')
+  const [usage, setUsage] = useState<Awaited<ReturnType<typeof getAiUsage>> | null>(null)
   useEffect(() => {
     let active = true
     getAiSettings().then(settings => { if (active) setForm(settings) })
       .catch(err => { if (active) setNotice(err instanceof Error ? err.message : 'KI-Einstellungen konnten nicht geladen werden.') })
     return () => { active = false }
   }, [])
+  useEffect(() => { getAiUsage().then(setUsage).catch(() => undefined) }, [])
 
   async function save(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -81,11 +87,24 @@ export function AiSettingsPanel() {
         <input required maxLength={120} list="ai-model-options" value={form[name]} onChange={event => setForm(current => current && { ...current, [name]: event.target.value })} />
       </label>)}</div>
       <details><summary>Tokenpreise für Schätzung und Budget</summary>
-        <p>USD pro 1 Million Tokens. Ohne Preise ist keine Budgetgrenze möglich. Leere Felder für Prüfung und Lektorat verwenden die Übersetzungspreise.</p>
+        <p>USD pro 1 Million Tokens. Für Kostenlimits brauchen alle verwendeten Modelle Preise. Leere Felder für Prüfung und Lektorat verwenden die Übersetzungspreise.</p>
         <div className="ai-prices">{prices.map(([name, label], index) => <label key={name}>{label}
-          <input type="number" min="0" step="any" required={index < 2} value={form[name] ?? ''}
-            onChange={event => setForm(current => current && { ...current, [name]: event.target.value === '' ? (index < 2 ? 0 : null) : Number(event.target.value) })} />
+          <input type="number" min="0" step="any" required={index < 6} value={form[name] ?? ''}
+            onChange={event => setForm(current => current && { ...current, [name]: event.target.value === '' ? (index < 6 ? 0 : null) : Number(event.target.value) })} />
         </label>)}</div>
+      </details>
+      <details><summary>Kostenlimits und Verbrauch</summary>
+        <p>0 deaktiviert das jeweilige Limit. Erfasste Kosten: heute {usage?.day_usd.toFixed(4) ?? '…'} USD, diesen Monat {usage?.month_usd.toFixed(4) ?? '…'} USD. Für laufende Anfragen reserviert: {usage?.reserved_usd.toFixed(4) ?? '…'} USD.</p>
+        {usage && (usage.warning.day || usage.warning.month) && <p role="alert">Mindestens ein KI-Limit ist zu {form.ai_warning_percent}% erreicht.</p>}
+        {usage && <ul>{Object.entries(usage.by_feature).map(([feature, item]) => <li key={feature}>{feature}: ${item.cost_usd.toFixed(4)} · {item.requests} Anfragen{item.unpriced_requests ? ` · ${item.unpriced_requests} mit unbekannten Kosten` : ''}</li>)}</ul>}
+        <div className="ai-prices"><label>Tageslimit (USD)
+          <input type="number" min="0" step="any" value={form.ai_daily_limit_usd} onChange={event => setForm(current => current && { ...current, ai_daily_limit_usd: Number(event.target.value) })} />
+        </label><label>Monatslimit (USD)
+          <input type="number" min="0" step="any" value={form.ai_monthly_limit_usd} onChange={event => setForm(current => current && { ...current, ai_monthly_limit_usd: Number(event.target.value) })} />
+        </label></div>
+        <label>Warnschwelle (% des Limits)
+          <input type="number" min="1" max="100" step="1" value={form.ai_warning_percent} onChange={event => setForm(current => current && { ...current, ai_warning_percent: Number(event.target.value) })} />
+        </label>
       </details>
       <div className="ai-settings-actions">
         <button type="submit" disabled={busy || testing}>{busy ? 'Speichert…' : 'Speichern'}</button>

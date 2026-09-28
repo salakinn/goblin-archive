@@ -26,7 +26,15 @@ class Settings(BaseSettings):
     ai_translation_qa_output_usd_per_million: float | None = Field(default=None, ge=0)
     ai_translation_editor_input_usd_per_million: float | None = Field(default=None, ge=0)
     ai_translation_editor_output_usd_per_million: float | None = Field(default=None, ge=0)
+    ai_tagging_input_usd_per_million: float = Field(default=0, ge=0)
+    ai_tagging_output_usd_per_million: float = Field(default=0, ge=0)
+    ai_language_input_usd_per_million: float = Field(default=0, ge=0)
+    ai_language_output_usd_per_million: float = Field(default=0, ge=0)
     ai_translation_timeout: float = Field(default=180.0, gt=0, le=600)
+    ai_daily_limit_usd: float = Field(default=0, ge=0)
+    ai_monthly_limit_usd: float = Field(default=0, ge=0)
+    ai_warning_percent: int = Field(default=80, ge=1, le=100)
+    epubcheck_command: str = ""
     ai_timeout: float = Field(default=30.0, gt=0, le=120)
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     truenas_ws_url: str = ""

@@ -121,6 +121,24 @@ def init_db(db_engine=engine) -> None:
             connection.execute(text(
                 "ALTER TABLE isbn_candidates ADD COLUMN series_json TEXT NOT NULL DEFAULT '[]'"
             ))
+        usage_columns = {row[1] for row in connection.execute(text("PRAGMA table_info(ai_usage)"))}
+        if "reserved_usd" not in usage_columns:
+            connection.execute(text("ALTER TABLE ai_usage ADD COLUMN reserved_usd FLOAT NOT NULL DEFAULT 0"))
+        if "input_rate" not in usage_columns:
+            connection.execute(text("ALTER TABLE ai_usage ADD COLUMN input_rate FLOAT"))
+        if "output_rate" not in usage_columns:
+            connection.execute(text("ALTER TABLE ai_usage ADD COLUMN output_rate FLOAT"))
+        preview_columns = {row[1] for row in connection.execute(text("PRAGMA table_info(import_previews)"))}
+        if "edited" not in preview_columns:
+            connection.execute(text("ALTER TABLE import_previews ADD COLUMN edited BOOLEAN NOT NULL DEFAULT 0"))
+        for column in ("embedded_cover_path", "embedded_cover_json", "external_cover_path", "external_cover_json"):
+            if column not in preview_columns:
+                connection.execute(text(f"ALTER TABLE import_previews ADD COLUMN {column} TEXT"))
+        if "embedded_cover_path" not in preview_columns:
+            connection.execute(text("UPDATE import_previews SET embedded_cover_path = cover_path, embedded_cover_json = cover_json WHERE cover_json LIKE '%\"embedded\"%'"))
+        translation_columns = {row[1] for row in connection.execute(text("PRAGMA table_info(translation_jobs)"))}
+        if "revision" not in translation_columns:
+            connection.execute(text("ALTER TABLE translation_jobs ADD COLUMN revision INTEGER NOT NULL DEFAULT 0"))
         connection.execute(text("""
             CREATE VIRTUAL TABLE IF NOT EXISTS books_fts USING fts5(
                 book_id UNINDEXED, title, authors, publisher, series, genres, isbn,

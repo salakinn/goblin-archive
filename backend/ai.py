@@ -22,6 +22,7 @@ class AIResult:
     value: BaseModel
     input_tokens: int
     output_tokens: int
+    usage_known: bool = True
 
 
 class AIProvider(Protocol):
@@ -49,7 +50,7 @@ class OpenAIProvider:
                 raise AIError("Die KI hat kein vollständiges Ergebnis geliefert. Bitte erneut versuchen.")
             usage = response.usage
             return AIResult(response.output_parsed, usage.input_tokens if usage else 0,
-                            usage.output_tokens if usage else 0)
+                            usage.output_tokens if usage else 0, usage is not None)
         except APITimeoutError as exc:
             raise AIError("Die KI-Anfrage hat zu lange gedauert. Bitte erneut versuchen.") from exc
         except APIConnectionError as exc:

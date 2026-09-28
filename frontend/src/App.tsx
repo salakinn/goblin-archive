@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { addTag, applyIsbn, applyIsbnReference, clearArchive, detectLanguage, generateTags, getBook, getBooks, getFilterOptions, getImport, getIsbnCandidates, refreshCover, removeTag, searchIsbn, uploadBooks } from './api'
+import { addTag, applyIsbn, applyIsbnReference, clearArchive, detectLanguage, generateTags, getBook, getBooks, getFilterOptions, getImport, getIsbnCandidates, refreshCover, removeTag, searchIsbn, updateBookMetadata, uploadBooks, uploadPreviews } from './api'
 import { compatibleBookFiles, filesFromDrop } from './drop'
 import { TranslationPanel } from './TranslationPanel'
 import { AiSettingsPanel } from './AiSettingsPanel'
 import { UpdatePrompt } from './UpdatePrompt'
+import { PreviewPanel } from './PreviewPanel'
 import type { Book, FilterOption, FilterOptions, ImportJob, ImportItem, IsbnCandidate } from './types'
 
 const eventLabels: Record<string, string> = {
@@ -91,9 +92,26 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
   const [tagNotice, setTagNotice] = useState('')
   const [languageDetecting, setLanguageDetecting] = useState(false)
   const [languageNotice, setLanguageNotice] = useState('')
+  const [editingMetadata, setEditingMetadata] = useState(false)
+  const [metadataSaving, setMetadataSaving] = useState(false)
+  const [metadataNotice, setMetadataNotice] = useState('')
+  const [metadataForm, setMetadataForm] = useState(() => ({ title: book.title, authors: book.authors.join(', '), publication_year: book.publication_year?.toString() || '', language: book.language || '', publisher: book.publisher || '', isbn: book.isbn || '', reference_isbn: book.reference_isbn || '', series: book.series || '', description: book.description || '' }))
   const coverSource = book.cover_source === 'embedded' ? 'Embedded'
     : book.cover_provider === 'openlibrary' ? 'Open Library'
     : book.cover_provider === 'googlebooks' ? 'Google Books' : '—'
+  function beginMetadataEdit() {
+    setMetadataForm({ title: book.title, authors: book.authors.join(', '), publication_year: book.publication_year?.toString() || '', language: book.language || '', publisher: book.publisher || '', isbn: book.isbn || '', reference_isbn: book.reference_isbn || '', series: book.series || '', description: book.description || '' })
+    setMetadataNotice(''); setEditingMetadata(true)
+  }
+  async function saveMetadata(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    try {
+      setMetadataSaving(true); setMetadataNotice('')
+      const updated = await updateBookMetadata(book.id, { ...metadataForm, authors: metadataForm.authors.split(',').map(value => value.trim()).filter(Boolean), publication_year: metadataForm.publication_year ? Number(metadataForm.publication_year) : null, language: metadataForm.language || null, publisher: metadataForm.publisher || null, isbn: metadataForm.isbn || null, reference_isbn: metadataForm.reference_isbn || null, series: metadataForm.series || null, description: metadataForm.description || null })
+      refreshed(updated); setEditingMetadata(false); setMetadataNotice('Metadaten gespeichert.')
+    } catch (err) { setMetadataNotice(err instanceof Error ? err.message : 'Metadaten konnten nicht gespeichert werden.') }
+    finally { setMetadataSaving(false) }
+  }
   async function searchCover() {
     try {
       setRefreshing(true)
@@ -221,7 +239,7 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
     ['Sprache', book.language_label || '—', book.metadata?.language?.source],
     ['Verlag', book.publisher || '—', book.metadata?.publisher?.source],
     ['Ausgaben-ISBN', book.isbn || '—', book.metadata?.isbn?.source],
-    ['Referenz-ISBN', book.reference_isbn || '—', book.work_match ? `${book.work_match.confidence.toFixed(0)} % Werkmatch` : null],
+    ['Referenz-ISBN', book.reference_isbn || '—', book.metadata?.reference_isbn?.source || (book.work_match ? `${book.work_match.confidence.toFixed(0)} % Werkmatch` : null)],
     ['Reihe', book.series || '—', book.metadata?.series?.source],
   ]
   return <div className="detail-backdrop" onMouseDown={event => event.target === event.currentTarget && close()}>
@@ -246,6 +264,15 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
         {tagNotice && <small className="tag-notice" role="status">{tagNotice}</small>}
       </section>
       <h3 className="section-title">Metadaten</h3>
+      {!editingMetadata ? <button type="button" className="settings-secondary" onClick={beginMetadataEdit}>Metadaten bearbeiten</button> : <form className="metadata-editor" onSubmit={saveMetadata}>
+        <label>Titel<input required maxLength={500} value={metadataForm.title} onChange={event => setMetadataForm(current => ({ ...current, title: event.target.value }))} /></label>
+        <label>Autoren (mit Komma trennen)<input maxLength={3000} value={metadataForm.authors} onChange={event => setMetadataForm(current => ({ ...current, authors: event.target.value }))} /></label>
+        <div className="metadata-editor-grid"><label>Jahr<input type="number" min="0" max="9999" value={metadataForm.publication_year} onChange={event => setMetadataForm(current => ({ ...current, publication_year: event.target.value }))} /></label><label>Sprache<input maxLength={30} placeholder="de" value={metadataForm.language} onChange={event => setMetadataForm(current => ({ ...current, language: event.target.value }))} /></label><label>Verlag<input maxLength={300} value={metadataForm.publisher} onChange={event => setMetadataForm(current => ({ ...current, publisher: event.target.value }))} /></label></div>
+        <div className="metadata-editor-grid"><label>Ausgaben-ISBN<input maxLength={20} value={metadataForm.isbn} onChange={event => setMetadataForm(current => ({ ...current, isbn: event.target.value }))} /></label><label>Referenz-ISBN<input maxLength={20} value={metadataForm.reference_isbn} onChange={event => setMetadataForm(current => ({ ...current, reference_isbn: event.target.value }))} /></label><label>Reihe<input maxLength={300} value={metadataForm.series} onChange={event => setMetadataForm(current => ({ ...current, series: event.target.value }))} /></label></div>
+        <label>Beschreibung<textarea maxLength={100000} rows={5} value={metadataForm.description} onChange={event => setMetadataForm(current => ({ ...current, description: event.target.value }))} /></label>
+        <button disabled={metadataSaving}>{metadataSaving ? 'Speichert…' : 'Speichern'}</button>{' '}<button type="button" className="quiet" onClick={() => setEditingMetadata(false)}>Abbrechen</button>
+      </form>}
+      {metadataNotice && <p className="tag-notice" role="status">{metadataNotice}</p>}
       <dl className="metadata-list">{fields.map(([name, value, source]) => <div key={name}><dt>{name}</dt><dd>{value}</dd><small>{source || '—'}</small></div>)}</dl>
       <section className="language-detection">
         <button type="button" disabled={languageDetecting || aiTagging || isbnSearching || Boolean(isbnApplying)} onClick={findLanguage}>{languageDetecting ? 'Sprache wird geprüft…' : 'Sprache per KI ermitteln'}</button>
@@ -408,20 +435,25 @@ export default function App({ onLogout }: { onLogout: () => void }) {
     return () => clearInterval(timer)
   }, [jobs, loadBooks, loadFilterOptions, refreshAfterImport])
 
-  async function importFiles(files: File[]) {
+  async function importFiles(files: File[], direct = false) {
     if (!files.length) { setError('Keine unterstützten E-Books gefunden.'); return }
     try {
       setError('')
-      const job = await uploadBooks(files)
-      setJobs(current => [...current, job])
-      setCollapsed(false)
+      if (direct) {
+        const job = await uploadBooks(files)
+        setJobs(current => [...current, job])
+        setCollapsed(false)
+      } else {
+        await uploadPreviews(files)
+        window.dispatchEvent(new Event('goblin-previews-changed'))
+      }
     } catch (err) { setError(err instanceof Error ? err.message : 'Upload fehlgeschlagen') }
   }
 
-  async function importSelection(input: HTMLInputElement) {
+  async function importSelection(input: HTMLInputElement, direct = false) {
     const files = compatibleBookFiles(input.files || [])
     input.value = ''
-    await importFiles(files)
+    await importFiles(files, direct)
   }
 
   async function openBook(id: string) {
@@ -493,9 +525,10 @@ export default function App({ onLogout }: { onLogout: () => void }) {
         <label className="search library-search"><span>⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Titel, Autor, ISBN durchsuchen…" /><kbd>⌘ K</kbd></label>
         <div className="import-actions">
           <label className="add-button"><b aria-hidden="true">＋</b><span>Bücher hinzufügen</span><input type="file" multiple accept=".epub,.pdf,.mobi,.azw3" onChange={event => importSelection(event.currentTarget)} /></label>
-          <label className="folder-button"><b aria-hidden="true">▣</b><span>Ordner importieren</span><input ref={input => { if (input) { input.webkitdirectory = true; input.setAttribute('directory', '') } }} type="file" multiple accept=".epub,.pdf,.mobi,.azw3" onChange={event => importSelection(event.currentTarget)} /></label>
+          <label className="folder-button"><b aria-hidden="true">▣</b><span>Ordner direkt importieren</span><input ref={input => { if (input) { input.webkitdirectory = true; input.setAttribute('directory', '') } }} type="file" multiple accept=".epub,.pdf,.mobi,.azw3" onChange={event => importSelection(event.currentTarget, true)} /></label>
         </div>
       </section>
+      <PreviewPanel refreshArchive={refreshAfterImport} />
       <section className="filters">
         <span className="filter-label">FILTER</span>
         <FilterSelect label="Tag" allLabel="Alle Tags" value={filters.tag} options={filterOptions.tags} showCount={false} onChange={tag => setFilters({...filters, tag})} />
