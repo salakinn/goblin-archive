@@ -72,6 +72,35 @@ def test_inline_code_is_protected():
     assert node.find('code').text == 'rm -rf /'
 
 
+def test_translation_rejects_provider_change_on_resume(db_context):
+    settings, factory = db_context
+    with factory() as db:
+        book = add_book(db)
+        book.language = 'en'
+        path = settings.library_dir / book.library_path
+        path.parent.mkdir(parents=True)
+        make_epub(path)
+        book.file_size = path.stat().st_size
+        book.sha256 = sha256_file(path)
+        db.commit()
+    manager = TranslationManager(settings, factory)
+    job = manager.create(book.id, 'de', 'schnell', None)
+    settings.ai_provider = 'custom'
+    with pytest.raises(TranslationError, match='Anbindung'):
+        manager.start(job['id'])
+
+
+def test_distinct_translation_models_need_their_own_prices(db_context):
+    settings, factory = db_context
+    settings.ai_translation_input_usd_per_million = 2
+    settings.ai_translation_output_usd_per_million = 8
+    settings.ai_translation_qa_model = 'different-qa-model'
+    manager = TranslationManager(settings, factory)
+    assert manager._rates()[:2] == [[2, 8], [0, 0]]
+    settings.ai_translation_qa_model = settings.ai_translation_model
+    assert manager._rates()[1] == [2, 8]
+
+
 @pytest.mark.parametrize('profile', ['schnell', 'buch', 'literarisch'])
 def test_preview_resume_and_archive_epub(db_context, monkeypatch, profile):
     settings, factory = db_context

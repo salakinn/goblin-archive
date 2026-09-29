@@ -66,10 +66,61 @@ class OpenAIProvider:
             raise AIError("Die KI hat ein ungültiges Ergebnis geliefert.") from exc
 
 
+class CompatibleProvider:
+    """OpenAI-compatible Chat Completions endpoint with local schema validation."""
+
+    def __init__(self, settings: Settings):
+        self.settings = settings
+
+    def generate(self, *, model, instructions, context, schema, max_output_tokens=1200, timeout=None):
+        key = self.settings.ai_custom_api_key.get_secret_value()
+        if not self.settings.ai_base_url:
+            raise AIError("Bitte zuerst die Base URL des KI-Anbieters speichern.")
+        if not key:
+            raise AIError("Der eigene KI-Anbieter ist noch nicht eingerichtet. Bitte den API-Key speichern.")
+        try:
+            with OpenAI(api_key=key, base_url=self.settings.ai_base_url,
+                        timeout=timeout or self.settings.ai_timeout, max_retries=1) as client:
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[
+                        {"role": "system", "content": instructions +
+                         " Antworte ausschließlich mit einem JSON-Objekt gemäß diesem Schema: " +
+                         json.dumps(schema.model_json_schema(), ensure_ascii=False)},
+                        {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
+                    ],
+                    max_tokens=max_output_tokens,
+                )
+            if not response.choices or response.choices[0].finish_reason != "stop":
+                raise AIError("Die KI hat kein vollständiges Ergebnis geliefert. Bitte erneut versuchen.")
+            content = response.choices[0].message.content
+            if not content:
+                raise AIError("Die KI hat kein vollständiges Ergebnis geliefert. Bitte erneut versuchen.")
+            value = schema.model_validate_json(content)
+            usage = response.usage
+            return AIResult(value, usage.prompt_tokens if usage else 0,
+                            usage.completion_tokens if usage else 0, usage is not None)
+        except APITimeoutError as exc:
+            raise AIError("Die KI-Anfrage hat zu lange gedauert. Bitte erneut versuchen.") from exc
+        except APIConnectionError as exc:
+            raise AIError("Der KI-Anbieter ist gerade nicht erreichbar.") from exc
+        except APIStatusError as exc:
+            message = {
+                401: "Der API-Key des KI-Anbieters ist ungültig.",
+                403: "Kein Zugriff auf das konfigurierte KI-Modell.",
+                429: "Limit des KI-Anbieters erreicht. Bitte später erneut versuchen.",
+            }.get(exc.status_code, "Der KI-Anbieter konnte die Anfrage nicht verarbeiten. Bitte URL und Modell prüfen.")
+            raise AIError(message) from exc
+        except (ValidationError, ValueError) as exc:
+            raise AIError("Die KI hat ein ungültiges Ergebnis geliefert.") from exc
+
+
 def make_ai_provider(settings: Settings) -> AIProvider:
-    if settings.ai_provider != "openai":
-        raise AIError("Der konfigurierte KI-Anbieter wird noch nicht unterstützt.")
-    return OpenAIProvider(settings)
+    if settings.ai_provider == "openai":
+        return OpenAIProvider(settings)
+    if settings.ai_provider == "custom":
+        return CompatibleProvider(settings)
+    raise AIError("Der konfigurierte KI-Anbieter wird noch nicht unterstützt.")
 
 
 class GeneratedTag(BaseModel):
@@ -106,7 +157,8 @@ def tagging_context(book) -> dict:
 def tagging_fingerprint(context: dict, settings: Settings) -> str:
     # Existing tags are deliberately excluded: accepting/removing a generated tag
     # should not trigger another paid request for the same book content.
-    payload = [context, settings.ai_provider, settings.ai_tagging_model, TAGGING_VERSION]
+    payload = [context, settings.ai_provider, settings.ai_base_url,
+               settings.ai_tagging_model, TAGGING_VERSION]
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
 
 

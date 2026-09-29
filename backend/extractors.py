@@ -15,6 +15,7 @@ from ebooklib import ITEM_COVER, ITEM_IMAGE, epub
 from pypdf import PdfReader
 
 from backend.metadata import BookMetadata, FieldValue, normalize_isbn, year_from
+from backend.epub_safety import UnsafeEpubError, validate_epub_zip
 
 
 class InvalidBookError(ValueError):
@@ -177,7 +178,11 @@ def extract_epub(path: Path) -> Extracted:
     try:
         if not zipfile.is_zipfile(path):
             raise InvalidBookError("Datei ist kein gültiges EPUB-Archiv")
+        with zipfile.ZipFile(path) as archive:
+            validate_epub_zip(archive)
         book = epub.read_epub(str(path), options={"ignore_ncx": True})
+    except UnsafeEpubError as exc:
+        raise InvalidBookError(str(exc)) from exc
     except InvalidBookError:
         raise
     except Exception as exc:

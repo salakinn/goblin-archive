@@ -7,6 +7,7 @@ import zlib
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
+from urllib.parse import urljoin, urlsplit
 
 import httpx
 
@@ -139,6 +140,7 @@ def embedded_cover(data: bytes | None) -> CoverAsset | None:
 
 class CoverProvider:
     name: str
+    allowed_image_hosts: frozenset[str] = frozenset()
 
     def __init__(self, client: httpx.AsyncClient):
         self.client = client
@@ -147,26 +149,45 @@ class CoverProvider:
         raise NotImplementedError
 
     async def _download(self, url: str, isbn: str) -> CoverAsset | None:
-        async with self.client.stream("GET", url) as response:
-            if response.status_code == 404:
+        for _ in range(4):
+            try:
+                parsed = urlsplit(url)
+                allowed = (parsed.scheme == "https" and parsed.hostname in self.allowed_image_hosts
+                           and not parsed.username and not parsed.password and parsed.port in (None, 443))
+            except ValueError:
+                allowed = False
+            if not allowed:
                 return None
-            response.raise_for_status()
-            content_length = response.headers.get("content-length")
-            if content_length and int(content_length) > MAX_COVER_BYTES:
-                return None
-            # Provider data first lands in an isolated temporary file. Only a
-            # completely downloaded and validated image is returned for atomic
-            # placement inside the archive.
-            with tempfile.TemporaryFile() as temporary:
-                size = 0
-                async for chunk in response.aiter_bytes():
-                    size += len(chunk)
-                    if size > MAX_COVER_BYTES:
+            async with self.client.stream("GET", url, follow_redirects=False) as response:
+                if response.status_code in {301, 302, 303, 307, 308}:
+                    location = response.headers.get("location")
+                    if not location:
                         return None
-                    temporary.write(chunk)
-                temporary.seek(0)
-                content = temporary.read()
-            source_url = str(response.url)
+                    url = urljoin(url, location)
+                    continue
+                return await self._image_response(response, isbn)
+        return None
+
+    async def _image_response(self, response: httpx.Response, isbn: str) -> CoverAsset | None:
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        content_length = response.headers.get("content-length")
+        if content_length and int(content_length) > MAX_COVER_BYTES:
+            return None
+        # Provider data first lands in an isolated temporary file. Only a
+        # completely downloaded and validated image is returned for atomic
+        # placement inside the archive.
+        with tempfile.TemporaryFile() as temporary:
+            size = 0
+            async for chunk in response.aiter_bytes():
+                size += len(chunk)
+                if size > MAX_COVER_BYTES:
+                    return None
+                temporary.write(chunk)
+            temporary.seek(0)
+            content = temporary.read()
+        source_url = str(response.url)
         details = inspect_image(content)
         if not details:
             logger.warning("Cover provider %s returned an invalid image for ISBN %s", self.name, isbn)
@@ -181,6 +202,7 @@ class CoverProvider:
 
 class OpenLibraryCoverProvider(CoverProvider):
     name = "openlibrary"
+    allowed_image_hosts = frozenset({"covers.openlibrary.org"})
 
     async def fetch(self, isbn: str) -> CoverAsset | None:
         return await self._download(
@@ -190,6 +212,8 @@ class OpenLibraryCoverProvider(CoverProvider):
 
 class GoogleBooksCoverProvider(CoverProvider):
     name = "googlebooks"
+    allowed_image_hosts = frozenset({"books.google.com", "books.googleusercontent.com",
+                                      "lh3.googleusercontent.com"})
     image_sizes = ("extraLarge", "large", "medium", "small", "thumbnail")
 
     async def fetch(self, isbn: str) -> CoverAsset | None:
@@ -210,7 +234,10 @@ class GoogleBooksCoverProvider(CoverProvider):
             url = next((links.get(size) for size in self.image_sizes if links.get(size)), None)
             if not url:
                 continue
-            return await self._download(str(url).replace("http://", "https://", 1), isbn)
+            image_url = str(url)
+            if image_url.startswith("http://"):
+                image_url = "https://" + image_url[7:]
+            return await self._download(image_url, isbn)
         return None
 
 
@@ -244,7 +271,7 @@ class CoverService:
 def make_cover_service(timeout: float) -> CoverService:
     client = httpx.AsyncClient(
         timeout=timeout,
-        follow_redirects=True,
+        follow_redirects=False,
         headers={"User-Agent": "GoblinArchivar/0.1"},
     )
     return CoverService([OpenLibraryCoverProvider(client), GoogleBooksCoverProvider(client)])

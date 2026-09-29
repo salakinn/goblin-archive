@@ -254,7 +254,7 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
       <section className="tag-editor">
         <h3 className="section-title">Tags</h3>
         <button type="button" disabled={tagSaving || languageDetecting} onClick={setTagsWithAI}>{aiTagging ? 'KI analysiert…' : 'Tags per KI setzen'}</button>
-        <p className="tag-notice">Übermittelt Buchmetadaten an OpenAI und ergänzt passende Tags direkt.</p>
+        <p className="tag-notice">Übermittelt Buchmetadaten an den eingestellten KI-Anbieter und ergänzt passende Tags direkt.</p>
         {book.tags.length > 0 && <div className="detail-tags">{book.tags.map(tag => <span key={tag.id}><button className="tag-filter" onClick={() => filterByTag(tag.name)}>{tag.name}</button><button className="tag-remove" disabled={tagSaving} onClick={() => deleteTag(tag.id)} aria-label={`${tag.name} entfernen`}>×</button></span>)}</div>}
         <form onSubmit={event => { event.preventDefault(); saveTag() }}>
           <input list="available-tags" value={tagName} maxLength={200} onChange={event => setTagName(event.target.value)} placeholder="Tag hinzufügen…" aria-label="Tag hinzufügen" />
@@ -276,7 +276,7 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
       <dl className="metadata-list">{fields.map(([name, value, source]) => <div key={name}><dt>{name}</dt><dd>{value}</dd><small>{source || '—'}</small></div>)}</dl>
       <section className="language-detection">
         <button type="button" disabled={languageDetecting || aiTagging || isbnSearching || Boolean(isbnApplying)} onClick={findLanguage}>{languageDetecting ? 'Sprache wird geprüft…' : 'Sprache per KI ermitteln'}</button>
-        <p className="tag-notice">Prüft drei Textproben aus der Buchdatei mit OpenAI. Nur bei eindeutiger Übereinstimmung wird die Sprache gespeichert.</p>
+        <p className="tag-notice">Prüft drei Textproben aus der Buchdatei mit dem eingestellten KI-Anbieter. Nur bei eindeutiger Übereinstimmung wird die Sprache gespeichert.</p>
         {languageNotice && <p className="tag-notice" role="status">{languageNotice}</p>}
         {book.language_detection && <details><summary>Letzte Sprachprüfung: {book.language_detection.status === 'detected' ? 'eindeutig' : 'unklar'}</summary>{book.language_detection.assessments.map(sample => <p key={sample.sample_id}>Probe {sample.sample_id}: {sample.language === 'xx' ? 'unklar / mehrsprachig' : sample.language.toUpperCase()} — {sample.reason}</p>)}</details>}
       </section>
@@ -325,6 +325,8 @@ export default function App({ onLogout }: { onLogout: () => void }) {
   const [collapsed, setCollapsed] = useState(false)
   const [selected, setSelected] = useState<Book | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [aiSettingsOpen, setAiSettingsOpen] = useState(false)
+  const settingsButtonRef = useRef<HTMLButtonElement>(null)
   const [clearing, setClearing] = useState(false)
   const [notice, setNotice] = useState('')
   const [coverVersions, setCoverVersions] = useState<Record<string, number>>({})
@@ -332,6 +334,16 @@ export default function App({ onLogout }: { onLogout: () => void }) {
   const listAbort = useRef<AbortController | null>(null)
   const importRefreshTimer = useRef<number | null>(null)
   const completedRefreshes = useRef<Set<string>>(new Set())
+
+  useEffect(() => {
+    if (!aiSettingsOpen) return
+    document.querySelector<HTMLButtonElement>('.ai-dialog .ai-close')?.focus()
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setAiSettingsOpen(false) }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => { window.removeEventListener('keydown', closeOnEscape); document.body.style.overflow = previousOverflow; settingsButtonRef.current?.focus() }
+  }, [aiSettingsOpen])
 
   const params = useMemo(() => {
     const result = new URLSearchParams()
@@ -508,9 +520,9 @@ export default function App({ onLogout }: { onLogout: () => void }) {
       <a className="brand" href="/"><span className="goblin">G</span><span><strong>Goblin</strong><small>ARCHIVAR</small></span></a>
       <div className="settings-wrap">
         <UpdatePrompt />
-        <button className="settings" title="Einstellungen" aria-expanded={settingsOpen} onClick={() => setSettingsOpen(!settingsOpen)}>⚙</button>
+        <button ref={settingsButtonRef} className="settings" title="Einstellungen" aria-expanded={settingsOpen} onClick={() => setSettingsOpen(!settingsOpen)}>⚙</button>
         {settingsOpen && <div className="settings-menu">
-          <AiSettingsPanel />
+          <button type="button" className="settings-entry" onClick={() => { setSettingsOpen(false); setAiSettingsOpen(true) }}>KI-Anbindung einrichten <span>→</span></button>
           <div className="settings-danger"><button className="danger-button" onClick={onLogout}>Abmelden</button></div>
           <div className="settings-danger">
           <strong>Entwicklung</strong>
@@ -520,6 +532,11 @@ export default function App({ onLogout }: { onLogout: () => void }) {
         </div>}
       </div>
     </header>
+    {aiSettingsOpen && <div className="ai-dialog-backdrop" onMouseDown={event => {
+      if (event.target === event.currentTarget) setAiSettingsOpen(false)
+    }}><div className="ai-dialog" role="dialog" aria-modal="true" aria-labelledby="ai-settings-title">
+      <AiSettingsPanel onClose={() => setAiSettingsOpen(false)} onSaved={() => { setAiSettingsOpen(false); setNotice('KI-Einstellungen gespeichert. Sie gelten sofort für neue Anfragen.') }} />
+    </div></div>}
     <main>
       <section className="intro">
         <label className="search library-search"><span>⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Titel, Autor, ISBN durchsuchen…" /><kbd>⌘ K</kbd></label>

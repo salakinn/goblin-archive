@@ -195,7 +195,7 @@ async def test_open_library_miss_falls_back_to_google_books_largest_image():
         if request.url.host == "www.googleapis.com":
             return httpx.Response(200, json={"items": [{"volumeInfo": {
                 "industryIdentifiers": [{"type": "ISBN_13", "identifier": "9783608938145"}],
-                "imageLinks": {"thumbnail": "http://img.test/thumb", "extraLarge": "http://img.test/xl"},
+                "imageLinks": {"thumbnail": "http://books.google.com/thumb", "extraLarge": "http://books.google.com/xl"},
             }}]}, request=request)
         return httpx.Response(200, content=png(4, 6), request=request)
 
@@ -203,7 +203,34 @@ async def test_open_library_miss_falls_back_to_google_books_largest_image():
         service = CoverService([OpenLibraryCoverProvider(client), GoogleBooksCoverProvider(client)])
         cover = await service.resolve(None, "978-3-608-93814-5")
     assert cover and cover.provider == "googlebooks" and (cover.width, cover.height) == (4, 6)
-    assert any(url == "https://img.test/xl" for url in requested)
+    assert any(url == "https://books.google.com/xl" for url in requested)
+
+
+@pytest.mark.asyncio
+async def test_google_cover_rejects_untrusted_host_and_redirect():
+    requested = []
+
+    def handler(request: httpx.Request):
+        requested.append(str(request.url))
+        if request.url.host == "www.googleapis.com":
+            return httpx.Response(200, json={"items": [{"volumeInfo": {
+                "industryIdentifiers": [{"type": "ISBN_13", "identifier": "9783608938145"}],
+                "imageLinks": {"thumbnail": "https://127.0.0.1/private"},
+            }}]}, request=request)
+        return httpx.Response(200, content=png(), request=request)
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        assert await GoogleBooksCoverProvider(client).fetch("9783608938145") is None
+    assert len(requested) == 1
+
+    def redirect(request: httpx.Request):
+        requested.append(str(request.url))
+        return httpx.Response(302, headers={"location": "http://127.0.0.1/private"}, request=request)
+
+    requested.clear()
+    async with httpx.AsyncClient(transport=httpx.MockTransport(redirect)) as client:
+        assert await OpenLibraryCoverProvider(client).fetch("9783608938145") is None
+    assert len(requested) == 1
 
 
 @pytest.mark.asyncio

@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import asyncio
+import math
 import re
 import uuid
 from importlib.metadata import PackageNotFoundError, version as package_version
@@ -16,14 +17,16 @@ from fastapi import Depends, FastAPI, File, HTTPException, Query, Request, Uploa
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse, Response
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
+import httpx
 
 from backend.config import get_settings
+from backend.backup import archive_lock
 from backend.ai_config import AIConfigUpdate, public_config, save_ai_config
-from backend.ai import (AIError, TAGGING_VERSION, generate_tags, make_ai_provider,
+from backend.ai import (AIError, TAGGING_VERSION, TaggingOutput, generate_tags, make_ai_provider,
                         tagging_context, tagging_fingerprint)
 from backend.metadata import normalize_language, normalize_tag_name
 from backend.metadata_store import MetadataConflict, persist_metadata, recover_metadata
@@ -83,34 +86,37 @@ def configure_logging() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    configure_logging()
-    auth.ensure_setup_code(settings.data_dir.resolve())
-    init_db()
-    recover_metadata(settings, SessionLocal)
-    expire_reservations(SessionLocal)
-    chain = make_provider_chain(settings.providers, settings.provider_timeout)
-    cover_service = make_cover_service(settings.provider_timeout)
-    isbn_resolver = make_isbn_resolver(settings, SessionLocal, settings.provider_timeout)
-    app.state.import_manager = ImportManager(
-        settings, SessionLocal, chain, cover_service, isbn_resolver,
-    )
-    app.state.preview_manager = PreviewManager(app.state.import_manager)
-    app.state.preview_manager.resume()
-    async def expire_previews():
-        while True:
-            await asyncio.sleep(300)
-            await asyncio.to_thread(app.state.preview_manager.cleanup)
-    cleanup_task = asyncio.create_task(expire_previews())
-    app.state.translation_manager = TranslationManager(settings, SessionLocal)
-    yield
-    cleanup_task.cancel()
-    try:
-        await cleanup_task
-    except asyncio.CancelledError:
-        pass
-    await chain.close()
-    await cover_service.close()
-    await isbn_resolver.close()
+    with archive_lock(settings.data_dir):
+        configure_logging()
+        auth.ensure_setup_code(settings.data_dir.resolve())
+        init_db()
+        recover_metadata(settings, SessionLocal)
+        expire_reservations(SessionLocal)
+        chain = make_provider_chain(settings.providers, settings.provider_timeout)
+        cover_service = make_cover_service(settings.provider_timeout)
+        isbn_resolver = make_isbn_resolver(settings, SessionLocal, settings.provider_timeout)
+        app.state.import_manager = ImportManager(
+            settings, SessionLocal, chain, cover_service, isbn_resolver,
+        )
+        app.state.preview_manager = PreviewManager(app.state.import_manager)
+        app.state.preview_manager.resume()
+        async def expire_previews():
+            while True:
+                await asyncio.sleep(300)
+                await asyncio.to_thread(app.state.preview_manager.cleanup)
+        cleanup_task = asyncio.create_task(expire_previews())
+        app.state.translation_manager = TranslationManager(settings, SessionLocal)
+        try:
+            yield
+        finally:
+            cleanup_task.cancel()
+            try:
+                await cleanup_task
+            except asyncio.CancelledError:
+                pass
+            await chain.close()
+            await cover_service.close()
+            await isbn_resolver.close()
 
 
 def current_version() -> str:
@@ -250,30 +256,121 @@ def ai_settings():
 
 @app.put("/api/settings/ai")
 def update_ai_settings(update: AIConfigUpdate):
+    requested = update.model_dump(exclude_unset=True)
+    switching = (("provider" in requested and requested["provider"] != settings.ai_provider) or
+                 ("base_url" in requested and requested["base_url"] is not None and
+                  requested["base_url"].rstrip("/") != settings.ai_base_url))
+    manager = getattr(app.state, "translation_manager", None)
+    if switching and manager is not None and manager.running:
+        raise HTTPException(409, detail={"code": "translation_active",
+                                         "message": "KI-Anbieter kann während einer laufenden Übersetzung nicht gewechselt werden."})
     try:
         return save_ai_config(settings, update)
     except ValueError as exc:
         raise HTTPException(400, detail={"code": "invalid_ai_settings", "message": str(exc)}) from exc
 
 
-@app.post("/api/settings/ai/test")
-def test_ai_settings():
-    key = settings.openai_api_key.get_secret_value()
-    if not key:
-        raise HTTPException(400, detail={"code": "missing_api_key", "message": "Bitte zuerst einen OpenAI-API-Key speichern."})
+def _ai_connection_settings(update: AIConfigUpdate | None):
+    update = update or AIConfigUpdate()
+    provider = update.provider or settings.ai_provider
+    base_url = update.base_url if update.base_url is not None else settings.ai_base_url
+    candidate = settings.model_copy(deep=True)
+    candidate.ai_provider = provider
+    candidate.ai_base_url = base_url
+    if update.api_key is not None:
+        if provider == "openai":
+            candidate.openai_api_key = SecretStr(update.api_key)
+        else:
+            candidate.ai_custom_api_key = SecretStr(update.api_key)
+    elif provider != settings.ai_provider or (provider == "custom" and base_url != settings.ai_base_url):
+        if provider == "openai":
+            candidate.openai_api_key = SecretStr("")
+        else:
+            candidate.ai_custom_api_key = SecretStr("")
+    return candidate
+
+
+def _provider_model_prices(base_url: str, key: str) -> dict[str, dict[str, float]]:
+    """Read optional LiteLLM model metadata; the standard models API has no prices."""
     try:
-        with OpenAI(api_key=key, timeout=15, max_retries=0) as client:
-            model = client.models.retrieve(settings.ai_tagging_model)
-        return {"ok": True, "model": model.id}
-    except APITimeoutError as exc:
-        raise HTTPException(503, detail={"code": "ai_timeout", "message": "OpenAI antwortet derzeit nicht."}) from exc
-    except APIConnectionError as exc:
-        raise HTTPException(503, detail={"code": "ai_unavailable", "message": "OpenAI ist nicht erreichbar."}) from exc
+        with httpx.Client(timeout=10, follow_redirects=False) as client:
+            response = client.get(f"{base_url.rstrip('/')}/model/info",
+                                  headers={"Authorization": f"Bearer {key}", "Accept": "application/json"})
+        if response.status_code != 200 or len(response.content) > 2_000_000:
+            return {}
+        data = response.json().get("data")
+        if not isinstance(data, list):
+            return {}
+    except (httpx.HTTPError, ValueError, AttributeError):
+        return {}
+
+    def per_million(value):
+        if (isinstance(value, bool) or not isinstance(value, (int, float)) or
+                not 0 <= value <= 1 or not math.isfinite(value)):
+            return None
+        return round(value * 1_000_000, 6)
+
+    prices = {}
+    for item in data[:1000]:
+        if not isinstance(item, dict) or not isinstance(item.get("model_name"), str):
+            continue
+        info = item.get("model_info")
+        if not isinstance(info, dict):
+            continue
+        currency = info.get("currency", item.get("currency", "USD"))
+        if currency != "USD":
+            continue
+        input_price = per_million(info.get("input_cost_per_token"))
+        output_price = per_million(info.get("output_cost_per_token"))
+        if input_price is not None and output_price is not None:
+            prices[item["model_name"]] = {"input_usd_per_million": input_price,
+                                          "output_usd_per_million": output_price}
+    return prices
+
+
+@app.post("/api/settings/ai/models")
+def list_ai_models(update: AIConfigUpdate | None = None):
+    candidate = _ai_connection_settings(update)
+    key = (candidate.openai_api_key if candidate.ai_provider == "openai"
+           else candidate.ai_custom_api_key).get_secret_value()
+    if not key:
+        raise HTTPException(400, detail={"code": "missing_api_key", "message": "Bitte einen API-Key eingeben."})
+    if candidate.ai_provider == "custom" and not candidate.ai_base_url:
+        raise HTTPException(400, detail={"code": "missing_base_url", "message": "Bitte eine Base URL eingeben."})
+    try:
+        kwargs = {"api_key": key, "timeout": 15, "max_retries": 0}
+        if candidate.ai_provider == "custom":
+            kwargs["base_url"] = candidate.ai_base_url
+        with OpenAI(**kwargs) as client:
+            models = client.models.list()
+        names = sorted({model.id for model in models.data if model.id})[:200]
+        prices = (_provider_model_prices(candidate.ai_base_url, key)
+                  if candidate.ai_provider == "custom" else {})
+        return {"models": names, "prices": {name: prices[name] for name in names if name in prices}}
+    except (APITimeoutError, APIConnectionError) as exc:
+        raise HTTPException(503, detail={"code": "ai_unavailable", "message": "Der KI-Anbieter ist nicht erreichbar."}) from exc
     except APIStatusError as exc:
-        message = {401: "Der API-Key ist ungültig.", 403: "Kein Zugriff auf das gewählte Modell.",
-                   404: "Das gewählte Modell wurde nicht gefunden.",
-                   429: "OpenAI-Limit erreicht."}.get(exc.status_code, "OpenAI konnte die Verbindung nicht bestätigen.")
-        raise HTTPException(503, detail={"code": "ai_test_failed", "message": message}) from exc
+        message = {401: "Der API-Key ist ungültig.", 403: "Kein Zugriff auf die Modellliste.",
+                   404: "Dieser Dienst bietet keine Modellliste an. Bitte den Modellnamen manuell eingeben."}.get(
+                       exc.status_code, "Modellliste konnte nicht geladen werden.")
+        raise HTTPException(503, detail={"code": "ai_models_failed", "message": message}) from exc
+
+
+@app.post("/api/settings/ai/test")
+def test_ai_settings(update: AIConfigUpdate | None = None):
+    candidate = _ai_connection_settings(update)
+    key = (candidate.openai_api_key if candidate.ai_provider == "openai"
+           else candidate.ai_custom_api_key).get_secret_value()
+    if not key:
+        raise HTTPException(400, detail={"code": "missing_api_key", "message": "Bitte einen API-Key eingeben."})
+    model_name = update.ai_tagging_model if update and update.ai_tagging_model else candidate.ai_tagging_model
+    try:
+        make_ai_provider(candidate).generate(
+            model=model_name, instructions="Liefere eine leere Tagliste.",
+            context={"test": True}, schema=TaggingOutput, max_output_tokens=100, timeout=15)
+        return {"ok": True, "model": model_name}
+    except AIError as exc:
+        raise HTTPException(503, detail={"code": "ai_test_failed", "message": str(exc)}) from exc
 
 
 @app.get("/api/books")

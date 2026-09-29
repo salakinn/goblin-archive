@@ -43,8 +43,20 @@ export async function saveAiSettings(settings: Partial<AiSettings> & { api_key?:
   return json(await apiFetch('/api/settings/ai', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }))
 }
 
-export async function testAiSettings(): Promise<{ ok: boolean; model: string }> {
-  return json(await apiFetch('/api/settings/ai/test', { method: 'POST' }))
+export type AiConnectionInput = Pick<AiSettings, 'provider' | 'base_url'> & { api_key?: string; ai_tagging_model?: string }
+export type AiModelPrices = Record<string, { input_usd_per_million: number; output_usd_per_million: number }>
+export type AiModelCatalog = { models: string[]; prices: AiModelPrices }
+
+export async function listAiModels(input: AiConnectionInput): Promise<AiModelCatalog> {
+  return json<AiModelCatalog>(await apiFetch('/api/settings/ai/models', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input),
+  }))
+}
+
+export async function testAiSettings(input?: AiConnectionInput): Promise<{ ok: boolean; model: string }> {
+  return json(await apiFetch('/api/settings/ai/test', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input || {}),
+  }))
 }
 export async function getAiUsage(): Promise<AIUsageSummary> { return json(await apiFetch('/api/ai/usage')) }
 export async function listGlossaries(): Promise<TranslationGlossary[]> { return (await json<{ items: TranslationGlossary[] }>(await apiFetch('/api/glossaries'))).items }

@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 from openai import APITimeoutError, RateLimitError
 
 from backend import ai, main
-from backend.ai import AIError, AIResult, GeneratedTag, OpenAIProvider, TaggingOutput
+from backend.ai import AIError, AIResult, CompatibleProvider, GeneratedTag, OpenAIProvider, TaggingOutput, make_ai_provider
 from backend.config import Settings
 from backend.database import get_db
 from backend.repository import get_book, search_books
@@ -189,3 +189,44 @@ def test_missing_api_key():
     with pytest.raises(AIError, match="Einstellungen"):
         OpenAIProvider(Settings(openai_api_key="")).generate(
             model="test", instructions="", context={}, schema=TaggingOutput)
+
+
+def test_compatible_chat_completion_validates_json_and_reports_usage(monkeypatch):
+    sdk = MagicMock()
+    sdk.__enter__.return_value = sdk
+    constructor = MagicMock(return_value=sdk)
+    monkeypatch.setattr(ai, "OpenAI", constructor)
+    sdk.chat.completions.create.return_value = SimpleNamespace(
+        choices=[SimpleNamespace(finish_reason="stop", message=SimpleNamespace(content='{"tags":[]}'))],
+        usage=SimpleNamespace(prompt_tokens=11, completion_tokens=4),
+    )
+    settings = Settings(ai_provider='custom', ai_base_url='https://example.test/v1',
+                        ai_custom_api_key='custom-key')
+    result = make_ai_provider(settings).generate(
+        model='other-model', instructions='Rules', context={'title': 'Test'}, schema=TaggingOutput)
+    assert isinstance(make_ai_provider(settings), CompatibleProvider)
+    assert result.value.tags == [] and (result.input_tokens, result.output_tokens) == (11, 4)
+    assert constructor.call_args.kwargs['base_url'] == 'https://example.test/v1'
+    assert constructor.call_args.kwargs['api_key'] == 'custom-key'
+    kwargs = sdk.chat.completions.create.call_args.kwargs
+    assert kwargs['model'] == 'other-model'
+    assert json.loads(kwargs['messages'][1]['content']) == {'title': 'Test'}
+    sdk.chat.completions.create.return_value.choices[0].message.content = '{"tags":"wrong"}'
+    with pytest.raises(AIError, match='ungültiges Ergebnis'):
+        make_ai_provider(settings).generate(model='other-model', instructions='', context={}, schema=TaggingOutput)
+
+
+def test_custom_connection_check_uses_configured_model(tmp_path, monkeypatch):
+    settings = Settings(data_dir=tmp_path, ai_provider='custom', ai_base_url='https://example.test/v1',
+                        ai_custom_api_key='custom-key', ai_tagging_model='other-model')
+    monkeypatch.setattr(main, 'settings', settings)
+    provider = MagicMock()
+    monkeypatch.setattr(main, 'make_ai_provider', lambda _: provider)
+    client = TestClient(main.app, raise_server_exceptions=False)
+    try:
+        response = client.post('/api/settings/ai/test')
+        assert response.status_code == 200
+        assert response.json() == {'ok': True, 'model': 'other-model'}
+        assert provider.generate.call_args.kwargs['model'] == 'other-model'
+    finally:
+        client.close()

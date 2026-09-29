@@ -24,6 +24,7 @@ from sqlalchemy import select, update
 
 from backend.ai import AIError, make_ai_provider
 from backend.config import Settings
+from backend.epub_safety import UnsafeEpubError, validate_epub_zip
 from backend.imports import sha256_file
 from backend.metadata import language_label, normalize_language, sanitize_component
 from backend.models import Book, TranslationGlossary, TranslationJob
@@ -41,8 +42,6 @@ XML_LANG = "{http://www.w3.org/XML/1998/namespace}lang"
 BLOCKS = {"p", "h1", "h2", "h3", "h4", "h5", "h6", "li", "dt", "dd", "td", "th", "blockquote", "figcaption", "title"}
 SKIP = {"script", "style", "code", "pre", "svg", "math"}
 TOKEN = re.compile(r"\[\[(/?)(\d+)\]\]")
-MAX_ZIP_BYTES = 100 * 1024 * 1024
-MAX_ITEM_BYTES = 32 * 1024 * 1024
 MAX_XML_BYTES = 4 * 1024 * 1024
 PROMPT_VERSION = "1"
 
@@ -64,12 +63,10 @@ def _local(tag):
 
 
 def _safe_zip(z: zipfile.ZipFile):
-    if len(z.infolist()) > 3000 or sum(i.file_size for i in z.infolist()) > MAX_ZIP_BYTES:
-        raise TranslationError("EPUB ist für die Übersetzung zu groß")
-    for info in z.infolist():
-        p = PurePosixPath(info.filename)
-        if info.filename.startswith("/") or ".." in p.parts or info.file_size > MAX_ITEM_BYTES:
-            raise TranslationError("EPUB enthält einen ungültigen oder zu großen ZIP-Eintrag")
+    try:
+        validate_epub_zip(z)
+    except UnsafeEpubError as exc:
+        raise TranslationError(str(exc)) from exc
 
 
 def _xml(data):
@@ -341,6 +338,8 @@ class TranslationManager:
                    "estimated_cost_usd": round(sum(self._cost(estimate_tokens * 2, estimate_tokens * 2, rate) for rate in rates), 4) if self._rates_configured(rates) else None,
                    "input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0,
                    "model": self.settings.ai_translation_model, "prompt_version": PROMPT_VERSION,
+                   "ai_provider": self.settings.ai_provider,
+                   "ai_base_url": self.settings.ai_base_url,
                    "models": [self.settings.ai_translation_model, self.settings.ai_translation_qa_model,
                               self.settings.ai_translation_editor_model][:passes],
                    "rate_cards": rates,
@@ -357,11 +356,13 @@ class TranslationManager:
     def _rates(self):
         base = [self.settings.ai_translation_input_usd_per_million,
                 self.settings.ai_translation_output_usd_per_million]
+        qa_fallback = base if self.settings.ai_translation_qa_model == self.settings.ai_translation_model else [0, 0]
+        editor_fallback = base if self.settings.ai_translation_editor_model == self.settings.ai_translation_model else [0, 0]
         return [base,
-                [self.settings.ai_translation_qa_input_usd_per_million if self.settings.ai_translation_qa_input_usd_per_million is not None else base[0],
-                 self.settings.ai_translation_qa_output_usd_per_million if self.settings.ai_translation_qa_output_usd_per_million is not None else base[1]],
-                [self.settings.ai_translation_editor_input_usd_per_million if self.settings.ai_translation_editor_input_usd_per_million is not None else base[0],
-                 self.settings.ai_translation_editor_output_usd_per_million if self.settings.ai_translation_editor_output_usd_per_million is not None else base[1]]]
+                [self.settings.ai_translation_qa_input_usd_per_million if self.settings.ai_translation_qa_input_usd_per_million is not None else qa_fallback[0],
+                 self.settings.ai_translation_qa_output_usd_per_million if self.settings.ai_translation_qa_output_usd_per_million is not None else qa_fallback[1]],
+                [self.settings.ai_translation_editor_input_usd_per_million if self.settings.ai_translation_editor_input_usd_per_million is not None else editor_fallback[0],
+                 self.settings.ai_translation_editor_output_usd_per_million if self.settings.ai_translation_editor_output_usd_per_million is not None else editor_fallback[1]]]
 
     def _rates_configured(self, rates):
         return all(input_rate > 0 and output_rate > 0 for input_rate, output_rate in rates)
@@ -402,6 +403,7 @@ class TranslationManager:
     def repair_segment(self, job_id, segment_id):
         with self.lock:
             job = self.get(job_id)
+            self._check_provider(job)
             if job["status"] not in {"paused", "failed", "awaiting_glossary"}:
                 raise TranslationError("Segment kann nur bei angehaltenem Auftrag repariert werden")
             if job_id in self.running:
@@ -497,6 +499,7 @@ class TranslationManager:
     def start(self, job_id):
         with self.lock:
             job = self.get(job_id)
+            self._check_provider(job)
             if job["status"] not in {"ready", "awaiting_glossary", "paused", "failed"}:
                 raise TranslationError("Auftrag kann derzeit nicht gestartet werden")
             if job_id in self.running:
@@ -508,6 +511,11 @@ class TranslationManager:
             self.running.add(job_id)
             Thread(target=self._run, args=(job_id, preview), daemon=True).start()
             return self._public(job)
+
+    def _check_provider(self, job):
+        if (job.get("ai_provider", "openai") != self.settings.ai_provider or
+                job.get("ai_base_url", "") != self.settings.ai_base_url):
+            raise TranslationError("Der KI-Anbieter hat sich seit Erstellung des Auftrags geändert. Bitte die ursprüngliche Anbindung wiederherstellen oder einen neuen Auftrag erstellen.")
 
     def stop(self, job_id, cancel=False):
         with self.lock:

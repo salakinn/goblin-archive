@@ -18,6 +18,7 @@ from pypdf import PdfReader
 from backend.ai import AIError, AIProvider, AIResult
 from backend.config import Settings
 from backend.extractors import _relative_zip_member
+from backend.epub_safety import UnsafeEpubError, validate_epub_zip
 
 
 VERSION = "1"
@@ -85,6 +86,10 @@ def _positions(count: int, limit: int = 18) -> list[int]:
 
 def _epub_units(path: Path) -> list[tuple[str, str]]:
     with zipfile.ZipFile(path) as archive:
+        try:
+            validate_epub_zip(archive)
+        except UnsafeEpubError as exc:
+            raise TextExtractionError(str(exc)) from exc
         def read(member):
             info = archive.getinfo(member)
             if info.file_size > MAX_MEMBER:
@@ -286,6 +291,6 @@ def agreed_language(output: LanguageOutput) -> str | None:
 
 
 def language_fingerprint(samples: list[TextSample], settings: Settings) -> str:
-    payload = [VERSION, settings.ai_provider, settings.ai_language_model,
+    payload = [VERSION, settings.ai_provider, settings.ai_base_url, settings.ai_language_model,
                [asdict(s) for s in samples]]
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()

@@ -1,5 +1,10 @@
 # Feature 05: Backup und Restore
 
+Stand: Der lokale, offline nutzbare Backup- und Restore-Ablauf ist in
+`backend/backup.py` implementiert. Er prüft Datenbanken und Dateien vor dem
+Restore, bewahrt bei `--replace` das alte Archiv auf und lässt KI-Keys aus.
+Ein Backup ohne Dienststopp, UI-Fortschritt und Zeitpläne bleiben offen.
+
 ## Ziel
 
 Bibliothek, Metadaten und Konfiguration sollen gegen Datenverlust gesichert und

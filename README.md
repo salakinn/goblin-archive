@@ -238,6 +238,29 @@ goblin-data/
 └── auth-setup-code      # nur bis zur Einrichtung
 ```
 
+### Backup und Restore
+
+Für ein konsistentes Backup den Dienst zuerst anhalten. Der Dienst und das
+Backup-Werkzeug verwenden dieselbe exklusive Archivsperre; ein Backup während
+des Betriebs wird mit einer Fehlermeldung abgelehnt. Das Ziel muss außerhalb
+des Datenverzeichnisses liegen und noch nicht existieren.
+
+```bash
+.venv/bin/python -m backend.backup create /pfad/zum/backup --data-dir /pfad/zum/archiv
+.venv/bin/python -m backend.backup verify /pfad/zum/backup
+.venv/bin/python -m backend.backup restore /pfad/zum/backup --data-dir /pfad/zum/neuen-archiv
+```
+
+Das Backup enthält die Buchdateien, Importvorschauen, beide SQLite-Datenbanken
+und KI-Einstellungen **ohne API-Keys**. Es enthält weder `.env` noch externe
+Update-Secrets. API-Keys nach einem Restore neu eingeben. Das Backup enthält
+weiterhin die Admin-Passwort-Hashes und persönliche Buchdaten: sicher verwahren.
+Vor dem Restore werden alle Dateiprüfsummen, die SQLite-Datenbanken und die
+SHA-256-Werte der archivierten Bücher geprüft. Ein bestehendes Ziel wird nur mit
+`--replace` ausgetauscht; dessen bisheriger Inhalt bleibt unter einem
+`before-restore`-Verzeichnis erhalten. Der Dienst muss auch beim Restore
+angehalten sein. Anschließend den Dienst neu starten.
+
 `metadata.json` enthält Originaldateiname, Importzeitpunkt, Hash, Dateidaten, alle fachlichen Metadaten und die Quelle jedes Feldes. Der zusätzliche Eintrag `cover` dokumentiert lokalen Dateinamen, Quelle (`embedded` oder `external`), Provider, ISBN, Bildmaße, MIME-Typ sowie bei externen Treffern Abrufzeit und Quell-URL. Ohne Cover ist der Wert `null`. Damit kann die Datenbank später aus dem Archiv rekonstruiert werden.
 
 Cover werden stets lokal beim Buch gespeichert und von der WebUI ausschließlich über Goblin ausgeliefert. Es findet kein dauerhaftes Hotlinking statt. „Cover neu suchen“ wiederholt dieselbe Prioritätskette; ein vorhandenes Bild wird erst ersetzt, wenn der neue Treffer vollständig geladen und validiert ist.
@@ -257,7 +280,7 @@ Eine Ausgabenübernahme aktualisiert Datenbank, Volltextindex und `metadata.json
 
 Die ISBN-Auflösung ist vom Dateiimport getrennt, damit große Ordnerimporte nicht durch Kataloganfragen oder Rate-Limits ausgebremst werden. Google Books ist wegen der gegenwärtig nicht verfügbaren API-Quote nicht Bestandteil der ISBN-Kandidatensuche; die Architektur erlaubt einen späteren zusätzlichen Provider.
 
-## KI-Tags mit OpenAI
+## KI-Tags
 
 In der Buchansicht ergänzt „Tags per KI setzen“ direkt bis zu fünf passende Tags.
 Bestehende Tags bleiben erhalten. Die KI erhält begrenzte Buchmetadaten (Titel,
@@ -265,11 +288,29 @@ Autoren, Beschreibung, Sprache, Reihe und Werkhinweise) sowie vorhandene Tags;
 Buchdateien werden nicht hochgeladen. Bei unzureichenden Angaben darf sie keine
 Tags liefern. Ergebnisse können wie manuelle Tags entfernt werden.
 
-API-Key und Modell können im Zahnrad-Menü gespeichert werden. Alternativ
-`GOBLIN_OPENAI_API_KEY` und `GOBLIN_AI_TAGGING_MODEL` in `.env` setzen und das
-Backend neu starten. Der Key bleibt im Backend. `GOBLIN_AI_TIMEOUT` setzt das
-Zeitlimit je Versuch. Ein vorübergehender Fehler wird höchstens einmal wiederholt.
-API-Aufrufe werden über das OpenAI-API-Konto abgerechnet.
+Anbieter, API-Key und Modelle können im KI-Dialog unter dem Zahnrad gespeichert werden. Zur Wahl
+stehen OpenAI und ein eigener OpenAI-kompatibler Dienst mit Base URL und API-Key.
+Der eigene Dienst muss `POST /chat/completions` am angegebenen API-Stammverzeichnis
+unterstützen und ein JSON-Objekt als Antwort liefern. Beispielsweise wird aus
+`https://anbieter.example/v1` der Aufruf
+`https://anbieter.example/v1/chat/completions`. Ein Anbieter mit einer anderen
+API benötigt einen eigenen Adapter. Der Einrichtungsdialog führt durch Verbindung,
+Modellwahl und optionale Einstellungen. Zunächst wird ein Modell für alle Aufgaben
+gewählt; unter „Optionen“ können Modelle je Aufgabe getrennt eingetragen werden.
+Die Verbindung lässt sich vor dem Speichern über die Modellliste prüfen. Danach
+testet eine kurze KI-Anfrage das gewählte Modell. Falls der Dienst keine
+Modellliste anbietet, kann der Modellname manuell eingegeben und getestet werden.
+Bei Diensten mit einem LiteLLM-kompatiblen `GET /v1/model/info` übernimmt der
+Dialog die gemeldeten Eingabe- und Ausgabepreise pro Token als USD je Million
+Tokens für die gewählten Modelle. Fehlende Preise bleiben manuell einstellbar.
+OpenAIs normale Modellliste enthält keine Tokenpreise; dort ist weiterhin eine
+manuelle Angabe nötig. Für unterschiedliche Übersetzungsmodelle werden fehlende
+Prüfungs- und Lektoratspreise nicht vom Übersetzungsmodell übernommen.
+Alternativ können `GOBLIN_AI_PROVIDER=custom`, `GOBLIN_AI_BASE_URL`,
+`GOBLIN_AI_CUSTOM_API_KEY` und die Modellvariablen in `.env` gesetzt werden.
+Für OpenAI bleibt `GOBLIN_OPENAI_API_KEY` verfügbar. Der Key bleibt im Backend.
+`GOBLIN_AI_TIMEOUT` setzt das Zeitlimit je Versuch. Ein vorübergehender Fehler
+wird höchstens einmal wiederholt. Kosten fallen beim gewählten Anbieter an.
 
 Herkunft, Modell, Zeitpunkt und Begründung neuer Tags werden pro Buch unter
 `tag_sources` in Datenbank-Metadaten und `metadata.json` gespeichert; `ai_tagging`
@@ -293,7 +334,7 @@ Navigation und erkennbare Titel-/Impressumsdateien werden übersprungen. Bei lä
 PDFs werden die ersten zwei Seiten ausgelassen. Die Stichprobe ist begrenzt und
 kann eine Sprache in unberücksichtigten Buchteilen übersehen.
 
-Nur die Textproben gehen an OpenAI, ohne Titel, Klappentext oder bisherige
+Nur die Textproben gehen an den gewählten KI-Anbieter, ohne Titel, Klappentext oder bisherige
 Sprachangabe. Das Modell bewertet jede Probe getrennt. Goblin übernimmt einen
 validierten ISO-639-1-Code nur, wenn alle drei Proben eindeutig dieselbe Sprache
 ergeben. Bei Mehrsprachigkeit, widersprüchlichen Ergebnissen oder zu wenig Text
@@ -316,13 +357,18 @@ zurückgerollt. Die Originalbuchdatei wird nicht verändert.
 
 ## EPUB übersetzen
 
-Die OpenAI-Anbindung wird im Zahnrad-Menü der Weboberfläche eingerichtet. Dort
-lassen sich API-Key, Modelle und optionale Tokenpreise speichern sowie die
+Die KI-Anbindung wird im Zahnrad-Menü der Weboberfläche eingerichtet. Dort
+lassen sich Anbieter, Base URL, API-Key, Modelle und optionale Tokenpreise speichern sowie die
 Verbindung prüfen. Die Einstellungen gelten sofort für neue KI-Anfragen und
 werden lokal in `goblin-data/ai-settings.json` mit Dateirechten `0600` abgelegt.
 Der API-Key wird bei späteren Aufrufen der Einstellungs-API nicht zurückgegeben.
 Vorhandene `.env`-Werte dienen als Ausgangswerte, bis sie in der UI gespeichert
 werden.
+OpenAI und der eigene Dienst behalten getrennte Keys. Bei einem Anbieterwechsel
+lassen sich bereits vorbereitete Übersetzungsaufträge erst mit ihrer ursprünglichen
+Anbindung fortsetzen. Für Kostenlimits müssen die Tokenpreise des gewählten
+Anbieters eingetragen werden; wenn dessen Antwort keine Token-Nutzung meldet,
+werden die tatsächlichen Kosten als unbekannt gekennzeichnet.
 
 In der Buchansicht eines EPUBs „Buch übersetzen“ öffnen, Zielsprache und Profil
 wählen und den Auftrag vorbereiten. Die erste Kapitelvorschau wird separat

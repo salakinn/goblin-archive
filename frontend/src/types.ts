@@ -24,7 +24,8 @@ export type ImportPreview = {
 }
 
 export type AiSettings = {
-  provider: 'openai'
+  provider: 'openai' | 'custom'
+  base_url: string
   key_configured: boolean
   ai_tagging_model: string
   ai_language_model: string

@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     provider_timeout: float = 5.0
     ai_provider: str = "openai"
     openai_api_key: SecretStr = SecretStr("")
+    ai_base_url: str = ""
+    ai_custom_api_key: SecretStr = SecretStr("")
     ai_tagging_model: str = "gpt-5.4-nano"
     ai_language_model: str = "gpt-5.4-nano"
     ai_translation_model: str = "gpt-5.4-mini"
