@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field, SecretStr, field_validator
 from backend.config import Settings
 
 AI_FIELDS = (
-    "ai_tagging_model", "ai_language_model", "ai_translation_model",
+    "ai_tagging_model", "ai_language_model", "ai_language_fallback_enabled", "ai_translation_model",
     "ai_translation_qa_model", "ai_translation_editor_model",
     "ai_translation_input_usd_per_million", "ai_translation_output_usd_per_million",
     "ai_translation_qa_input_usd_per_million", "ai_translation_qa_output_usd_per_million",
@@ -23,7 +23,8 @@ AI_FIELDS = (
     "ai_language_input_usd_per_million", "ai_language_output_usd_per_million",
     "ai_daily_limit_usd", "ai_monthly_limit_usd", "ai_warning_percent",
 )
-MODEL_FIELDS = AI_FIELDS[:5]
+MODEL_FIELDS = ("ai_tagging_model", "ai_language_model", "ai_translation_model",
+                "ai_translation_qa_model", "ai_translation_editor_model")
 PRICE_FIELDS = tuple(field for field in AI_FIELDS if "_usd_per_million" in field)
 CONFIG_LOCK = Lock()
 
@@ -34,6 +35,7 @@ class AIConfigUpdate(BaseModel):
     api_key: str | None = Field(default=None, max_length=500)
     ai_tagging_model: str | None = None
     ai_language_model: str | None = None
+    ai_language_fallback_enabled: bool | None = None
     ai_translation_model: str | None = None
     ai_translation_qa_model: str | None = None
     ai_translation_editor_model: str | None = None

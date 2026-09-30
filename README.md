@@ -1,10 +1,10 @@
 # Goblin Archivar
 
-Goblin Archivar ist ein lokal betriebener E-Book-Archivar mit einer dunklen, schlanken Weboberfläche. EPUB-, PDF-, MOBI- und AZW3-Dateien können einzeln, gemeinsam oder als kompletter Ordner in das Browserfenster gezogen werden. Der Goblin liest Metadaten, ergänzt sie über öffentliche Bibliotheksdienste, archiviert jede Datei unter einem sicheren Namen und indexiert die Sammlung in SQLite.
+Goblin Archivar ist ein lokal betriebener E-Book-Archivar mit einer dunklen, schlanken Weboberfläche. EPUB-, PDF-, MOBI-, AZW3- und FB2-Dateien können einzeln, gemeinsam oder als kompletter Ordner in das Browserfenster gezogen werden. Der Goblin liest Metadaten, ergänzt sie über öffentliche Bibliotheksdienste, archiviert jede Datei unter einem sicheren Namen und indexiert die Sammlung in SQLite.
 
-Über „Ordner importieren“ lässt sich alternativ ein Verzeichnis auswählen. Goblin durchsucht auch dessen Unterordner und übernimmt alle kompatiblen EPUB-, PDF-, MOBI- und AZW3-Dateien; andere Dateien werden übersprungen.
+Über „Ordner importieren“ lässt sich alternativ ein Verzeichnis auswählen. Goblin durchsucht auch dessen Unterordner und übernimmt alle kompatiblen EPUB-, PDF-, MOBI-, AZW3- und FB2-Dateien; andere Dateien werden übersprungen.
 
-Der MVP arbeitet ausschließlich mit **COPY-Semantik**: Die Originaldatei auf dem Rechner wird weder verändert noch gelöscht. Exakte Duplikate werden über den SHA-256-Inhaltshash erkannt.
+Der MVP arbeitet ausschließlich mit **COPY-Semantik**: Die Originaldatei auf dem Rechner wird weder verändert noch gelöscht. Exakte Duplikate werden über SHA-256 erkannt; mögliche inhaltliche Duplikate werden zur Prüfung vorgelegt.
 
 ## Architektur
 
@@ -18,13 +18,14 @@ und fortsetzbare Aufträge.
 
 Die Import-Pipeline schreibt zunächst ins Staging. Anschließend validiert und analysiert sie die Datei, baut einen temporären Archivordner und benennt diesen atomar um. Erst danach wird der Datenbankeintrag in einer Transaktion angelegt. Schlägt die Transaktion fehl, wird der neue Archivordner wieder entfernt. Vorhandene Archivdateien werden nie überschrieben.
 
-Cover durchlaufen eine getrennte, fehlertolerante Pipeline: **embedded → Open Library → Google Books**. EPUB2-/EPUB3-Cover und, soweit zuverlässig verfügbar, PDF-Thumbnails sowie MOBI-/AZW3-Cover werden zuerst aus der Buchdatei gelesen. Externe Treffer werden im MVP ausschließlich per ISBN übernommen. Jedes Bild wird vor der Ablage auf Format, Vollständigkeit, Abmessungen und Größenlimit geprüft; unterstützt werden JPEG, PNG und WebP. Ein fehlendes oder beschädigtes Cover sowie ein Provider-Ausfall blockiert den Buchimport nie.
+Cover durchlaufen eine getrennte, fehlertolerante Pipeline: **embedded → Open Library → Google Books**. EPUB2-/EPUB3-Cover, die erste PDF-Seite sowie MOBI-/AZW3- und FB2-Cover werden zuerst aus der Buchdatei gewonnen. Externe Treffer werden im MVP ausschließlich per ISBN übernommen. Jedes Bild wird vor der Ablage auf Format, Vollständigkeit, Abmessungen und Größenlimit geprüft; unterstützt werden JPEG, PNG und WebP. Ein fehlendes oder beschädigtes Cover sowie ein Provider-Ausfall blockiert den Buchimport nie.
 
 ## Voraussetzungen
 
 - Python 3.12 oder neuer
 - Node.js 20 oder neuer und npm
 - SQLite mit FTS5 (in üblichen Python-Installationen enthalten)
+- Poppler (`pdftoppm`, unter Debian/Ubuntu im Paket `poppler-utils`) für PDF-Cover; im Docker-Image enthalten
 
 ## Installation
 
@@ -60,6 +61,15 @@ Die API-Dokumentation liegt unter <http://127.0.0.1:8000/docs>.
 werden. Uploads sind standardmäßig auf 200 MiB und 20 Dateien pro Anfrage
 begrenzt. Diese Grenzen lassen sich über `GOBLIN_MAX_UPLOAD_BYTES` und
 `GOBLIN_MAX_UPLOAD_FILES` anpassen.
+Mit `GOBLIN_IMPORT_CONCURRENCY` (Standard `3`) wird die Zahl gleichzeitig
+bearbeiteter Bücher begrenzt; `GOBLIN_PROVIDER_CONCURRENCY` (Standard `2`)
+begrenzt externe Anfragen. `GOBLIN_MAX_QUEUED_IMPORT_FILES` (Standard `100`)
+begrenzt angenommene, noch nicht abgeschlossene Arbeit.
+`GOBLIN_MAX_STAGING_BYTES` (Standard 2 GiB) begrenzt den Platz für
+zwischengespeicherte Uploads. ISBN-, Autoren-,
+Sprach- und Tag-Prüfung laufen nach der Archivierung im Backend weiter, auch
+wenn der Browser geschlossen wird. Offene Aufträge sind über `GET /api/imports`
+erneut abrufbar.
 
 ## Anmeldung
 
@@ -227,23 +237,42 @@ Die Struktur wird automatisch erzeugt:
 ```text
 goblin-data/
 ├── library/
-│   └── Autor/Titel/bk_a81f92c4/
-│       ├── Titel.epub
+│   └── a1b2/bk_a1b2c3d4e5f6478899aabbccddeeff00/
+│       ├── book.epub
 │       ├── cover.jpg          # falls vorhanden
 │       └── metadata.json
 ├── staging/
-├── logs/goblin.log
+├── logs/
+│   ├── goblin.log
+│   └── ai-requests.jsonl   # nach dem ersten KI-Anbieteraufruf
 ├── goblin.db
 ├── auth.db
 └── auth-setup-code      # nur bis zur Einrichtung
 ```
 
+Neue Buch-IDs bestehen aus `bk_` und einer vollständigen UUIDv4 ohne Bindestriche.
+Die ersten vier UUID-Zeichen bilden den Gruppenordner. Titel und Autoren ändern
+den Archivpfad nicht. Für bestehende Archive gibt es keine Pfadmigration; für
+die neue Struktur muss das Archiv neu aufgebaut werden. Vor dem Neuaufbau sollte
+ein Backup erstellt werden. Alte Backups werden durch Restore unverändert
+wiederhergestellt und dadurch nicht in die neue Struktur umgewandelt.
+
 ### Backup und Restore
 
-Für ein konsistentes Backup den Dienst zuerst anhalten. Der Dienst und das
-Backup-Werkzeug verwenden dieselbe exklusive Archivsperre; ein Backup während
-des Betriebs wird mit einer Fehlermeldung abgelehnt. Das Ziel muss außerhalb
-des Datenverzeichnisses liegen und noch nicht existieren.
+Im Einstellungsmenü bietet „Backup und Wiederherstellung“ vollständige ZIP-Backups
+und die Vorprüfung einer hochgeladenen Sicherung. Die Erstellung läuft auf dem
+Server weiter, wenn der Browser geschlossen wird. Fertige Dateien lassen sich
+in der Auftragsübersicht herunterladen oder löschen. Vor einem Restore zeigt
+die Oberfläche den geprüften Inhalt und verlangt eine ausdrückliche Bestätigung.
+Der bisherige Stand bleibt danach als separat löschbare Rückfallkopie erhalten.
+Die Auftragsdateien liegen im Datenverzeichnis unter `.backup-jobs/` und werden
+nicht in die Sicherung aufgenommen. Während der Sicherung und Wiederherstellung
+werden schreibende Aktionen kurz gesperrt. Nach dem Restore ist eine Anmeldung
+mit dem Passwort aus der Sicherung erforderlich.
+
+Die folgenden Offline-Befehle bleiben verfügbar, wenn die Oberfläche nicht
+startet. Für sie den Dienst vorher anhalten. Ziel und Datenverzeichnis dürfen
+nicht ineinander liegen; das Ziel darf noch nicht existieren.
 
 ```bash
 .venv/bin/python -m backend.backup create /pfad/zum/backup --data-dir /pfad/zum/archiv
@@ -258,8 +287,7 @@ weiterhin die Admin-Passwort-Hashes und persönliche Buchdaten: sicher verwahren
 Vor dem Restore werden alle Dateiprüfsummen, die SQLite-Datenbanken und die
 SHA-256-Werte der archivierten Bücher geprüft. Ein bestehendes Ziel wird nur mit
 `--replace` ausgetauscht; dessen bisheriger Inhalt bleibt unter einem
-`before-restore`-Verzeichnis erhalten. Der Dienst muss auch beim Restore
-angehalten sein. Anschließend den Dienst neu starten.
+`before-restore`-Verzeichnis erhalten. Anschließend den Dienst neu starten.
 
 `metadata.json` enthält Originaldateiname, Importzeitpunkt, Hash, Dateidaten, alle fachlichen Metadaten und die Quelle jedes Feldes. Der zusätzliche Eintrag `cover` dokumentiert lokalen Dateinamen, Quelle (`embedded` oder `external`), Provider, ISBN, Bildmaße, MIME-Typ sowie bei externen Treffern Abrufzeit und Quell-URL. Ohne Cover ist der Wert `null`. Damit kann die Datenbank später aus dem Archiv rekonstruiert werden.
 
@@ -282,11 +310,14 @@ Die ISBN-Auflösung ist vom Dateiimport getrennt, damit große Ordnerimporte nic
 
 ## KI-Tags
 
-In der Buchansicht ergänzt „Tags per KI setzen“ direkt bis zu fünf passende Tags.
+In der Buchansicht ergänzt „Tags per KI setzen“ möglichst zehn passende Tags.
 Bestehende Tags bleiben erhalten. Die KI erhält begrenzte Buchmetadaten (Titel,
-Autoren, Beschreibung, Sprache, Reihe und Werkhinweise) sowie vorhandene Tags;
-Buchdateien werden nicht hochgeladen. Bei unzureichenden Angaben darf sie keine
-Tags liefern. Ergebnisse können wie manuelle Tags entfernt werden.
+Autoren, Beschreibung, Sprache, Reihe, Jahr, Verlag, ISBN, Genres und Werkhinweise)
+sowie Tags desselben Buchs; Tags anderer Bücher werden nicht in den Request übernommen.
+Buchdateien werden nicht hochgeladen. Auch ohne Beschreibung
+darf sie aus Titel, Autor und ihrem Werkwissen plausible Genres und Themen ableiten.
+Sie soll keine konkreten Handlungsdetails erfinden oder eine nicht erfolgte Recherche
+behaupten. Ergebnisse können wie manuelle Tags entfernt werden.
 
 Anbieter, API-Key und Modelle können im KI-Dialog unter dem Zahnrad gespeichert werden. Zur Wahl
 stehen OpenAI und ein eigener OpenAI-kompatibler Dienst mit Base URL und API-Key.
@@ -312,19 +343,52 @@ Für OpenAI bleibt `GOBLIN_OPENAI_API_KEY` verfügbar. Der Key bleibt im Backend
 `GOBLIN_AI_TIMEOUT` setzt das Zeitlimit je Versuch. Ein vorübergehender Fehler
 wird höchstens einmal wiederholt. Kosten fallen beim gewählten Anbieter an.
 
+Alle HTTP-Aufrufe an den KI-Anbieter, einschließlich Modellliste, Modellpreisen,
+Verbindungstest, Tagging, Titelbereinigung, Sprachprüfung und Übersetzung, werden ab dem ersten
+Aufruf in `goblin-data/logs/ai-requests.jsonl` protokolliert. Jede Zeile ist ein
+JSON-Objekt: `request`, `response` oder bei Verbindungsfehlern `error`. Die
+zusammengehörenden Zeilen haben dieselbe `id`; auch wiederholte HTTP-Versuche
+werden einzeln erfasst. Request- und Response-Body werden gespeichert, auch
+wenn die Antwort später als ungültig verworfen wird. Zugangsschlüssel in
+Headern, URL-Parametern und JSON-Feldern werden ersetzt. Die Datei hat Modus
+`0600` und enthält trotzdem Buchmetadaten oder Textproben; sie sollte vertraulich
+behandelt werden. Das reguläre Archiv-Backup enthält diese Logdatei nicht.
+Zum Anzeigen: `jq . goblin-data/logs/ai-requests.jsonl`.
+
 Herkunft, Modell, Zeitpunkt und Begründung neuer Tags werden pro Buch unter
 `tag_sources` in Datenbank-Metadaten und `metadata.json` gespeichert; `ai_tagging`
 enthält zusätzlich den Tokenverbrauch des letzten erfolgreichen Laufs. Unveränderte
 Buchdaten werden bei erneutem Klick nicht nochmals angefragt. Auch manuell entfernte
 KI-Tags werden dadurch nicht sofort erneut gesetzt. Änderungen an Buchkontext,
 Modell oder Prompt-Version ermöglichen eine neue Analyse. Fehler werden nicht gecacht.
+Katalogvorschläge werden vor dem KI-Aufruf um Werbe- und Identitätsbegriffe bereinigt.
+Beim Wechsel der Prompt-Version ersetzt eine erfolgreiche neue Analyse die alten,
+als KI-generiert markierten Tags; manuelle Tags bleiben bestehen.
 
 `POST /api/books/{id}/ai/tags` liefert das aktualisierte Buch, die Anzahl neuer Tags
 und einen Cache-Hinweis. Pro Backend-Prozess läuft höchstens eine Tagging-Anfrage
-gleichzeitig. Die Verarbeitung erfolgt unabhängig vom Import. Die gemeinsame
+gleichzeitig. Für neue Bücher kann sie auch in der serverseitigen
+Import-Nachbearbeitung laufen. Die gemeinsame
 Provider-Schnittstelle in `backend/ai.py` kann auch weitere KI-Funktionen bedienen.
 
-## Sprache per KI ermitteln
+## Autorennamen abgleichen
+
+Nach der ISBN-/Werksuche gleicht Goblin nicht-lateinische Autorenangaben mit einem
+exakten Katalogtreffer ab. Ein bereits im Archiv verwendeter Name wird bevorzugt;
+manuell gepflegte Autorenangaben bleiben unangetastet.
+
+## Titel per KI bereinigen
+
+Die Buchansicht kann Titel mit `POST /api/books/{id}/ai/title` bereinigen. Die KI
+korrigiert Schreibweise, Groß-/Kleinschreibung, Abstände und Satzzeichen und soll
+Untertitel, Band- und Editionsangaben erhalten. Manuell gepflegte Titel werden
+nicht überschrieben. Herkunft und Modell stehen unter `metadata.title`; der Lauf
+und seine Cachekennung stehen unter `ai_title_normalization` in `metadata.json`.
+Neue Importe bereinigen Titel automatisch nur lokal nach konservativen Regeln.
+In der Importvorschau kann eine KI-Prüfung ausdrücklich als Vorschlag ausgelöst
+werden; erst eine Bestätigung übernimmt den vorgeschlagenen Titel.
+
+## Sprache prüfen
 
 Die Buchansicht bietet eine getrennte Sprachprüfung über
 `POST /api/books/{id}/ai/language`. Goblin liest lokal drei unterschiedliche,
@@ -334,22 +398,27 @@ Navigation und erkennbare Titel-/Impressumsdateien werden übersprungen. Bei lä
 PDFs werden die ersten zwei Seiten ausgelassen. Die Stichprobe ist begrenzt und
 kann eine Sprache in unberücksichtigten Buchteilen übersehen.
 
-Nur die Textproben gehen an den gewählten KI-Anbieter, ohne Titel, Klappentext oder bisherige
-Sprachangabe. Das Modell bewertet jede Probe getrennt. Goblin übernimmt einen
-validierten ISO-639-1-Code nur, wenn alle drei Proben eindeutig dieselbe Sprache
-ergeben. Bei Mehrsprachigkeit, widersprüchlichen Ergebnissen oder zu wenig Text
+Lingua bewertet jede Probe lokal gegen alle unterstützten Sprachen. Deutsch oder Englisch
+wird nur bei drei eindeutigen, übereinstimmenden Proben ohne längere abweichende
+Textabschnitte übernommen. Die relativen Modellwerte sind keine Trefferwahrscheinlichkeiten.
+Bei unsicheren, widersprüchlichen oder anderssprachigen Proben kann die bisherige
+KI-Prüfung einspringen. Nur dann werden die drei Textproben an den konfigurierten
+Anbieter gesendet, ohne Titel, Klappentext oder bisherige Sprachangabe. Der Fallback
+lässt sich in den KI-Optionen oder mit `GOBLIN_AI_LANGUAGE_FALLBACK_ENABLED=false`
+abschalten. Ohne API-Key funktioniert die lokale Erkennung weiterhin.
+Bei Mehrsprachigkeit, widersprüchlichen Ergebnissen oder zu wenig Text
 bleibt die bisherige Sprache erhalten. Eine manuell bestätigte Angabe
 (`metadata.language.source` gleich `manual`/`user` oder `confirmed: true`) ist geschützt.
 
-Unterstützt sind EPUB, PDFs mit Text und unverschlüsselte MOBI/AZW3-Dateien mit
+Unterstützt sind EPUB, FB2, PDFs mit Text und unverschlüsselte MOBI/AZW3-Dateien mit
 unkomprimiertem oder einfachem PalmDOC-Text. Andere Kindle-Kompressionen und
 Textstrukturen werden mit einem Hinweis abgelehnt. Es erfolgt keine DRM-Umgehung
 und keine OCR für gescannte PDFs. Datei- und Abschnittsgrößen sind begrenzt.
 
-`GOBLIN_AI_LANGUAGE_MODEL` konfiguriert das Modell unabhängig vom Tagging. API-Key
-und Zeitlimit werden gemeinsam verwendet. Wiederholte Aufrufe mit denselben
-Proben und derselben Modell-/Prompt-Konfiguration nutzen das gespeicherte Ergebnis.
-Fehler werden nicht gecacht. Herkunft, alte Sprachangabe, Bewertungen, Probenpositionen
+`GOBLIN_AI_LANGUAGE_MODEL` konfiguriert das Fallback-Modell unabhängig vom Tagging. API-Key
+und Zeitlimit werden gemeinsam verwendet. Eindeutige lokale Ergebnisse werden unabhängig
+von der KI-Konfiguration gecacht; KI-Ergebnisse berücksichtigen Anbieter, Modell und Prompt.
+Vorübergehende Fehler werden nicht gecacht. Herkunft, alte Sprachangabe, Bewertungen, Probenpositionen
 und Proben-Hashes sowie Tokenverbrauch stehen in `language_detection` und
 `language_detection_history` in Datenbank und `metadata.json`; Probenvolltexte
 werden dort nicht gespeichert. Bei Fehlern beim Speichern wird die Änderung
@@ -437,17 +506,23 @@ Für Cover gilt unabhängig von der konfigurierbaren Metadatenreihenfolge fest:
 - `PUT /api/translations/{id}/budget` ändert oder entfernt eine Budgetgrenze
 - `POST /api/translations/{id}/start|pause|cancel` steuert den Auftrag
 - `POST /api/import` (Multipart, Feldname `files`)
-- `GET /api/imports/{id}` und `GET /api/events`
+- `GET /api/imports`, `GET /api/imports/{id}` und `GET /api/events` liefern Aufträge und Fortschritt
+- `POST /api/imports/{id}/items/{item_id}/retry` wiederholt fehlgeschlagene Nachbearbeitungsschritte
+- `GET /api/import/previews` zeigt Duplikatverdachte; `PUT /api/import/previews/{id}/duplicate-decision` speichert „beide behalten“ oder „vorhandenes Buch verwenden“
+- `POST /api/duplicates/scans` startet die Bestandsprüfung; `GET /api/duplicates` zeigt Treffer und `PUT /api/duplicates/decision` speichert Paarentscheidungen
+- `GET/PUT /api/duplicates/aliases` verwaltet bestätigte Schreibvarianten für Autoren, Verlage und Reihen
+- `GET /api/books/{id}/metadata-sources` zeigt die erfassten Quellwerte und manuellen Korrekturen
 - `GET /api/providers`
 - `DELETE /api/archive?confirmation=LÖSCHEN` (Entwicklungsfunktion)
 
 ## Aktuelle MVP-Grenzen
 
-- Duplikate bedeuten nur byte-identische Dateien mit gleichem SHA-256.
+- Byteidentische Dateien werden automatisch übersprungen. ISBN-, Metadaten- und Texttreffer werden mit Begründung angezeigt und erfordern bei Verdacht eine Entscheidung. Die Textextraktion unterstützt EPUB, PDF und FB2; verschlüsselte oder bildbasierte PDFs und MOBI/AZW3 ohne Textextraktor bleiben inhaltlich ungeprüft.
 - Werkmatches und Referenz-ISBNs werden getrennt von konkreten Ausgaben gespeichert; ein automatisches Zusammenführen verschiedener Archivdateien findet weiterhin nicht statt.
 - Importjobs leben nur im Speicher und gehen bei einem Backend-Neustart verloren; bereits abgeschlossene Archivdaten bleiben erhalten.
 - MOBI/AZW3-Metadaten werden direkt aus gängigen MOBI-/EXTH-Feldern gelesen. Bei exotischen Kindle-Varianten kann der Dateiname als Titel-Fallback dienen.
-- PDF-Seiten werden nicht als Cover gerendert. Nur ein explizit eingebettetes PDF-Thumbnail wird verwendet; andernfalls folgen die ISBN-Provider.
+- FB2 unterstützt unkomprimierte `.fb2`-Dateien bis 100 MB mit Metadaten, eingebettetem Cover und Textproben aus dem Haupttext. ZIP-verpackte FB2-Dateien werden derzeit nicht importiert.
+- Die erste PDF-Seite wird als Cover gerendert. Falls das scheitert, wird ein eingebettetes PDF-Thumbnail versucht; danach folgen die ISBN-Provider.
 - Exotische EPUB-Guide-Seiten oder Kindle-Container ohne direkt zugänglichen Cover-Record können ein eingebettetes Bild enthalten, das im MVP nicht extrahiert werden kann; externe ISBN-Provider bleiben der Fallback.
 - Kein Metadaten-Editor, keine Mehrbenutzer-Konten, Rechteverwaltung, Cloud-Synchronisation oder Desktop-Hülle. Der [Sicherheitsaudit](docs/security-audit.md) beschreibt den Stand vor Einführung der Admin-Anmeldung.
 - Provider-Treffer werden bewusst einfach ausgewählt: erster plausibler Treffer in der konfigurierten Reihenfolge.

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
+import uuid
 
 import pytest
 from ebooklib import epub
@@ -31,7 +33,7 @@ def make_epub(path):
 
 
 @pytest.mark.asyncio
-async def test_success_metadata_serialization_and_duplicate(db_context, tmp_path):
+async def test_success_metadata_serialization_and_duplicate(db_context, tmp_path, monkeypatch):
     settings, factory = db_context
     manager = ImportManager(settings, factory, ProviderChain([]))
     first = tmp_path / "first.epub"
@@ -46,10 +48,24 @@ async def test_success_metadata_serialization_and_duplicate(db_context, tmp_path
         assert len(books) == 1
         assert books[0].sha256 == expected_hash
         metadata_path = settings.library_dir / books[0].library_path
+        assert re.fullmatch(r"bk_[0-9a-f]{32}", books[0].id)
+        assert uuid.UUID(hex=books[0].id[3:]).version == 4
+        assert books[0].library_path == f"{books[0].id[3:7]}/{books[0].id}/book.epub"
+        assert metadata_path.is_file()
+        assert sha256_file(metadata_path) == expected_hash
         document = json.loads((metadata_path.parent / "metadata.json").read_text())
         assert document["schema_version"] == 1
         assert document["import"]["original_filename"] == "hobbit_final_NEU_2.epub"
+        assert document["file"]["library_path"] == books[0].library_path
         assert document["metadata"]["title"] == {"value": "Der Hobbit", "source": "embedded"}
+        original_path = books[0].library_path
+        books[0].title = "Ein anderer Titel"
+        session.commit()
+        from backend import main
+        monkeypatch.setattr(main, "settings", settings)
+        response = main.download_book(books[0].id, session)
+        assert response.filename == "Ein anderer Titel.epub"
+        assert books[0].library_path == original_path
 
     second = tmp_path / "again.epub"
     shutil.copy2(settings.library_dir / books[0].library_path, second)

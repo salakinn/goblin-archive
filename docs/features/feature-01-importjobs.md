@@ -1,4 +1,5 @@
 # Feature 01: Importjobs persistent und wiederaufnehmbar
+Umsetzungsaufwand: 7/10
 
 ## Ziel
 

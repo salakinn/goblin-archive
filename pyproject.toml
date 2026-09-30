@@ -15,6 +15,7 @@ dependencies = [
   "pypdf>=5,<7",
   "openai>=2,<3",
   "websockets>=14,<18",
+  "lingua-language-detector>=2.2,<3",
 ]
 
 [project.optional-dependencies]

@@ -1,4 +1,5 @@
 import json
+import hashlib
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
@@ -109,6 +110,31 @@ def test_empty_result_and_changed_context(tagging_api):
         session.commit()
     assert client.post(URL).json()["cached"] is False
     assert provider.generate.call_count == 2
+
+
+def test_tagging_retries_old_empty_result_with_inference_prompt(tagging_api):
+    client, provider, path, factory = tagging_api
+    with factory() as session:
+        book = get_book(session, "bk_test0001")
+        old_context = ai.tagging_context(book)
+        for field in ("publication_year", "publisher", "isbn", "genres"):
+            old_context.pop(field)
+        old_payload = [old_context, main.settings.ai_provider, main.settings.ai_base_url,
+                       main.settings.ai_tagging_model, "1"]
+        old_fingerprint = hashlib.sha256(json.dumps(old_payload, sort_keys=True).encode()).hexdigest()
+        document = json.loads(book.metadata_json)
+        document["ai_tagging"] = {"fingerprint": old_fingerprint}
+        book.metadata_json = json.dumps(document)
+        session.commit()
+        path.write_text(book.metadata_json)
+
+    response = client.post(URL)
+    assert response.status_code == 200, response.text
+    assert response.json()["cached"] is False
+    kwargs = provider.generate.call_args.kwargs
+    assert "Selbst ohne Beschreibung" in kwargs["instructions"]
+    assert kwargs["context"]["title"] == "Der Hobbit"
+    assert kwargs["context"]["publication_year"] == 1937
 
 
 def test_missing_book_and_concurrent_request(tagging_api):

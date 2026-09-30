@@ -7,7 +7,18 @@ async function apiFetch(input: RequestInfo | URL, init: RequestInit = {}): Promi
   const method = (init.method || 'GET').toUpperCase()
   const headers = new Headers(init.headers)
   if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) headers.set('X-CSRF-Token', csrfToken)
-  const response = await fetch(input, { ...init, headers })
+  let response = await fetch(input, { ...init, headers })
+  if (response.status === 403 && !['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+    const body = await response.clone().json().catch(() => null)
+    if (body?.detail?.message === 'CSRF-Prüfung fehlgeschlagen.') {
+      const status = await fetch('/api/auth/status', { cache: 'no-store' }).then(result => result.json()).catch(() => null)
+      if (status?.authenticated && status.csrf_token && status.csrf_token !== headers.get('X-CSRF-Token')) {
+        setCsrfToken(status.csrf_token)
+        headers.set('X-CSRF-Token', status.csrf_token)
+        response = await fetch(input, { ...init, headers })
+      }
+    }
+  }
   if (response.status === 401) window.dispatchEvent(new Event('goblin-unauthorized'))
   return response
 }
@@ -38,6 +49,17 @@ export async function updateBookMetadata(id: string, values: BookMetadataUpdate)
 export async function getAiSettings(): Promise<AiSettings> {
   return json(await apiFetch('/api/settings/ai'))
 }
+
+export type BackupJob = { id: string; kind: 'backup' | 'restore'; status: string; phase: string; created_at: string; processed_bytes: number; total_bytes?: number; size?: number; book_count?: number; current_book_count?: number; created_backup_at?: string; format?: number; error?: string; previous?: string; previous_bytes?: number }
+export async function listBackups(): Promise<BackupJob[]> { return (await json<{ items: BackupJob[] }>(await apiFetch('/api/backups'))).items }
+export async function createBackup(): Promise<BackupJob> { return json(await apiFetch('/api/backups', { method: 'POST' })) }
+export async function uploadBackup(file: File): Promise<BackupJob> {
+  const form = new FormData(); form.append('file', file)
+  return json(await apiFetch('/api/backups/restore/upload', { method: 'POST', body: form }))
+}
+export async function restoreBackup(id: string): Promise<BackupJob> { return json(await apiFetch(`/api/backups/${id}/restore`, { method: 'POST' })) }
+export async function deleteBackup(id: string): Promise<void> { await json(await apiFetch(`/api/backups/${id}`, { method: 'DELETE' })) }
+export async function deletePreviousBackup(id: string): Promise<void> { await json(await apiFetch(`/api/backups/${id}/previous`, { method: 'DELETE' })) }
 
 export async function saveAiSettings(settings: Partial<AiSettings> & { api_key?: string | null }): Promise<AiSettings> {
   return json(await apiFetch('/api/settings/ai', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }))
@@ -84,8 +106,16 @@ export async function removeTag(id: string, tagId: number): Promise<Book> {
   return json<Book>(await apiFetch(`/api/books/${id}/tags/${tagId}`, { method: 'DELETE' }))
 }
 
-export async function generateTags(id: string): Promise<{ book: Book; added: number; cached: boolean }> {
+export async function generateTags(id: string): Promise<{ book: Book; added: number; removed?: number; cached: boolean; message?: string }> {
   return json(await apiFetch(`/api/books/${id}/ai/tags`, { method: 'POST' }))
+}
+
+export async function normalizeTitle(id: string): Promise<{ book: Book; changed: boolean; cached: boolean; message?: string; original_title?: string; normalized_title?: string }> {
+  return json(await apiFetch(`/api/books/${id}/ai/title`, { method: 'POST' }))
+}
+
+export async function normalizeAuthors(id: string): Promise<{ book: Book; changed: boolean; message?: string; original_authors?: string[]; normalized_authors?: string[] }> {
+  return json(await apiFetch(`/api/books/${id}/authors/normalize`, { method: 'POST' }))
 }
 
 export async function detectLanguage(id: string): Promise<{ book: Book; status: 'detected' | 'unclear' | 'protected' | 'insufficient_text'; applied: boolean; cached: boolean }> {
@@ -164,6 +194,10 @@ export async function uploadBooks(files: File[]): Promise<ImportJob> {
   return json<ImportJob>(await apiFetch('/api/import', { method: 'POST', body: form }))
 }
 
+export async function getImportLimits(): Promise<{ max_files: number; max_bytes: number }> {
+  return json(await apiFetch('/api/import/limits'))
+}
+
 export async function uploadPreviews(files: File[]): Promise<ImportPreview[]> {
   const form = new FormData()
   for (const file of files) form.append('files', file, file.name)
@@ -178,9 +212,34 @@ export async function editPreview(id: string, revision: number, changes: Record<
 export async function previewAction(id: string, action: 'confirm' | 'discard' | 'enrich' | 'reanalyze' | 'cover/search' | 'skip' | 'resume'): Promise<ImportPreview> {
   return json(await apiFetch(`/api/import/previews/${id}/${action}`, { method: 'POST' }))
 }
+export type PreviewTitleSuggestion = { revision: number; original_title: string; suggested_title: string; token: string; provider: string; model: string }
+export async function suggestPreviewTitle(id: string, revision: number, original_title: string): Promise<PreviewTitleSuggestion> {
+  return json(await apiFetch(`/api/import/previews/${id}/ai/title/suggest`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ revision, original_title, suggested_title: original_title }) }))
+}
+export async function acceptPreviewTitle(id: string, suggestion: PreviewTitleSuggestion): Promise<ImportPreview> {
+  return json(await apiFetch(`/api/import/previews/${id}/ai/title/accept`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(suggestion) }))
+}
+
+export async function decidePreviewDuplicate(id: string, revision: number, action: 'keep_both' | 'use_existing', bookId?: string): Promise<ImportPreview> {
+  return json(await apiFetch(`/api/import/previews/${id}/duplicate-decision`, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ revision, action, book_id: bookId }),
+  }))
+}
+
+export type MetadataSourceRow = { field: string; value: unknown; source: string | null; recorded_at: string }
+export async function getMetadataSources(id: string): Promise<MetadataSourceRow[]> {
+  return (await json<{ items: MetadataSourceRow[] }>(await apiFetch(`/api/books/${id}/metadata-sources`))).items
+}
 
 export async function getImport(id: string): Promise<ImportJob> {
   return json<ImportJob>(await apiFetch(`/api/imports/${id}`))
+}
+export async function listImports(): Promise<ImportJob[]> {
+  return (await json<{ items: ImportJob[] }>(await apiFetch('/api/imports'))).items
+}
+export async function retryImportStep(importId: string, itemId: string): Promise<ImportJob> {
+  return json<ImportJob>(await apiFetch(`/api/imports/${importId}/items/${itemId}/retry`, { method: 'POST' }))
 }
 
 export async function clearArchive(): Promise<{ deleted_books: number }> {

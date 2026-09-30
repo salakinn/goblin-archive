@@ -224,6 +224,7 @@ export function AiSettingsPanel({ onClose, onSaved }: { onClose: () => void; onS
         </div>}
         {step === 2 && <div className="ai-step-content">
           <div><h3>Optionen</h3><p>Die ersten beiden Schritte reichen für den Start. Hier kannst du Modelle, Preise und Limits getrennt festlegen.</p></div>
+          <label><input type="checkbox" checked={form.ai_language_fallback_enabled} onChange={event => setForm(current => current && { ...current, ai_language_fallback_enabled: event.target.checked })} /> KI-Fallback bei unsicherer lokaler Spracherkennung</label>
           <details><summary>Modelle je Aufgabe</summary><div className="ai-models">{tasks.map(([name, label]) => <label key={name}>{label}
             <input required maxLength={120} value={form[name]} onChange={event => setForm(current => current &&
               withCatalogPrices({ ...current, [name]: event.target.value }, modelPrices, name, true))} />

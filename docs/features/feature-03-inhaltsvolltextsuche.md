@@ -1,4 +1,5 @@
 # Feature 03: Volltextsuche im Buchinhalt
+Umsetzungsaufwand: 8/10
 
 ## Ziel
 

@@ -131,6 +131,8 @@ def test_preview_resume_and_archive_epub(db_context, monkeypatch, profile):
         assert output.language == 'de'
         assert output.isbn is None
         assert output.reference_isbn == book.isbn
+        assert len(output.id) == 35
+        assert output.library_path == f"{output.id[3:7]}/{output.id}/book.epub"
         assert json.loads((settings.library_dir / output.library_path).parent.joinpath('metadata.json').read_text())['file']['filename'] == Path(output.library_path).name
         with zipfile.ZipFile(settings.library_dir / output.library_path) as z:
             chapter = ET.fromstring(z.read('OEBPS/one.xhtml'))

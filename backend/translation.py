@@ -24,9 +24,11 @@ from sqlalchemy import select, update
 
 from backend.ai import AIError, make_ai_provider
 from backend.config import Settings
+from backend.archive_paths import publish_book_directory, reserve_book_location
 from backend.epub_safety import UnsafeEpubError, validate_epub_zip
 from backend.imports import sha256_file
 from backend.metadata import language_label, normalize_language, sanitize_component
+from backend.metadata_sources import record_sources
 from backend.models import Book, TranslationGlossary, TranslationJob
 from backend.usage import AILimitError, cost as ai_cost, fail as fail_usage
 from backend.usage import finish as finish_usage, mark_invalid as mark_invalid_usage
@@ -675,12 +677,15 @@ class TranslationManager:
             if sha256_file(source) != job["source_hash"]:
                 raise TranslationError("Quelldatei wurde seit dem Start verändert")
             title = f"{source_book.title} (KI-Übersetzung: {language_label(job['target_language'])})"
-            output_id = f"bk_{uuid.uuid4().hex[:8]}"
-            relative = PurePosixPath(sanitize_component(source_book.authors[0].name if source_book.authors else "Unbekannter Autor")) / sanitize_component(title) / output_id / f"{sanitize_component(title, max_length=150)}.epub"
-            target = self.settings.library_dir / relative
-            target.parent.mkdir(parents=True, exist_ok=False)
-            temp = target.with_suffix(".tmp")
+            location = reserve_book_location(self.settings.library_dir, "epub",
+                                             lambda value: db.get(Book, value) is not None)
+            output_id = location.book_id
+            relative = PurePosixPath(location.relative_file)
+            target = location.directory / "book.epub"
+            staged_dir = self.settings.library_dir / f".incoming-{uuid.uuid4().hex}"
+            temp = staged_dir / "book.epub.tmp"
             try:
+                staged_dir.mkdir()
                 by_file = {}
                 for s in job["segments"]:
                     by_file.setdefault(s["file"], []).append(s)
@@ -728,14 +733,14 @@ class TranslationManager:
                     raise TranslationError("Auftrag wurde während der EPUB-Prüfung angehalten")
                 digest = sha256_file(temp)
                 size = temp.stat().st_size
-                os.replace(temp, target)
+                os.replace(temp, staged_dir / target.name)
                 cover_relative = None
                 if source_book.cover_path:
                     cover_source = (self.settings.library_dir / source_book.cover_path).resolve()
                     if cover_source.is_relative_to(self.settings.library_dir.resolve()) and cover_source.is_file():
-                        cover_target = target.parent / cover_source.name
+                        cover_target = staged_dir / cover_source.name
                         shutil.copy2(cover_source, cover_target)
-                        cover_relative = cover_target.relative_to(self.settings.library_dir).as_posix()
+                        cover_relative = (location.directory / cover_source.name).relative_to(self.settings.library_dir).as_posix()
                 doc = {"schema_version": 1, "id": output_id,
                        "file": {"filename": target.name, "format": "epub", "size": size,
                                 "sha256": digest, "library_path": relative.as_posix(),
@@ -748,7 +753,8 @@ class TranslationManager:
                        "metadata": {"title": {"value": title, "source": "ai_translation"},
                                     "language": {"value": job["target_language"], "source": "ai_translation"}}}
                 metadata_text = json.dumps(doc, ensure_ascii=False, indent=2)
-                (target.parent / "metadata.json").write_text(metadata_text + "\n", encoding="utf-8")
+                (staged_dir / "metadata.json").write_text(metadata_text + "\n", encoding="utf-8")
+                publish_book_directory(staged_dir, location)
                 book = Book(id=output_id, title=title, publication_year=source_book.publication_year,
                             language=job["target_language"], publisher=source_book.publisher, isbn=None,
                             reference_isbn=source_book.reference_isbn or source_book.isbn,
@@ -757,11 +763,12 @@ class TranslationManager:
                             library_path=relative.as_posix(), has_cover=bool(cover_relative), cover_path=cover_relative,
                             cover_source=source_book.cover_source if cover_relative else None,
                             cover_provider=source_book.cover_provider if cover_relative else None,
-                            original_filename=target.name, imported_at=datetime.now(timezone.utc),
+                            original_filename=f"{sanitize_component(title, max_length=150)}.epub", imported_at=datetime.now(timezone.utc),
                             metadata_json=metadata_text)
                 book.authors = [get_or_create_author(db, a.name) for a in source_book.authors]
                 book.tags = list(source_book.tags)
                 insert_book(db, book)
+                record_sources(db, output_id, [doc["metadata"]])
                 job["output_book_id"] = output_id
                 job["status"] = "completed"
                 changed = db.execute(update(TranslationJob).where(
@@ -774,5 +781,6 @@ class TranslationManager:
                 db.commit()
             except Exception:
                 db.rollback()
+                shutil.rmtree(staged_dir, ignore_errors=True)
                 shutil.rmtree(target.parent, ignore_errors=True)
                 raise

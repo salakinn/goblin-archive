@@ -131,6 +131,12 @@ def init_db(db_engine=engine) -> None:
         preview_columns = {row[1] for row in connection.execute(text("PRAGMA table_info(import_previews)"))}
         if "edited" not in preview_columns:
             connection.execute(text("ALTER TABLE import_previews ADD COLUMN edited BOOLEAN NOT NULL DEFAULT 0"))
+        for column in ("fingerprint_json", "duplicate_decision_json", "source_values_json"):
+            if column not in preview_columns:
+                connection.execute(text(f"ALTER TABLE import_previews ADD COLUMN {column} TEXT"))
+        fingerprint_columns = {row[1] for row in connection.execute(text("PRAGMA table_info(book_fingerprints)"))}
+        if "signature_json" not in fingerprint_columns:
+            connection.execute(text("ALTER TABLE book_fingerprints ADD COLUMN signature_json TEXT"))
         for column in ("embedded_cover_path", "embedded_cover_json", "external_cover_path", "external_cover_json"):
             if column not in preview_columns:
                 connection.execute(text(f"ALTER TABLE import_previews ADD COLUMN {column} TEXT"))

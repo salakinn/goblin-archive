@@ -1,4 +1,4 @@
-const supported = new Set(['epub', 'pdf', 'mobi', 'azw3'])
+const supported = new Set(['epub', 'pdf', 'mobi', 'azw3', 'fb2'])
 
 type FileEntry = {
   isFile: boolean

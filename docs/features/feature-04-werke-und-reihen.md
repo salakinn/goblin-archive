@@ -1,4 +1,5 @@
 # Feature 04: Werke und Reihendetails
+Umsetzungsaufwand: 6/10
 
 ## Ziel
 

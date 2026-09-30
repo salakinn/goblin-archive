@@ -40,6 +40,15 @@ async def test_provider_fallback_and_merge():
     assert result.publisher.source == "working"
 
 
+@pytest.mark.asyncio
+async def test_provider_can_replace_provisional_filename_title():
+    metadata = BookMetadata(title=FieldValue("Der Hobbit by Tolkien", "filename"))
+    result, used = await ProviderChain([WorkingProvider()]).enrich(metadata)
+    assert used == ["working"]
+    assert result.title.value == "Der Hobbit"
+    assert result.title.source == "working"
+
+
 def test_structured_lobid_values_are_reduced_to_labels():
     assert _first([{"id": "lang:de", "label": "Deutsch"}]) == "Deutsch"
     assert _list([{"label": "Historischer Roman"}, {"id": "topic:fiction"}]) == [

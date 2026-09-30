@@ -17,6 +17,10 @@ export type ImportPreview = {
   sha256: string | null
   duplicate_book_id: string | null
   duplicate_preview_id: string | null
+  duplicate_matches: { book_id: string; title: string; authors: string[]; format: string; isbn: string | null; kind: 'content' | 'short_content' | 'partial_content' | 'edition' | 'metadata'; reasons: string[]; conflicts: string[]; requires_review: boolean }[]
+  similar_previews: { preview_id: string; filename: string; kind: string; reasons: string[]; conflicts: string[] }[]
+  duplicate_decision: { action: string; book_ids?: string[]; book_id?: string } | null
+  fingerprint: { status: string; reason: string | null; word_count: number } | null
   book_id: string | null
   error: string | null
   revision: number
@@ -29,6 +33,7 @@ export type AiSettings = {
   key_configured: boolean
   ai_tagging_model: string
   ai_language_model: string
+  ai_language_fallback_enabled: boolean
   ai_translation_model: string
   ai_translation_qa_model: string
   ai_translation_editor_model: string
@@ -137,7 +142,7 @@ export type Book = {
   library_path?: string
   metadata?: Record<string, SourceValue>
   tag_sources?: Record<string, { source: string; provider: string; model: string; created_at: string; reason: string }>
-  language_detection?: { status: string; language: string | null; created_at: string; assessments: { sample_id: number; language: string; status: string; reason: string }[] } | null
+  language_detection?: { status: string; language: string | null; source: 'local' | 'ai'; fallback_error?: string | null; created_at: string; assessments: { sample_id: number; language: string; status: string; reason: string }[] } | null
   cover?: CoverMetadata | null
   work_match?: WorkMatch | null
   translation?: { source_book_id: string; target_language: string; job_id: string } | null
@@ -194,17 +199,26 @@ export type FilterOptions = {
 }
 
 export type ImportItem = {
+  id: string
   filename: string
-  status: 'queued' | 'finished' | 'duplicate' | 'failed'
+  status: 'queued' | 'running' | 'postprocessing' | 'finished' | 'duplicate' | 'needs_review' | 'failed' | 'discarded'
   event: string
   message: string | null
   book_id: string | null
+  preview_id: string | null
+  warnings: string[]
+  results: string[]
+  failed_steps: string[]
 }
 
 export type ImportJob = {
   id: string
   status: string
+  revision: number
   total: number
   completed: number
+  queued: number
+  active: number
+  needs_review: number
   items: ImportItem[]
 }

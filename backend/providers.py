@@ -162,7 +162,7 @@ class ProviderChain:
             # are never silently selected as a side effect of metadata enrichment.
             if name == "isbn":
                 continue
-            if name == "title" and current.value:
+            if name == "title" and current.value and current.source != "filename":
                 continue
             if incoming.value not in (None, "", []):
                 setattr(target, name, incoming)

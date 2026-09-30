@@ -6,11 +6,15 @@ import json
 import re
 import struct
 import zipfile
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
+from functools import lru_cache
 from html.parser import HTMLParser
+from importlib.metadata import version
 from pathlib import Path
 from typing import Literal
 from xml.etree import ElementTree
+
+from lingua import LanguageDetectorBuilder
 
 from pydantic import BaseModel, Field, ValidationError
 from pypdf import PdfReader
@@ -19,9 +23,13 @@ from backend.ai import AIError, AIProvider, AIResult
 from backend.config import Settings
 from backend.extractors import _relative_zip_member
 from backend.epub_safety import UnsafeEpubError, validate_epub_zip
+from backend.fb2 import body_units as fb2_body_units, parse_fb2
 
 
 VERSION = "1"
+LOCAL_VERSION = f"lingua-{version('lingua-language-detector')}-low-accuracy-v1"
+LOCAL_MIN_DISTANCE = 0.35
+LOCAL_CHUNK_MIN_DISTANCE = 0.55
 SAMPLE_SIZE = 1600
 MAX_MEMBER = 2_000_000
 MAX_FILE = 100_000_000
@@ -125,7 +133,12 @@ def _epub_units(path: Path) -> list[tuple[str, str]]:
 def _pdf_units(path: Path) -> list[tuple[str, str]]:
     reader = PdfReader(str(path))
     if reader.is_encrypted:
-        raise TextExtractionError("Verschlüsselte PDFs können nicht analysiert werden.")
+        try:
+            unlocked = reader.decrypt("")
+        except Exception as exc:
+            raise TextExtractionError("Passwortgeschützte PDFs können nicht analysiert werden.") from exc
+        if not unlocked:
+            raise TextExtractionError("Passwortgeschützte PDFs können nicht analysiert werden.")
     units = []
     # Skip the first two pages in longer books; keep short PDFs usable.
     start = 2 if len(reader.pages) > 5 else 0
@@ -138,6 +151,14 @@ def _pdf_units(path: Path) -> list[tuple[str, str]]:
         text = re.sub(r"\s+", " ", page.extract_text() or "").strip()
         units.append((f"Seite {page_index + 1}", text[:MAX_MEMBER]))
     return units
+
+
+def _fb2_units(path: Path) -> list[tuple[str, str]]:
+    try:
+        units = fb2_body_units(parse_fb2(path))
+    except ValueError as exc:
+        raise TextExtractionError(str(exc)) from exc
+    return [units[index] for index in _positions(len(units))]
 
 
 def _palmdoc(data: bytes) -> bytes:
@@ -214,7 +235,8 @@ def extract_language_samples(path: Path, file_format: str) -> list[TextSample]:
     if path.stat().st_size > MAX_FILE:
         raise TextExtractionError("Die Datei überschreitet das Limit für die Sprachprüfung (100 MB).")
     try:
-        extractor = {"epub": _epub_units, "pdf": _pdf_units, "mobi": _mobi_units, "azw3": _mobi_units}[file_format]
+        extractor = {"epub": _epub_units, "pdf": _pdf_units, "fb2": _fb2_units,
+                     "mobi": _mobi_units, "azw3": _mobi_units}[file_format]
         units = extractor(path)
         candidates = []
         seen = set()
@@ -292,5 +314,52 @@ def agreed_language(output: LanguageOutput) -> str | None:
 
 def language_fingerprint(samples: list[TextSample], settings: Settings) -> str:
     payload = [VERSION, settings.ai_provider, settings.ai_base_url, settings.ai_language_model,
-               [asdict(s) for s in samples]]
+               [sample.evidence()["sha256"] for sample in samples]]
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
+@lru_cache(maxsize=1)
+def _local_detector():
+    # All supported languages are included so Dutch and other close languages
+    # remain real alternatives to German and English. Models ship in the wheel.
+    return LanguageDetectorBuilder.from_all_languages().with_low_accuracy_mode().build()
+
+
+def local_fingerprint(samples: list[TextSample]) -> str:
+    payload = [LOCAL_VERSION, LOCAL_MIN_DISTANCE, LOCAL_CHUNK_MIN_DISTANCE,
+               [sample.evidence()["sha256"] for sample in samples]]
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
+def local_assessment(samples: list[TextSample]) -> tuple[str | None, list[dict], str | None]:
+    """Conservative three-vote decision; scores are relative model values, not probabilities."""
+    detector = _local_detector()
+    assessments = []
+    for sample in samples:
+        ranked = detector.compute_language_confidence_values(sample.text)
+        top, second = ranked[:2]
+        code = top.language.iso_code_639_1.name.lower()
+        gap = top.value - second.value
+        status = "clear" if code in {"de", "en"} and gap >= LOCAL_MIN_DISTANCE else "unclear"
+        reason = "Lokale Sprachmerkmale eindeutig" if status == "clear" else "Lokale Sprachmerkmale nicht eindeutig"
+        # Separate windows reveal substantial mixed passages hidden by an overall score.
+        chunks = [sample.text[i:i + 400] for i in range(0, len(sample.text), 400)]
+        other = []
+        for chunk in chunks:
+            if sum(char.isalpha() for char in chunk) < 180:
+                continue
+            values = detector.compute_language_confidence_values(chunk)
+            if (values[0].language != top.language
+                    and values[0].value - values[1].value >= LOCAL_CHUNK_MIN_DISTANCE):
+                other.append(values[0].language.iso_code_639_1.name.lower())
+        if other:
+            status, reason = "multilingual", "Abweichende Sprache in einem längeren Teilabschnitt"
+        assessments.append({"sample_id": sample.id, "language": code if status == "clear" else "xx",
+                            "status": status, "reason": reason,
+                            "candidates": [{"language": value.language.iso_code_639_1.name.lower(),
+                                            "score": round(value.value, 5)} for value in ranked[:3]],
+                            "relative_distance": round(gap, 5), "other_sections": other})
+    languages = {item["language"] for item in assessments if item["status"] == "clear"}
+    if len(assessments) == 3 and all(item["status"] == "clear" for item in assessments) and len(languages) == 1:
+        return next(iter(languages)), assessments, None
+    return None, assessments, "Widersprüchliche oder unsichere lokale Textproben"

@@ -12,6 +12,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 ARG APP_VERSION=0.1.0
 ENV GOBLIN_APP_VERSION=${APP_VERSION}
 WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils \
+    && rm -rf /var/lib/apt/lists/*
 COPY pyproject.toml README.md ./
 COPY backend/ ./backend/
 RUN pip install --no-cache-dir . && mkdir -p /data && chown 568:568 /data

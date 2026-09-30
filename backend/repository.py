@@ -10,7 +10,8 @@ from sqlalchemy import delete, func, select, text
 from sqlalchemy.orm import Session, selectinload
 
 from backend.metadata import clean_tag_name, language_label, normalize_language, normalize_tag_name
-from backend.models import Author, Book, Genre, Tag, book_authors, book_tags
+from backend.models import Author, Book, BookComparison, Genre, Tag, book_authors, book_tags
+from backend.metadata_normalization import VERSION as NORMALIZATION_VERSION, normalize as normalize_comparison
 
 _filter_cache: tuple[str, float, dict[str, list[dict[str, Any]]]] | None = None
 _filter_cache_lock = Lock()
@@ -79,6 +80,26 @@ def insert_book(session: Session, book: Book) -> None:
         INSERT INTO books_fts(book_id, title, authors, publisher, series, genres, isbn)
         VALUES (:book_id, :title, :authors, :publisher, :series, :genres, :isbn)
     """), _fts_text(book))
+    update_book_comparison(session, book)
+
+
+def update_book_comparison(session: Session, book: Book) -> None:
+    value = normalize_comparison(title=book.title,
+                                 authors=[author.name for author in book.authors],
+                                 isbn=book.isbn, reference_isbn=book.reference_isbn,
+                                 language=book.language, publisher=book.publisher,
+                                 series=book.series, year=book.publication_year)
+    record = session.get(BookComparison, book.id)
+    if record is None:
+        record = BookComparison(book_id=book.id, version=NORMALIZATION_VERSION,
+                                title_search=value.title_search, isbn=value.isbn,
+                                authors_json=json.dumps(value.authors))
+        session.add(record)
+    else:
+        record.version = NORMALIZATION_VERSION
+        record.title_search = value.title_search
+        record.isbn = value.isbn
+        record.authors_json = json.dumps(value.authors)
 
 
 def get_or_create_author(session: Session, name: str) -> Author:
@@ -216,6 +237,7 @@ def replace_book_fts(session: Session, book: Book) -> None:
         INSERT INTO books_fts(book_id, title, authors, publisher, series, genres, isbn)
         VALUES (:book_id, :title, :authors, :publisher, :series, :genres, :isbn)
     """), _fts_text(book))
+    update_book_comparison(session, book)
 
 
 def add_book_tag(session: Session, book: Book, name: str) -> None:

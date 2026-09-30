@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import base64
+import binascii
 import re
 import posixpath
+import subprocess
 import struct
+import tempfile
 import zipfile
 from dataclasses import dataclass
 from html.parser import HTMLParser
@@ -16,10 +20,30 @@ from pypdf import PdfReader
 
 from backend.metadata import BookMetadata, FieldValue, normalize_isbn, year_from
 from backend.epub_safety import UnsafeEpubError, validate_epub_zip
+from backend.fb2 import child as fb2_child, children as fb2_children, local_name as fb2_local_name
+from backend.fb2 import parse_fb2, text_content as fb2_text
 
 
 class InvalidBookError(ValueError):
     pass
+
+
+def _pdf_first_page_cover(path: Path) -> bytes | None:
+    """Render only the first PDF page to a bounded JPEG cover."""
+    try:
+        with tempfile.TemporaryDirectory(prefix="goblin-pdf-cover-") as directory:
+            output = Path(directory) / "cover"
+            subprocess.run(
+                ["pdftoppm", "-f", "1", "-l", "1", "-singlefile", "-scale-to", "1600",
+                 "-jpeg", "-jpegopt", "quality=85", str(path), str(output)],
+                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=30,
+            )
+            image = output.with_suffix(".jpg")
+            if image.stat().st_size > 15 * 1024 * 1024:
+                return None
+            return image.read_bytes()
+    except (OSError, subprocess.SubprocessError):
+        return None
 
 
 class _CoverReferenceParser(HTMLParser):
@@ -192,7 +216,7 @@ def extract_epub(path: Path) -> Extracted:
     identifiers = _epub_values(book, "DC", "identifier")
     isbn = next((normalize_isbn(value) for value in identifiers if normalize_isbn(value)), None)
     metadata = BookMetadata(
-        title=FieldValue(_clean(titles[0]) if titles else None, "embedded" if titles else None),
+        title=FieldValue(str(titles[0]) if titles else None, "embedded" if titles else None),
         authors=FieldValue([_clean(v) for v in authors if _clean(v)], "embedded" if authors else None),
         publication_year=FieldValue(year_from((_epub_values(book, "DC", "date") or [None])[0]), "embedded"),
         language=FieldValue(_clean((_epub_values(book, "DC", "language") or [None])[0]), "embedded"),
@@ -225,21 +249,20 @@ def extract_pdf(path: Path) -> Extracted:
         raise InvalidBookError(f"PDF konnte nicht gelesen werden: {exc}") from exc
     raw_author = _clean(info.get("/Author"))
     metadata = BookMetadata(
-        title=FieldValue(_clean(info.get("/Title")), "embedded"),
+        title=FieldValue(str(info.get("/Title")) if info.get("/Title") is not None else None, "embedded"),
         authors=FieldValue([raw_author] if raw_author else [], "embedded" if raw_author else None),
         publication_year=FieldValue(year_from(info.get("/CreationDate")), "embedded"),
         publisher=FieldValue(_clean(info.get("/Producer")), "embedded"),
         description=FieldValue(_clean(info.get("/Subject")), "embedded"),
     )
-    cover = None
-    try:
-        # PDF page thumbnails are explicit embedded previews; the page itself is never rendered as a cover.
-        thumbnail = reader.pages[0].get("/Thumb") if reader.pages else None
-        if thumbnail:
-            thumbnail = thumbnail.get_object()
-            cover = thumbnail.get_data()
-    except Exception:
-        pass
+    cover = _pdf_first_page_cover(path) if reader.pages else None
+    if cover is None:
+        try:
+            thumbnail = reader.pages[0].get("/Thumb") if reader.pages else None
+            if thumbnail:
+                cover = thumbnail.get_object().get_data()
+        except Exception:
+            pass
     return Extracted(metadata, cover)
 
 
@@ -256,13 +279,17 @@ def extract_mobi(path: Path) -> Extracted:
         mobi_start = first_offset + 16
         if data[mobi_start:mobi_start + 4] != b"MOBI":
             return Extracted(metadata)
-        full_name_offset = struct.unpack(">I", data[mobi_start + 84:mobi_start + 88])[0]
-        full_name_length = struct.unpack(">I", data[mobi_start + 88:mobi_start + 92])[0]
-        title = data[first_offset + full_name_offset:first_offset + full_name_offset + full_name_length].decode("utf-8", "replace")
-        metadata.title = FieldValue(_clean(title), "embedded")
-        exth_flags = struct.unpack(">I", data[mobi_start + 128:mobi_start + 132])[0]
+        full_name_offset = struct.unpack_from(">I", data, mobi_start + 68)[0]
+        full_name_length = struct.unpack_from(">I", data, mobi_start + 72)[0]
+        first_record_end = offsets[1] if len(offsets) > 1 else len(data)
+        title_start = first_offset + full_name_offset
+        if full_name_length and first_offset <= title_start < first_record_end and title_start + full_name_length <= first_record_end:
+            title = _clean(data[title_start:title_start + full_name_length].decode("utf-8", "replace"))
+            if title and any(char.isalnum() for char in title):
+                metadata.title = FieldValue(title, "embedded")
+        exth_flags = struct.unpack_from(">I", data, mobi_start + 112)[0]
         if exth_flags & 0x40:
-            header_length = struct.unpack(">I", data[mobi_start + 20:mobi_start + 24])[0]
+            header_length = struct.unpack_from(">I", data, mobi_start + 4)[0]
             pos = mobi_start + header_length
             if data[pos:pos + 4] == b"EXTH":
                 count = struct.unpack(">I", data[pos + 8:pos + 12])[0]
@@ -275,20 +302,81 @@ def extract_mobi(path: Path) -> Extracted:
                     raw_values.setdefault(kind, []).append(raw)
                     values.setdefault(kind, []).append(raw.decode("utf-8", "replace"))
                     cursor += length
+                if not metadata.title.value:
+                    title = _clean((values.get(503) or [None])[0])
+                    if title and any(char.isalnum() for char in title):
+                        metadata.title = FieldValue(title, "embedded")
                 metadata.authors = FieldValue(values.get(100, []), "embedded" if values.get(100) else None)
                 metadata.publisher = FieldValue(_clean((values.get(101) or [None])[0]), "embedded")
                 metadata.description = FieldValue(_clean((values.get(103) or [None])[0]), "embedded")
                 metadata.isbn = FieldValue(normalize_isbn((values.get(104) or [None])[0]), "embedded")
                 metadata.publication_year = FieldValue(year_from((values.get(106) or [None])[0]), "embedded")
+                metadata.language = FieldValue(_clean((values.get(524) or [None])[0]), "embedded")
+                metadata.genres = FieldValue(values.get(105, []), "embedded" if values.get(105) else None)
                 if raw_values.get(201):
                     cover_offset = int.from_bytes(raw_values[201][0], "big")
-                    first_image_index = struct.unpack(">I", data[mobi_start + 108:mobi_start + 112])[0]
+                    first_image_index = struct.unpack_from(">I", data, mobi_start + 92)[0]
                     image_index = first_image_index + cover_offset
                     if image_index < len(offsets):
                         end = offsets[image_index + 1] if image_index + 1 < len(offsets) else len(data)
                         cover = data[offsets[image_index]:end]
     except (struct.error, IndexError, ValueError):
         pass
+    return Extracted(metadata, cover)
+
+
+def extract_fb2(path: Path) -> Extracted:
+    try:
+        root = parse_fb2(path)
+    except ValueError as exc:
+        raise InvalidBookError(str(exc)) from exc
+    description = fb2_child(root, "description")
+    title_info = fb2_child(description, "title-info")
+    publish_info = fb2_child(description, "publish-info")
+
+    def field(value):
+        return FieldValue(value, "embedded" if value not in (None, "", []) else None)
+
+    authors = []
+    for author in fb2_children(title_info, "author"):
+        name = " ".join(filter(None, (fb2_text(fb2_child(author, part))
+                                     for part in ("first-name", "middle-name", "last-name"))))
+        name = name or fb2_text(fb2_child(author, "nickname"))
+        if name:
+            authors.append(name)
+    date = fb2_child(title_info, "date")
+    sequence = fb2_child(title_info, "sequence")
+    isbn = normalize_isbn(fb2_text(fb2_child(publish_info, "isbn")))
+    metadata = BookMetadata(
+        title=field(fb2_text(fb2_child(title_info, "book-title"))),
+        authors=field(authors),
+        publication_year=field(year_from(fb2_text(fb2_child(publish_info, "year"))
+                                         or (date.get("value") if date is not None else None)
+                                         or fb2_text(date))),
+        language=field(fb2_text(fb2_child(title_info, "lang"))),
+        publisher=field(fb2_text(fb2_child(publish_info, "publisher"))),
+        isbn=field(isbn),
+        genres=field([value for genre in fb2_children(title_info, "genre")
+                      if (value := fb2_text(genre))]),
+        series=field(sequence.get("name") if sequence is not None else None),
+        description=field(fb2_text(fb2_child(title_info, "annotation"))),
+    )
+
+    cover = None
+    coverpage = fb2_child(title_info, "coverpage")
+    image = fb2_child(coverpage, "image")
+    if image is not None:
+        cover_id = next((value.lstrip("#") for key, value in image.attrib.items()
+                         if fb2_local_name(key) == "href"), None)
+        binary = next((item for item in fb2_children(root, "binary")
+                       if item.get("id") == cover_id), None)
+        if binary is not None:
+            encoded = "".join(binary.itertext())
+            if len(encoded) <= 20_000_000:
+                try:
+                    cover = base64.b64decode(re.sub(r"\s+", "", encoded), validate=True)
+                except binascii.Error:
+                    pass
     return Extracted(metadata, cover)
 
 
@@ -300,4 +388,6 @@ def detect_and_extract(path: Path, original_filename: str) -> tuple[str, Extract
         return extension, extract_pdf(path)
     if extension in {"mobi", "azw3"}:
         return extension, extract_mobi(path)
+    if extension == "fb2":
+        return extension, extract_fb2(path)
     raise InvalidBookError(f"Nicht unterstütztes Dateiformat: {extension or 'ohne Endung'}")

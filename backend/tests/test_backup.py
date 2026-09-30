@@ -1,13 +1,21 @@
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256
 from pathlib import Path
+import zipfile
+import asyncio
+import shutil
+import json
+from types import SimpleNamespace
 
 import pytest
 
 from backend import auth
-from backend.backup import BackupError, archive_lock, create_backup, restore_backup, verify_backup
+from backend.backup import (BackupError, archive_lock, create_backup, restore_backup, verify_backup,
+                            pack_backup, unpack_backup, restore_in_place,
+                            recover_interrupted_restore)
 from backend.models import ImportPreview
 from backend.tests.conftest import add_book
+from backend.backup_jobs import BackupJobs
 
 
 def _archive(db_context):
@@ -87,3 +95,111 @@ def test_backup_requires_stopped_service_and_restore_preserves_old_data(db_conte
     previous = restore_backup(backup, settings.data_dir, replace=True)
     assert previous and (previous / "library" / path.relative_to(settings.library_dir)).is_file()
     assert path.is_file()
+
+
+def test_zip_package_roundtrip_and_unsafe_entries(db_context, tmp_path):
+    settings, _path, _digest = _archive(db_context)
+    directory = tmp_path / "backup"
+    create_backup(settings.data_dir, directory)
+    package = tmp_path / "archive.zip"
+    pack_backup(directory, package)
+    extracted = tmp_path / "extracted"
+    assert unpack_backup(package, extracted, max_bytes=100_000_000) == verify_backup(directory)
+    with pytest.raises(BackupError):
+        unpack_backup(package, tmp_path / "too-small", max_bytes=1)
+    malicious = tmp_path / "malicious.zip"
+    with zipfile.ZipFile(malicious, "w") as archive:
+        archive.writestr("../escape", b"bad")
+    with pytest.raises(BackupError):
+        unpack_backup(malicious, tmp_path / "unsafe", max_bytes=1000)
+    assert not (tmp_path / "escape").exists()
+    import backend.backup as backup_module
+    from collections import namedtuple
+    original_usage = backup_module.shutil.disk_usage
+    Usage = namedtuple("Usage", "total used free")
+    try:
+        backup_module.shutil.disk_usage = lambda _path: Usage(100, 100, 0)
+        with pytest.raises(BackupError, match="Speicher"):
+            unpack_backup(package, tmp_path / "no-space", max_bytes=100_000_000)
+    finally:
+        backup_module.shutil.disk_usage = original_usage
+    assert not (tmp_path / "no-space").exists()
+
+
+def test_in_place_restore_keeps_previous_archive_and_rolls_back(db_context, tmp_path, monkeypatch):
+    settings, book_path, _digest = _archive(db_context)
+    source = tmp_path / "backup"
+    create_backup(settings.data_dir, source)
+    (settings.data_dir / "library" / "extra.txt").write_text("old data")
+    import backend.backup as backup_module
+    original = backup_module._check_database
+    def fail_after_swap(root):
+        if root == settings.data_dir.resolve():
+            raise BackupError("simulierter Abschlussfehler")
+        return original(root)
+    monkeypatch.setattr(backup_module, "_check_database", fail_after_swap)
+    with pytest.raises(BackupError, match="Abschlussfehler"):
+        restore_in_place(source, settings.data_dir)
+    assert (settings.data_dir / "library" / "extra.txt").read_text() == "old data"
+    monkeypatch.setattr(backup_module, "_check_database", original)
+    previous = restore_in_place(source, settings.data_dir)
+    assert previous.is_dir()
+    assert (previous / "library" / "extra.txt").read_text() == "old data"
+    assert book_path.is_file()
+
+
+def test_interrupted_swap_recovers_old_database_before_start(db_context):
+    settings, book_path, _digest = _archive(db_context)
+    previous = settings.data_dir / ".before-restore-interrupted"
+    previous.mkdir()
+    stage = settings.data_dir / ".restore-stage-interrupted"
+    stage.mkdir()
+    (stage / "partial").write_text("new")
+    (settings.data_dir / "goblin.db").rename(previous / "goblin.db")
+    (settings.data_dir / ".restore-journal").write_text(json.dumps({
+        "previous": previous.name,
+        "old_names": ["goblin.db", "auth.db", "library"],
+        "new_names": ["goblin.db", "auth.db", "library"],
+    }))
+    recover_interrupted_restore(settings.data_dir)
+    assert (settings.data_dir / "goblin.db").is_file()
+    assert book_path.is_file()
+    assert not previous.exists()
+    assert not stage.exists()
+
+
+@pytest.mark.asyncio
+async def test_server_job_survives_client_and_restores(db_context, tmp_path, monkeypatch):
+    settings, book_path, digest = _archive(db_context)
+    class Scanner:
+        async def stop(self): pass
+        def resume(self): pass
+    app = SimpleNamespace(state=SimpleNamespace(
+        import_manager=SimpleNamespace(has_active_imports=lambda: False, tasks=set(),
+                                       settings=settings, jobs={}),
+        preview_manager=SimpleNamespace(tasks=set()),
+        translation_manager=SimpleNamespace(running=set(), repairing=set()),
+        duplicate_scanner=Scanner(),
+    ))
+    jobs = BackupJobs(settings.data_dir)
+    monkeypatch.setattr("backend.database.init_db", lambda: None)
+    monkeypatch.setattr("backend.metadata_store.recover_metadata", lambda *_: None)
+    monkeypatch.setattr("backend.translation.TranslationManager", lambda *_: SimpleNamespace(running=set(), repairing=set()))
+    job = jobs.create(app)
+    while jobs.tasks:
+        await asyncio.gather(*list(jobs.tasks))
+    assert jobs.get(job["id"])["status"] == "ready"
+    package = jobs.root / f"{job['id']}.zip"
+    upload = jobs.root / "upload.zip"
+    shutil.copyfile(package, upload)
+    prepared = jobs.prepared_restore(upload, 100_000_000)
+    book_path.write_bytes(b"modified")
+    jobs.restore(app, prepared["id"])
+    while jobs.tasks:
+        await asyncio.gather(*list(jobs.tasks))
+    result = jobs.get(prepared["id"])
+    assert result["status"] == "done", result.get("error")
+    assert book_path.read_bytes() == b"archived epub bytes"
+    assert result["previous_bytes"] > 0
+    jobs.delete_previous(prepared["id"])
+    assert "previous" not in jobs.get(prepared["id"])

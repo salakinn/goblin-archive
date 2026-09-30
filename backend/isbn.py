@@ -19,6 +19,7 @@ from backend.config import Settings
 from backend.metadata import normalize_language, normalize_text, year_from
 from backend.metadata_store import persist_metadata
 from backend.models import Book, IsbnCandidateRecord, IsbnLookupCache
+from backend.subjects import clean_subjects
 
 logger = logging.getLogger(__name__)
 
@@ -578,6 +579,12 @@ class IsbnResolver:
             shared_id = bool(set(value["source_ids"]) & set(candidate["source_ids"]))
             if same_identity or shared_id:
                 related.append(value)
+        known_names = [*book_authors, *candidate["authors"], candidate["title"], candidate.get("publisher")]
+        known_names.extend(value.get("publisher") for value in related)
+        subject_hints = clean_subjects(
+            candidate["subjects"] + [subject for value in related for subject in value["subjects"]],
+            known_names=known_names, limit=30,
+        )
         return {
             "title": candidate["title"],
             "authors": matched_authors or candidate["authors"],
@@ -588,11 +595,7 @@ class IsbnResolver:
             "reference_isbns": list(dict.fromkeys(
                 [candidate["isbn13"]] + [value["isbn13"] for value in related]
             )),
-            "suggested_genres": list(dict.fromkeys(
-                candidate["subjects"] + [
-                    subject for value in related for subject in value["subjects"]
-                ]
-            ))[:30],
+            "suggested_genres": subject_hints,
             "work_series": list(dict.fromkeys(
                 candidate["series"] + [item for value in related for item in value["series"]]
             ))[:20],
@@ -608,7 +611,9 @@ class IsbnResolver:
     ) -> None:
         document["work_match"] = work_match
         book.work_match_json = json.dumps(work_match, ensure_ascii=False)
-        persist_metadata(session, book, document, self.settings)
+        from backend.repository import update_book_comparison
+        persist_metadata(session, book, document, self.settings,
+                         before_commit=lambda: update_book_comparison(session, book))
 
     def apply(self, book_id: str, isbn: str) -> dict[str, Any]:
         """Explicitly assign a candidate as the exact edition ISBN."""

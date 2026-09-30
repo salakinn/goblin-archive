@@ -7,8 +7,9 @@ from ebooklib import epub
 from fastapi.testclient import TestClient
 from pypdf import PdfWriter
 from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
+from pydantic import SecretStr
 
-from backend import main
+from backend import language as language_module, main
 from backend.ai import AIError, AIResult
 from backend.database import get_db
 from backend.language import (LanguageOutput, SampleLanguage, TextExtractionError,
@@ -69,7 +70,7 @@ def test_language_detection_obeys_global_cost_limit(language_api):
     main.settings.ai_language_input_usd_per_million = 100
     main.settings.ai_language_output_usd_per_million = 100
     main.settings.ai_daily_limit_usd = 0.001
-    assert client.post('/api/books/bk_test0001/ai/language').status_code == 409
+    assert client.post('/api/books/bk_test0001/ai/language').json()['status'] == 'unclear'
     provider.generate.assert_not_called()
     main.settings.ai_daily_limit_usd = 1
     assert client.post('/api/books/bk_test0001/ai/language').status_code == 200
@@ -101,10 +102,17 @@ def test_pdf_text_and_scan_without_text(tmp_path):
     assert len(samples) == 3
     assert all("traveller" in s.text for s in samples)
     assert all(not s.location.startswith(("Seite 1 ", "Seite 2 ")) for s in samples)
+    writer.encrypt("", owner_password="owner")
+    writer.write(path)
+    assert len(extract_language_samples(path, "pdf")) == 3
     scan = PdfWriter()
     scan.add_blank_page(width=600, height=800)
     scan.write(path)
     assert extract_language_samples(path, "pdf") == []
+    scan.encrypt("secret")
+    scan.write(path)
+    with pytest.raises(TextExtractionError, match="Passwortgeschützte PDFs"):
+        extract_language_samples(path, "pdf")
 
 
 def write_mobi(path, encryption=0):
@@ -153,7 +161,11 @@ def test_agreement_rules(codes, statuses, expected):
 @pytest.fixture
 def language_api(db_context, monkeypatch):
     settings, factory = db_context
+    settings.openai_api_key = SecretStr("test-key")
     monkeypatch.setattr(main, "settings", settings)
+    monkeypatch.setattr(main, "local_assessment", lambda samples: (None, [
+        {"sample_id": sample.id, "language": "xx", "status": "unclear", "reason": "Test"}
+        for sample in samples], "Test-Fallback"))
     with factory() as session:
         book = add_book(session)
         file = settings.library_dir / book.library_path
@@ -237,8 +249,8 @@ def test_failure_is_not_cached(language_api):
     client, provider, path, _ = language_api
     before = path.read_bytes()
     provider.generate.side_effect = AIError("Offline")
-    assert client.post(URL).status_code == 503
-    assert path.read_bytes() == before
+    assert client.post(URL).json()["status"] == "unclear"
+    assert json.loads(path.read_text())["language_detection"]["cacheable"] is False
     provider.generate.side_effect = None
     assert client.post(URL).json()["applied"] is True
 
@@ -250,8 +262,7 @@ def test_invalid_sample_ids_and_language_are_rejected(language_api):
         if invalid.samples[0].language == "en":
             invalid.samples[0].sample_id = 2
         provider.generate.return_value = AIResult(invalid, 0, 0)
-        assert client.post(URL).status_code == 503
-        assert path.read_bytes() == before
+        assert client.post(URL).json()["status"] == "unclear"
 
 
 def test_commit_failure_restores_language_and_file(language_api, monkeypatch):
@@ -291,3 +302,83 @@ def test_fingerprint_changes_with_model(language_api, monkeypatch):
     monkeypatch.setattr(main.settings, "ai_language_model", "another-model")
     assert client.post(URL).json()["cached"] is False
     assert provider.generate.call_count == 2
+
+
+@pytest.mark.parametrize("language", ["de", "en"])
+def test_local_detection_without_key_or_ai_usage(language_api, monkeypatch, language):
+    client, provider, path, factory = language_api
+    monkeypatch.setattr(main, "local_assessment", language_module.local_assessment)
+    main.settings.openai_api_key = SecretStr("")
+    write_epub(path.parent / "Der Hobbit.epub", (language,) * 3)
+    response = client.post(URL)
+    assert response.status_code == 200
+    assert response.json()["book"]["language"] == language
+    assert response.json()["book"]["language_detection"]["source"] == "local"
+    assert json.loads(path.read_text())["metadata"]["language"]["source"] == "local"
+    assert client.post(URL).json()["cached"] is True
+    provider.generate.assert_not_called()
+    assert records(factory) == []
+
+
+def test_local_conflicting_samples_use_single_ai_fallback(language_api, monkeypatch):
+    client, provider, path, _ = language_api
+    monkeypatch.setattr(main, "local_assessment", language_module.local_assessment)
+    write_epub(path.parent / "Der Hobbit.epub", ("de", "en", "de"))
+    result = client.post(URL)
+    assert result.status_code == 200
+    assert result.json()["book"]["language_detection"]["source"] == "ai"
+    assert provider.generate.call_count == 1
+    assert len(provider.generate.call_args.kwargs["context"]["samples"]) == 3
+
+
+def test_fallback_can_be_disabled(language_api, monkeypatch):
+    client, provider, path, _ = language_api
+    monkeypatch.setattr(main, "local_assessment", language_module.local_assessment)
+    main.settings.ai_language_fallback_enabled = False
+    write_epub(path.parent / "Der Hobbit.epub", ("de", "en", "de"))
+    result = client.post(URL)
+    assert result.json()["status"] == "unclear"
+    assert result.json()["book"]["language"] == "de"
+    provider.generate.assert_not_called()
+
+
+def test_missing_key_keeps_unclear_language(language_api, monkeypatch):
+    client, provider, path, _ = language_api
+    monkeypatch.setattr(main, "local_assessment", language_module.local_assessment)
+    main.settings.openai_api_key = SecretStr("")
+    write_epub(path.parent / "Der Hobbit.epub", ("de", "en", "de"))
+    result = client.post(URL)
+    assert result.json()["status"] == "unclear"
+    assert result.json()["book"]["language"] == "de"
+    assert result.json()["book"]["language_detection"]["cacheable"] is False
+    provider.generate.assert_not_called()
+
+
+def test_local_cache_survives_model_change(language_api, monkeypatch):
+    client, provider, path, _ = language_api
+    monkeypatch.setattr(main, "local_assessment", language_module.local_assessment)
+    write_epub(path.parent / "Der Hobbit.epub", ("en",) * 3)
+    assert client.post(URL).json()["cached"] is False
+    main.settings.ai_language_model = "another-model"
+    assert client.post(URL).json()["cached"] is True
+    provider.generate.assert_not_called()
+
+
+def test_dutch_is_not_accepted_as_german():
+    from backend.language import local_assessment
+    text = ("De wandelaar liep door het bos en keek naar de oude bomen. "
+            "In de avond bereikte hij het dorp en vertelde over zijn reis. ") * 12
+    language, assessments, reason = local_assessment([TextSample(i, "body", text[:1600]) for i in (1, 2, 3)])
+    assert language is None
+    assert reason
+    assert all(item["language"] != "de" for item in assessments)
+
+
+def test_long_mixed_section_prevents_local_acceptance():
+    from backend.language import local_assessment
+    german = "Der Wanderer ging durch den Wald und betrachtete die alten Bäume. " * 7
+    english = "The traveller walked through the forest and watched the old trees. " * 7
+    mixed = german + english + german
+    language, assessments, _ = local_assessment([TextSample(i, "body", mixed[:1600]) for i in (1, 2, 3)])
+    assert language is None
+    assert any(item["status"] == "multilingual" for item in assessments)

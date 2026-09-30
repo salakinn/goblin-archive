@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import asyncio
 import json
+import shutil
 import struct
 import zlib
 from pathlib import Path
@@ -9,6 +11,7 @@ import httpx
 import pytest
 from ebooklib import epub
 from fastapi.testclient import TestClient
+from pypdf import PdfWriter
 
 from backend import main
 from backend.covers import (
@@ -19,9 +22,10 @@ from backend.covers import (
     embedded_cover,
 )
 from backend.database import get_db
-from backend.extractors import extract_epub
+from backend.extractors import extract_epub, extract_pdf
 from backend.imports import ImportItem, ImportJob, ImportManager
 from backend.metadata import BookMetadata, FieldValue
+from backend.previews import PreviewManager
 from backend.providers import ProviderChain
 from backend.repository import get_book
 from backend.tests.conftest import add_book
@@ -95,6 +99,14 @@ def make_epub2_wrapped_cover(path: Path) -> None:
     epub.write_epub(str(path), book)
 
 
+def make_pdf(path: Path) -> None:
+    writer = PdfWriter()
+    writer.add_blank_page(width=300, height=450)
+    writer.add_blank_page(width=450, height=300)
+    writer.add_metadata({"/Title": "PDF mit Titelseite"})
+    writer.write(path)
+
+
 def asset(data: bytes, provider: str = "openlibrary") -> CoverAsset:
     parsed = embedded_cover(data)
     assert parsed
@@ -139,6 +151,60 @@ def test_epub2_guide_cover_page_resolves_its_nested_image(tmp_path):
     extracted = extract_epub(path)
 
     assert extracted.cover == png(4, 6)
+
+
+@pytest.mark.skipif(shutil.which("pdftoppm") is None, reason="Poppler fehlt")
+def test_pdf_first_page_is_rendered_as_cover(tmp_path):
+    path = tmp_path / "covered.pdf"
+    make_pdf(path)
+
+    extracted = extract_pdf(path)
+    cover = embedded_cover(extracted.cover)
+
+    assert extracted.metadata.title.value == "PDF mit Titelseite"
+    assert cover and cover.extension == ".jpg"
+    assert cover.height == 1600
+    assert 1000 <= cover.width <= 1100
+
+
+@pytest.mark.skipif(shutil.which("pdftoppm") is None, reason="Poppler fehlt")
+@pytest.mark.asyncio
+async def test_pdf_first_page_cover_is_archived(db_context):
+    settings, factory = db_context
+    manager = ImportManager(settings, factory, ProviderChain([]), CoverService([]))
+    path = settings.staging_dir / "covered.pdf"
+    make_pdf(path)
+    item = ImportItem(path.name)
+
+    await manager._process_one(ImportJob("imp_pdf_cover", "now", [item]), item, path)
+
+    assert item.status == "finished"
+    with factory() as session:
+        book = get_book(session, item.book_id)
+        assert book and book.cover_source == "embedded"
+        cover = embedded_cover((settings.library_dir / book.cover_path).read_bytes())
+        assert cover and cover.height == 1600
+
+
+@pytest.mark.skipif(shutil.which("pdftoppm") is None, reason="Poppler fehlt")
+@pytest.mark.asyncio
+async def test_pdf_first_page_cover_is_selected_in_preview(db_context):
+    settings, factory = db_context
+    manager = PreviewManager(ImportManager(settings, factory, ProviderChain([]), CoverService([])))
+    path = settings.staging_dir / "preview.pdf"
+    make_pdf(path)
+
+    preview_id = manager.create([("preview.pdf", path)])[0]["id"]
+    await asyncio.gather(*manager.tasks)
+    preview = manager.get(preview_id)
+
+    assert preview["status"] == "ready"
+    assert preview["cover_selected"]
+    assert preview["cover"]["source"] == "embedded"
+    archived = await manager.confirm(preview_id)
+    with factory() as session:
+        book = get_book(session, archived["book_id"])
+        assert book and book.cover_source == "embedded"
 
 
 @pytest.mark.asyncio

@@ -64,7 +64,7 @@ class Book(Base):
         Index("ix_books_imported_id", "imported_at", "id"),
     )
 
-    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    id: Mapped[str] = mapped_column(String(35), primary_key=True)
     title: Mapped[str] = mapped_column(String(500))
     publication_year: Mapped[int | None] = mapped_column(Integer)
     language: Mapped[str | None] = mapped_column(String(30))
@@ -89,6 +89,89 @@ class Book(Base):
     authors: Mapped[list[Author]] = relationship(secondary=book_authors, lazy="selectin")
     genres: Mapped[list[Genre]] = relationship(secondary=book_genres, lazy="selectin")
     tags: Mapped[list[Tag]] = relationship(secondary=book_tags, lazy="selectin")
+
+
+class BookFingerprint(Base):
+    __tablename__ = "book_fingerprints"
+    book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), primary_key=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False)
+    text_hash: Mapped[str | None] = mapped_column(String(64), index=True)
+    word_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+    reason: Mapped[str | None] = mapped_column(Text)
+    signature_json: Mapped[str | None] = mapped_column(Text)
+
+
+class BookSimilarityBucket(Base):
+    __tablename__ = "book_similarity_buckets"
+    __table_args__ = (Index("ix_book_similarity_bucket", "bucket"),)
+    book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), primary_key=True)
+    band: Mapped[int] = mapped_column(Integer, primary_key=True)
+    bucket: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class BookComparison(Base):
+    __tablename__ = "book_comparisons"
+    book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), primary_key=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False)
+    title_search: Mapped[str] = mapped_column(String(500), nullable=False, index=True)
+    isbn: Mapped[str | None] = mapped_column(String(13), index=True)
+    authors_json: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class DuplicateMatch(Base):
+    __tablename__ = "duplicate_matches"
+    __table_args__ = (Index("ix_duplicate_matches_right", "right_book_id"),)
+    left_book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), primary_key=True)
+    right_book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), primary_key=True)
+    kind: Mapped[str] = mapped_column(String(20), nullable=False)
+    evidence_json: Mapped[str] = mapped_column(Text, nullable=False)
+    decision: Mapped[str | None] = mapped_column(String(24))
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class DuplicateDecisionEvent(Base):
+    __tablename__ = "duplicate_decision_events"
+    __table_args__ = (Index("ix_duplicate_decision_events_pair", "left_book_id", "right_book_id"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    left_book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
+    right_book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
+    decision: Mapped[str | None] = mapped_column(String(24))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class MetadataAlias(Base):
+    __tablename__ = "metadata_aliases"
+    __table_args__ = (Index("ux_metadata_alias_field_variant", "field", "variant_key", unique=True),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    field: Mapped[str] = mapped_column(String(20), nullable=False)
+    variant: Mapped[str] = mapped_column(String(300), nullable=False)
+    canonical: Mapped[str] = mapped_column(String(300), nullable=False)
+    variant_key: Mapped[str] = mapped_column(String(300), nullable=False)
+    canonical_key: Mapped[str] = mapped_column(String(300), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class MetadataSourceValue(Base):
+    __tablename__ = "metadata_source_values"
+    __table_args__ = (Index("ix_metadata_source_values_book_field", "book_id", "field"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    book_id: Mapped[str] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
+    field: Mapped[str] = mapped_column(String(40), nullable=False)
+    value_json: Mapped[str] = mapped_column(Text, nullable=False)
+    source: Mapped[str | None] = mapped_column(String(100))
+    recorded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class DuplicateScanJob(Base):
+    __tablename__ = "duplicate_scan_jobs"
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+    cursor: Mapped[str | None] = mapped_column(String(32))
+    processed: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    total: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    errors: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 
 class IsbnCandidateRecord(Base):
@@ -156,11 +239,14 @@ class ImportPreview(Base):
     providers_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
     file_format: Mapped[str | None] = mapped_column(String(10))
     sha256: Mapped[str | None] = mapped_column(String(64))
-    duplicate_book_id: Mapped[str | None] = mapped_column(String(32))
-    book_id: Mapped[str | None] = mapped_column(String(32))
+    duplicate_book_id: Mapped[str | None] = mapped_column(String(35))
+    book_id: Mapped[str | None] = mapped_column(String(35))
     error: Mapped[str | None] = mapped_column(Text)
     revision: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     edited: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    fingerprint_json: Mapped[str | None] = mapped_column(Text)
+    duplicate_decision_json: Mapped[str | None] = mapped_column(Text)
+    source_values_json: Mapped[str | None] = mapped_column(Text)
 
 
 class TranslationGlossary(Base):
@@ -187,7 +273,7 @@ class AIUsage(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     feature: Mapped[str] = mapped_column(String(50), nullable=False)
     job_id: Mapped[str | None] = mapped_column(String(32), index=True)
-    book_id: Mapped[str | None] = mapped_column(String(32), index=True)
+    book_id: Mapped[str | None] = mapped_column(String(35), index=True)
     model: Mapped[str] = mapped_column(String(120), nullable=False)
     input_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     output_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)

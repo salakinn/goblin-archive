@@ -9,6 +9,7 @@ from contextlib import contextmanager
 from pathlib import Path
 
 from backend.models import Book
+from backend.metadata_sources import record_sources
 
 
 class MetadataConflict(ValueError):
@@ -46,7 +47,8 @@ def persist_metadata(db, book: Book, document: dict, settings, *, before_commit=
     metadata_text = json.dumps(document, ensure_ascii=False, indent=2)
     with _book_lock(metadata_path):
         old_bytes = metadata_path.read_bytes()
-        if json.loads(old_bytes) != json.loads(book.metadata_json):
+        old_document = json.loads(book.metadata_json)
+        if json.loads(old_bytes) != old_document:
             raise MetadataConflict("Metadaten wurden gleichzeitig geändert; bitte neu laden")
         journal_dir.mkdir(parents=True, exist_ok=True)
         _atomic_bytes(journal, json.dumps({"book_id": book.id, "library_path": book.library_path}).encode())
@@ -54,6 +56,13 @@ def persist_metadata(db, book: Book, document: dict, settings, *, before_commit=
         try:
             _atomic_bytes(metadata_path, (metadata_text + "\n").encode("utf-8"))
             book.metadata_json = metadata_text
+            changed_sources = {field: entry for field, entry in document.get("metadata", {}).items()
+                               if isinstance(entry, dict) and
+                               ((old_document.get("metadata", {}).get(field) or {}).get("value"),
+                                (old_document.get("metadata", {}).get(field) or {}).get("source")) !=
+                               (entry.get("value"), entry.get("source"))}
+            if changed_sources:
+                record_sources(db, book.id, [changed_sources])
             db.flush()
             if before_commit:
                 before_commit()

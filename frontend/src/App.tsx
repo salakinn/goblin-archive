@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { addTag, applyIsbn, applyIsbnReference, clearArchive, detectLanguage, generateTags, getBook, getBooks, getFilterOptions, getImport, getIsbnCandidates, refreshCover, removeTag, searchIsbn, updateBookMetadata, uploadBooks, uploadPreviews } from './api'
+import { addTag, applyIsbn, applyIsbnReference, clearArchive, detectLanguage, generateTags, getBook, getBooks, getFilterOptions, getImport, getImportLimits, getIsbnCandidates, getMetadataSources, listImports, normalizeAuthors, normalizeTitle, refreshCover, removeTag, retryImportStep, searchIsbn, updateBookMetadata, uploadBooks, uploadPreviews } from './api'
+import type { MetadataSourceRow } from './api'
 import { compatibleBookFiles, filesFromDrop } from './drop'
 import { TranslationPanel } from './TranslationPanel'
 import { AiSettingsPanel } from './AiSettingsPanel'
+import { BackupPanel } from './BackupPanel'
 import { UpdatePrompt } from './UpdatePrompt'
 import { PreviewPanel } from './PreviewPanel'
-import type { Book, FilterOption, FilterOptions, ImportJob, ImportItem, IsbnCandidate } from './types'
+import type { Book, FilterOption, FilterOptions, ImportJob, IsbnCandidate } from './types'
 
 const eventLabels: Record<string, string> = {
   queued: 'Wartet',
@@ -17,8 +19,16 @@ const eventLabels: Record<string, string> = {
   'import.cover.found': 'Cover gespeichert',
   'import.cover.missing': 'Kein Cover gefunden',
   'import.archiving': 'Wird archiviert…',
-  'import.finished': 'Archiviert',
+  'import.archived': 'Archiviert · Nachbearbeitung wartet',
+  'import.postprocess.queued': 'Nachbearbeitung wartet',
+  'import.postprocess.isbn': 'ISBN wird geprüft…',
+  'import.postprocess.authors': 'Autoren werden geprüft…',
+  'import.postprocess.language': 'Sprache wird geprüft…',
+  'import.postprocess.tags': 'Tags werden ergänzt…',
+  'import.finished': 'Fertig',
   'import.duplicate': 'Bereits im Archiv',
+  'import.discarded': 'Vorschau verworfen',
+  'import.needs_review': 'Mögliches Duplikat: Vorschau prüfen',
   'import.failed': 'Import fehlgeschlagen',
 }
 
@@ -92,13 +102,21 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
   const [tagNotice, setTagNotice] = useState('')
   const [languageDetecting, setLanguageDetecting] = useState(false)
   const [languageNotice, setLanguageNotice] = useState('')
+  const [titleNormalizing, setTitleNormalizing] = useState(false)
+  const [titleNotice, setTitleNotice] = useState('')
+  const [authorNormalizing, setAuthorNormalizing] = useState(false)
+  const [authorNotice, setAuthorNotice] = useState('')
   const [editingMetadata, setEditingMetadata] = useState(false)
   const [metadataSaving, setMetadataSaving] = useState(false)
   const [metadataNotice, setMetadataNotice] = useState('')
+  const [sourceRows, setSourceRows] = useState<MetadataSourceRow[]>([])
+  const [sourceOpen, setSourceOpen] = useState(false)
+  const [sourceError, setSourceError] = useState('')
   const [metadataForm, setMetadataForm] = useState(() => ({ title: book.title, authors: book.authors.join(', '), publication_year: book.publication_year?.toString() || '', language: book.language || '', publisher: book.publisher || '', isbn: book.isbn || '', reference_isbn: book.reference_isbn || '', series: book.series || '', description: book.description || '' }))
   const coverSource = book.cover_source === 'embedded' ? 'Embedded'
     : book.cover_provider === 'openlibrary' ? 'Open Library'
     : book.cover_provider === 'googlebooks' ? 'Google Books' : '—'
+  const nonLatinAuthor = book.authors.some(name => /[^\p{Script=Latin}\p{M}\s.,'-]/u.test(name))
   function beginMetadataEdit() {
     setMetadataForm({ title: book.title, authors: book.authors.join(', '), publication_year: book.publication_year?.toString() || '', language: book.language || '', publisher: book.publisher || '', isbn: book.isbn || '', reference_isbn: book.reference_isbn || '', series: book.series || '', description: book.description || '' })
     setMetadataNotice(''); setEditingMetadata(true)
@@ -199,8 +217,9 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
       setTagNotice('')
       const result = await generateTags(book.id)
       refreshed(result.book)
-      setTagNotice(result.cached ? 'Diese Buchdaten wurden bereits analysiert. Kein weiterer KI-Aufruf.'
-        : result.added ? `${result.added} Tags per KI ergänzt.` : 'Keine weiteren passenden Tags gefunden.')
+      setTagNotice(result.message || (result.cached ? 'Diese Buchdaten wurden bereits analysiert. Kein weiterer KI-Aufruf.'
+        : result.added || result.removed ? `${result.added} neue Tags ergänzt${result.removed ? `; ${result.removed} veraltete KI-Tags ersetzt` : ''}.` : 'Die KI hat keine neuen Tags vorgeschlagen.')
+      )
     } catch (err) {
       setTagNotice(err instanceof Error ? err.message : 'KI-Tags konnten nicht gesetzt werden.')
     } finally { setTagSaving(false); setAiTagging(false) }
@@ -212,9 +231,9 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
       const result = await detectLanguage(book.id)
       refreshed(result.book)
       const messages = {
-        detected: result.cached ? `Bereits analysiert: ${result.book.language_detection?.language?.toUpperCase() || 'eindeutig'}. Kein weiterer KI-Aufruf; aktuelle Sprachangabe bleibt erhalten.`
-          : `Erkannte Sprache: ${result.book.language_label || result.book.language}. Direkt gespeichert.`,
-        unclear: 'Die Textproben ergeben keine eindeutige Sprache. Bisherige Angabe bleibt erhalten.',
+        detected: result.cached ? `Bereits analysiert (${result.book.language_detection?.source === 'local' ? 'lokal' : 'per KI'}): ${result.book.language_detection?.language?.toUpperCase() || 'eindeutig'}. Aktuelle Sprachangabe bleibt erhalten.`
+          : `${result.book.language_detection?.source === 'local' ? 'Lokal erkannt' : 'Per KI erkannt'}: ${result.book.language_label || result.book.language}. Direkt gespeichert.`,
+        unclear: `Sprache unklar. Bisherige Angabe bleibt erhalten.${result.book.language_detection?.fallback_error ? ` ${result.book.language_detection.fallback_error}` : ''}`,
         protected: 'Die Sprachangabe wurde manuell bestätigt und bleibt erhalten.',
         insufficient_text: 'Keine drei ausreichend langen Textproben gefunden. Bei gescannten PDFs ist zunächst OCR nötig.',
       }
@@ -222,6 +241,32 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
     } catch (err) {
       setLanguageNotice(err instanceof Error ? err.message : 'Sprache konnte nicht ermittelt werden.')
     } finally { setLanguageDetecting(false) }
+  }
+  async function normalizeTitleNow() {
+    try {
+      setTitleNormalizing(true)
+      setTitleNotice('')
+      const result = await normalizeTitle(book.id)
+      refreshed(result.book)
+      setTitleNotice(result.message || (result.changed
+        ? `Titel bereinigt: ${result.normalized_title}`
+        : result.cached ? 'Dieser Titel wurde bereits bereinigt.' : 'Der Titel ist bereits sauber.'))
+    } catch (err) {
+      setTitleNotice(err instanceof Error ? err.message : 'Titel konnte nicht bereinigt werden.')
+    } finally { setTitleNormalizing(false) }
+  }
+  async function normalizeAuthorsNow() {
+    try {
+      setAuthorNormalizing(true)
+      setAuthorNotice('')
+      const result = await normalizeAuthors(book.id)
+      refreshed(result.book)
+      setAuthorNotice(result.message || (result.changed
+        ? `Autor korrigiert: ${result.normalized_authors?.join(', ')}`
+        : 'Keine sichere Korrektur gefunden.'))
+    } catch (err) {
+      setAuthorNotice(err instanceof Error ? err.message : 'Autor konnte nicht korrigiert werden.')
+    } finally { setAuthorNormalizing(false) }
   }
   async function deleteTag(tagId: number) {
     try {
@@ -252,8 +297,8 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
       {book.description && <p className="description">{book.description}</p>}
       {book.translation && <p className="tag-notice">KI-Übersetzung von <a href={`/books/${book.translation.source_book_id}`}>Originalbuch öffnen</a></p>}
       <section className="tag-editor">
-        <h3 className="section-title">Tags</h3>
-        <button type="button" disabled={tagSaving || languageDetecting} onClick={setTagsWithAI}>{aiTagging ? 'KI analysiert…' : 'Tags per KI setzen'}</button>
+        <div className="detail-section-header"><h3 className="section-title">Tags</h3>
+          <button type="button" className="detail-action" disabled={tagSaving || languageDetecting || titleNormalizing} onClick={setTagsWithAI}>{aiTagging ? 'KI analysiert…' : 'Tags per KI setzen'}</button></div>
         <p className="tag-notice">Übermittelt Buchmetadaten an den eingestellten KI-Anbieter und ergänzt passende Tags direkt.</p>
         {book.tags.length > 0 && <div className="detail-tags">{book.tags.map(tag => <span key={tag.id}><button className="tag-filter" onClick={() => filterByTag(tag.name)}>{tag.name}</button><button className="tag-remove" disabled={tagSaving} onClick={() => deleteTag(tag.id)} aria-label={`${tag.name} entfernen`}>×</button></span>)}</div>}
         <form onSubmit={event => { event.preventDefault(); saveTag() }}>
@@ -263,28 +308,40 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
         </form>
         {tagNotice && <small className="tag-notice" role="status">{tagNotice}</small>}
       </section>
-      <h3 className="section-title">Metadaten</h3>
-      {!editingMetadata ? <button type="button" className="settings-secondary" onClick={beginMetadataEdit}>Metadaten bearbeiten</button> : <form className="metadata-editor" onSubmit={saveMetadata}>
+      <section className="metadata-section">
+      <div className="detail-section-header"><h3 className="section-title">Metadaten</h3>
+        {!editingMetadata && <button type="button" className="detail-action" onClick={beginMetadataEdit}>Metadaten bearbeiten</button>}</div>
+      {editingMetadata && <form className="metadata-editor" onSubmit={saveMetadata}>
         <label>Titel<input required maxLength={500} value={metadataForm.title} onChange={event => setMetadataForm(current => ({ ...current, title: event.target.value }))} /></label>
         <label>Autoren (mit Komma trennen)<input maxLength={3000} value={metadataForm.authors} onChange={event => setMetadataForm(current => ({ ...current, authors: event.target.value }))} /></label>
         <div className="metadata-editor-grid"><label>Jahr<input type="number" min="0" max="9999" value={metadataForm.publication_year} onChange={event => setMetadataForm(current => ({ ...current, publication_year: event.target.value }))} /></label><label>Sprache<input maxLength={30} placeholder="de" value={metadataForm.language} onChange={event => setMetadataForm(current => ({ ...current, language: event.target.value }))} /></label><label>Verlag<input maxLength={300} value={metadataForm.publisher} onChange={event => setMetadataForm(current => ({ ...current, publisher: event.target.value }))} /></label></div>
         <div className="metadata-editor-grid"><label>Ausgaben-ISBN<input maxLength={20} value={metadataForm.isbn} onChange={event => setMetadataForm(current => ({ ...current, isbn: event.target.value }))} /></label><label>Referenz-ISBN<input maxLength={20} value={metadataForm.reference_isbn} onChange={event => setMetadataForm(current => ({ ...current, reference_isbn: event.target.value }))} /></label><label>Reihe<input maxLength={300} value={metadataForm.series} onChange={event => setMetadataForm(current => ({ ...current, series: event.target.value }))} /></label></div>
         <label>Beschreibung<textarea maxLength={100000} rows={5} value={metadataForm.description} onChange={event => setMetadataForm(current => ({ ...current, description: event.target.value }))} /></label>
-        <button disabled={metadataSaving}>{metadataSaving ? 'Speichert…' : 'Speichern'}</button>{' '}<button type="button" className="quiet" onClick={() => setEditingMetadata(false)}>Abbrechen</button>
+        <div className="detail-form-actions"><button className="detail-action" disabled={metadataSaving}>{metadataSaving ? 'Speichert…' : 'Speichern'}</button><button type="button" className="detail-action quiet" onClick={() => setEditingMetadata(false)}>Abbrechen</button></div>
       </form>}
       {metadataNotice && <p className="tag-notice" role="status">{metadataNotice}</p>}
-      <dl className="metadata-list">{fields.map(([name, value, source]) => <div key={name}><dt>{name}</dt><dd>{value}</dd><small>{source || '—'}</small></div>)}</dl>
-      <section className="language-detection">
-        <button type="button" disabled={languageDetecting || aiTagging || isbnSearching || Boolean(isbnApplying)} onClick={findLanguage}>{languageDetecting ? 'Sprache wird geprüft…' : 'Sprache per KI ermitteln'}</button>
-        <p className="tag-notice">Prüft drei Textproben aus der Buchdatei mit dem eingestellten KI-Anbieter. Nur bei eindeutiger Übereinstimmung wird die Sprache gespeichert.</p>
-        {languageNotice && <p className="tag-notice" role="status">{languageNotice}</p>}
-        {book.language_detection && <details><summary>Letzte Sprachprüfung: {book.language_detection.status === 'detected' ? 'eindeutig' : 'unklar'}</summary>{book.language_detection.assessments.map(sample => <p key={sample.sample_id}>Probe {sample.sample_id}: {sample.language === 'xx' ? 'unklar / mehrsprachig' : sample.language.toUpperCase()} — {sample.reason}</p>)}</details>}
+      <dl className="metadata-list">{fields.map(([name, value, source]) => <div key={name} className={name === 'Sprache' ? 'metadata-language-row' : name === 'Titel' ? 'metadata-title-row' : undefined}>
+        <dt>{name}</dt><dd className={name === 'Sprache' ? 'metadata-language-value' : name === 'Titel' ? 'metadata-title-value' : undefined}>{value}
+          {name === 'Titel' && <button type="button" className="detail-action" disabled={titleNormalizing || aiTagging || languageDetecting || isbnSearching || Boolean(isbnApplying)} onClick={normalizeTitleNow}>{titleNormalizing ? 'Titel wird bereinigt…' : 'Titel per KI bereinigen'}</button>}
+          {name === 'Autor' && nonLatinAuthor && <button type="button" className="detail-action" disabled={authorNormalizing} onClick={normalizeAuthorsNow}>{authorNormalizing ? 'Autor wird abgeglichen…' : 'Autor mit Katalog abgleichen'}</button>}
+          {name === 'Sprache' && <button type="button" className="detail-action" disabled={languageDetecting || aiTagging || titleNormalizing || isbnSearching || Boolean(isbnApplying)} onClick={findLanguage}>{languageDetecting ? 'Sprache wird geprüft…' : 'Sprache prüfen'}</button>}
+        </dd><small>{source || '—'}</small>
+        {name === 'Titel' && titleNotice && <div className="metadata-language-feedback"><p role="status">{titleNotice}</p></div>}
+        {name === 'Autor' && authorNotice && <div className="metadata-language-feedback"><p role="status">{authorNotice}</p></div>}
+        {name === 'Sprache' && (languageNotice || book.language_detection) && <div className="metadata-language-feedback">
+          {languageNotice && <p role="status">{languageNotice}</p>}
+          {book.language_detection && <details><summary>Letzte Sprachprüfung: {book.language_detection.status === 'detected' ? (book.language_detection.source === 'local' ? 'lokal erkannt' : 'per KI erkannt') : 'unklar'}</summary>{book.language_detection.assessments.map(sample => <p key={sample.sample_id}>Probe {sample.sample_id}: {sample.language === 'xx' ? 'unklar / mehrsprachig' : sample.language.toUpperCase()} — {sample.reason}</p>)}</details>}
+        </div>}
+      </div>)}</dl>
+      <button type="button" className="detail-action" onClick={async () => { if (sourceOpen) { setSourceOpen(false); return } try { setSourceRows(await getMetadataSources(book.id)); setSourceError(''); setSourceOpen(true) } catch (err) { setSourceError(err instanceof Error ? err.message : 'Quellenverlauf konnte nicht geladen werden') } }}>Quellenverlauf {sourceOpen ? 'ausblenden' : 'anzeigen'}</button>
+      {sourceError && <p className="metadata-language-feedback">{sourceError}</p>}
+      {sourceOpen && <div className="metadata-source-history">{sourceRows.length ? sourceRows.map((row, index) => <p key={`${row.field}-${index}`}><strong>{row.field}</strong> · {row.source || 'Herkunft unbekannt'} · {String(Array.isArray(row.value) ? row.value.join(', ') : row.value ?? '—').slice(0, 160)}</p>) : <p>Für dieses Buch wurden noch keine Quellwerte erfasst.</p>}</div>}
       </section>
       <TranslationPanel book={book} finished={() => refreshed(book)} />
       <section className="isbn-resolver">
         <div className="isbn-heading"><div><h3>Werk- und ISBN-Auflösung</h3><p>Eine Ausgaben-ISBN gehört exakt zur Datei. Eine Referenz-ISBN bezeichnet nur dasselbe Werk und dient der späteren Metadatenanreicherung.</p></div><div className="isbn-actions"><button disabled={isbnSearching || Boolean(isbnApplying)} onClick={() => findIsbn(false)}>{isbnSearching ? 'Suche läuft…' : 'Werk suchen'}</button>{(isbnCandidates.length > 0 || isbnNotice) && <button className="quiet" disabled={isbnSearching || Boolean(isbnApplying)} onClick={() => findIsbn(true)}>Neu abfragen</button>}</div></div>
         {isbnNotice && <p className="isbn-notice">{isbnNotice}</p>}
-        {book.work_match && <div className="work-match"><strong>Erkanntes Werk: {book.work_match.title}</strong><span>{book.work_match.confidence.toFixed(0)} % · {book.work_match.sources.join(' + ')}</span>{book.work_match.suggested_genres.length > 0 && <p>Tag-Vorschläge: {book.work_match.suggested_genres.slice(0, 8).join(', ')}</p>}{book.work_match.work_series.length > 0 && <p>Werkreihe: {book.work_match.work_series.join(', ')}</p>}</div>}
+        {book.work_match && <div className="work-match"><strong>Erkanntes Werk: {book.work_match.title}</strong><span>{book.work_match.confidence.toFixed(0)} % · {book.work_match.sources.join(' + ')}</span>{book.work_match.suggested_genres.length > 0 && <p>Katalogvorschläge: {book.work_match.suggested_genres.slice(0, 8).join(', ')}</p>}{book.work_match.work_series.length > 0 && <p>Werkreihe: {book.work_match.work_series.join(', ')}</p>}</div>}
         {isbnCandidates.length > 0 && <div className="isbn-candidates">{isbnCandidates.slice(0, 12).map(candidate => <article key={candidate.isbn13} className={candidate.isbn13 === book.isbn || candidate.isbn13 === book.reference_isbn ? 'selected' : ''}>
           <div><strong>{candidate.isbn13}</strong><small>{candidate.match_type === 'edition' ? 'Ausgabe plausibel' : 'Werkreferenz'}{candidate.isbn10 ? ` · ISBN-10: ${candidate.isbn10}` : ''}</small></div>
           <p>{candidate.title}</p>
@@ -298,14 +355,17 @@ function Detail({ book, tagOptions, close, filterByTag, refreshed }: { book: Boo
   </div>
 }
 
-function ImportPanel({ jobs, collapsed, toggle }: { jobs: ImportJob[]; collapsed: boolean; toggle: () => void }) {
+function ImportPanel({ jobs, collapsed, toggle, retry }: { jobs: ImportJob[]; collapsed: boolean; toggle: () => void; retry: (jobId: string, itemId: string) => void }) {
   if (!jobs.length) return null
-  const latest = jobs[jobs.length - 1]
+  const counts = jobs.reduce((total, job) => ({
+    queued: total.queued + job.queued, active: total.active + job.active,
+    review: total.review + job.needs_review, completed: total.completed + job.completed,
+  }), { queued: 0, active: 0, review: 0, completed: 0 })
   return <aside className={`import-panel ${collapsed ? 'collapsed' : ''}`}>
-    <button className="import-head" onClick={toggle}><span><i /> Import</span><strong>{latest.completed} / {latest.total}</strong><b>{collapsed ? '⌃' : '⌄'}</b></button>
-    {!collapsed && <div className="import-items">{jobs.flatMap(job => job.items).slice(-8).map((item, index) => <div className={`import-item ${item.status}`} key={`${item.filename}-${index}`}>
-      <span className="state">{item.status === 'finished' ? '✓' : item.status === 'failed' ? '!' : item.status === 'duplicate' ? '↺' : '●'}</span>
-      <div><strong>{item.filename}</strong><small>{item.message || eventLabels[item.event] || item.event}</small></div>
+    <button className="import-head" onClick={toggle}><span><i /> Import</span><strong>{counts.queued} wartet · {counts.active} aktiv · {counts.review} prüfen · {counts.completed} fertig</strong><b>{collapsed ? '⌃' : '⌄'}</b></button>
+    {!collapsed && <div className="import-items">{jobs.flatMap(job => job.items.map(item => ({ job, item }))).slice(-8).map(({ job, item }) => <div className={`import-item ${item.status}${item.warnings.length ? ' with-warnings' : ''}`} key={item.id}>
+      <span className="state">{item.warnings.length || item.status === 'failed' ? '!' : item.status === 'finished' ? '✓' : item.status === 'duplicate' ? '↺' : '●'}</span>
+      <div><strong>{item.filename}</strong><small title={item.message || ''}>{item.message || eventLabels[item.event] || item.event}</small>{item.failed_steps.length > 0 && <button className="import-retry" onClick={() => retry(job.id, item.id)}>Fehlgeschlagene Schritte wiederholen</button>}</div>
     </div>)}</div>}
   </aside>
 }
@@ -326,6 +386,7 @@ export default function App({ onLogout }: { onLogout: () => void }) {
   const [selected, setSelected] = useState<Book | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [aiSettingsOpen, setAiSettingsOpen] = useState(false)
+  const [backupOpen, setBackupOpen] = useState(false)
   const settingsButtonRef = useRef<HTMLButtonElement>(null)
   const [clearing, setClearing] = useState(false)
   const [notice, setNotice] = useState('')
@@ -334,6 +395,17 @@ export default function App({ onLogout }: { onLogout: () => void }) {
   const listAbort = useRef<AbortController | null>(null)
   const importRefreshTimer = useRef<number | null>(null)
   const completedRefreshes = useRef<Set<string>>(new Set())
+
+  const mergeJobs = useCallback((incoming: ImportJob[]) => {
+    setJobs(current => {
+      const byId = new Map(current.map(job => [job.id, job]))
+      for (const job of incoming) {
+        const previous = byId.get(job.id)
+        if (!previous || job.revision >= previous.revision) byId.set(job.id, job)
+      }
+      return [...byId.values()]
+    })
+  }, [])
 
   useEffect(() => {
     if (!aiSettingsOpen) return
@@ -397,6 +469,7 @@ export default function App({ onLogout }: { onLogout: () => void }) {
 
   useEffect(() => { const timer = window.setTimeout(loadBooks, 180); return () => clearTimeout(timer) }, [loadBooks])
   useEffect(() => { loadFilterOptions() }, [loadFilterOptions])
+  useEffect(() => { void listImports().then(mergeJobs).catch(() => {}) }, [mergeJobs])
   useEffect(() => {
     if (!query.trim() && totalBooks > 0 && page > 0 && page * pageSize >= totalBooks) {
       setPage(Math.max(0, Math.ceil(totalBooks / pageSize) - 1))
@@ -412,54 +485,82 @@ export default function App({ onLogout }: { onLogout: () => void }) {
       if (payload.import_id) {
         try {
           const job = await getImport(payload.import_id)
-          setJobs(current => current.some(item => item.id === job.id) ? current.map(item => item.id === job.id ? job : item) : [...current, job])
+          mergeJobs([job])
         } catch { /* job may have vanished after a backend restart */ }
       }
-      if (event.type === 'import.finished' || event.type === 'import.duplicate') {
-        if (payload.import_id && !completedRefreshes.current.has(payload.import_id)) {
-          completedRefreshes.current.add(payload.import_id)
+      if (event.type === 'import.archived' || event.type === 'import.finished' || event.type === 'import.duplicate') {
+        const marker = `${payload.import_id || payload.book_id}:${event.type}`
+        if (!completedRefreshes.current.has(marker)) {
+          completedRefreshes.current.add(marker)
           refreshAfterImport()
         }
       }
     }
+    source.onopen = () => { void listImports().then(mergeJobs).catch(() => {}) }
     names.forEach(name => source.addEventListener(name, onEvent))
     return () => source.close()
-  }, [loadBooks, loadFilterOptions, refreshAfterImport])
+  }, [mergeJobs, refreshAfterImport])
 
   useEffect(() => {
-    const active = jobs.filter(job => job.status === 'queued' || job.status === 'running')
+    const active = jobs.filter(job => job.status === 'queued' || job.status === 'running' || job.status === 'needs_review')
     if (!active.length) return
     const timer = window.setInterval(async () => {
       const updates = await Promise.all(active.map(job => getImport(job.id).catch(() => job)))
       let newlyFinished = false
       setJobs(current => current.map(job => {
         const update = updates.find(candidate => candidate.id === job.id)
-        if (update && job.status !== 'finished' && update.status === 'finished' && !completedRefreshes.current.has(job.id)) {
-          completedRefreshes.current.add(job.id)
+        if (update && job.status !== 'finished' && update.status === 'finished' && !completedRefreshes.current.has(`${job.id}:import.finished`)) {
+          completedRefreshes.current.add(`${job.id}:import.finished`)
           newlyFinished = true
         }
-        return update || job
+        return update && update.revision >= job.revision ? update : job
       }))
       if (newlyFinished) {
         refreshAfterImport()
       }
     }, 1200)
     return () => clearInterval(timer)
-  }, [jobs, loadBooks, loadFilterOptions, refreshAfterImport])
+  }, [jobs, refreshAfterImport])
 
   async function importFiles(files: File[], direct = false) {
     if (!files.length) { setError('Keine unterstützten E-Books gefunden.'); return }
+    let uploaded = 0
     try {
       setError('')
-      if (direct) {
-        const job = await uploadBooks(files)
-        setJobs(current => [...current, job])
-        setCollapsed(false)
-      } else {
-        await uploadPreviews(files)
-        window.dispatchEvent(new Event('goblin-previews-changed'))
+      const limits = await getImportLimits()
+      const oversized = files.find(file => file.size > limits.max_bytes)
+      if (oversized) {
+        throw new Error(`„${oversized.name}“ überschreitet das Uploadlimit von ${Math.floor(limits.max_bytes / 1024 / 1024)} MiB.`)
       }
-    } catch (err) { setError(err instanceof Error ? err.message : 'Upload fehlgeschlagen') }
+      const maxFiles = Math.min(limits.max_files, 10)
+      const maxBytes = Math.min(limits.max_bytes, 100 * 1024 * 1024)
+      let batch: File[] = []
+      let batchBytes = 0
+      const sendBatch = async () => {
+        if (direct) {
+          const job = await uploadBooks(batch)
+          mergeJobs([job])
+          setCollapsed(false)
+        } else {
+          await uploadPreviews(batch)
+          window.dispatchEvent(new Event('goblin-previews-changed'))
+        }
+        uploaded += batch.length
+        batch = []
+        batchBytes = 0
+      }
+      for (const file of files) {
+        if (batch.length && (batch.length >= maxFiles || batchBytes + file.size > maxBytes)) await sendBatch()
+        batch.push(file)
+        batchBytes += file.size
+      }
+      if (batch.length) await sendBatch()
+    } catch (err) {
+      const message = err instanceof TypeError
+        ? 'Verbindung zum Server beim Upload abgebrochen. Bitte Server und Uploadgröße prüfen.'
+        : err instanceof Error ? err.message : 'Upload fehlgeschlagen'
+      setError(uploaded ? `${uploaded} von ${files.length} Dateien übertragen. Danach fehlgeschlagen: ${message}` : message)
+    }
   }
 
   async function importSelection(input: HTMLInputElement, direct = false) {
@@ -515,7 +616,7 @@ export default function App({ onLogout }: { onLogout: () => void }) {
     return () => removeEventListener('popstate', pop)
   }, [])
 
-  return <div className="app" onDragEnter={event => { event.preventDefault(); dragDepth.current++; setDragging(true) }} onDragLeave={event => { event.preventDefault(); if (--dragDepth.current <= 0) { dragDepth.current = 0; setDragging(false) } }} onDragOver={event => event.preventDefault()} onDrop={async event => { event.preventDefault(); dragDepth.current = 0; setDragging(false); await importFiles(await filesFromDrop(event.dataTransfer)) }}>
+  return <div className="app" onDragEnter={event => { event.preventDefault(); dragDepth.current++; setDragging(true) }} onDragLeave={event => { event.preventDefault(); if (--dragDepth.current <= 0) { dragDepth.current = 0; setDragging(false) } }} onDragOver={event => event.preventDefault()} onDrop={async event => { event.preventDefault(); dragDepth.current = 0; setDragging(false); try { await importFiles(await filesFromDrop(event.dataTransfer), true) } catch (err) { setError(err instanceof Error ? err.message : 'Ordner konnte nicht gelesen werden') } }}>
     <header>
       <a className="brand" href="/"><span className="goblin">G</span><span><strong>Goblin</strong><small>ARCHIVAR</small></span></a>
       <div className="settings-wrap">
@@ -523,6 +624,7 @@ export default function App({ onLogout }: { onLogout: () => void }) {
         <button ref={settingsButtonRef} className="settings" title="Einstellungen" aria-expanded={settingsOpen} onClick={() => setSettingsOpen(!settingsOpen)}>⚙</button>
         {settingsOpen && <div className="settings-menu">
           <button type="button" className="settings-entry" onClick={() => { setSettingsOpen(false); setAiSettingsOpen(true) }}>KI-Anbindung einrichten <span>→</span></button>
+          <button type="button" className="settings-entry" onClick={() => { setSettingsOpen(false); setBackupOpen(true) }}>Backup und Wiederherstellung <span>→</span></button>
           <div className="settings-danger"><button className="danger-button" onClick={onLogout}>Abmelden</button></div>
           <div className="settings-danger">
           <strong>Entwicklung</strong>
@@ -537,12 +639,15 @@ export default function App({ onLogout }: { onLogout: () => void }) {
     }}><div className="ai-dialog" role="dialog" aria-modal="true" aria-labelledby="ai-settings-title">
       <AiSettingsPanel onClose={() => setAiSettingsOpen(false)} onSaved={() => { setAiSettingsOpen(false); setNotice('KI-Einstellungen gespeichert. Sie gelten sofort für neue Anfragen.') }} />
     </div></div>}
+    {backupOpen && <div className="ai-dialog-backdrop" onMouseDown={event => {
+      if (event.target === event.currentTarget) setBackupOpen(false)
+    }}><div className="ai-dialog" role="dialog" aria-modal="true" aria-label="Backup und Wiederherstellung"><BackupPanel onClose={() => setBackupOpen(false)} /></div></div>}
     <main>
       <section className="intro">
         <label className="search library-search"><span>⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Titel, Autor, ISBN durchsuchen…" /><kbd>⌘ K</kbd></label>
         <div className="import-actions">
-          <label className="add-button"><b aria-hidden="true">＋</b><span>Bücher hinzufügen</span><input type="file" multiple accept=".epub,.pdf,.mobi,.azw3" onChange={event => importSelection(event.currentTarget)} /></label>
-          <label className="folder-button"><b aria-hidden="true">▣</b><span>Ordner direkt importieren</span><input ref={input => { if (input) { input.webkitdirectory = true; input.setAttribute('directory', '') } }} type="file" multiple accept=".epub,.pdf,.mobi,.azw3" onChange={event => importSelection(event.currentTarget, true)} /></label>
+          <label className="add-button"><b aria-hidden="true">＋</b><span>Bücher hinzufügen</span><input type="file" multiple accept=".epub,.pdf,.mobi,.azw3,.fb2" onChange={event => importSelection(event.currentTarget)} /></label>
+          <label className="folder-button"><b aria-hidden="true">▣</b><span>Ordner direkt importieren</span><input ref={input => { if (input) { input.webkitdirectory = true; input.setAttribute('directory', '') } }} type="file" multiple accept=".epub,.pdf,.mobi,.azw3,.fb2" onChange={event => importSelection(event.currentTarget, true)} /></label>
         </div>
       </section>
       <PreviewPanel refreshArchive={refreshAfterImport} />
@@ -570,7 +675,9 @@ export default function App({ onLogout }: { onLogout: () => void }) {
       </> : <div className="empty"><span>🧌</span><h2>Das Archiv ist noch hungrig</h2><p>Ziehe EPUB-, PDF-, MOBI- oder AZW3-Dateien hierher.</p></div>}
     </main>
     {dragging && <div className="drop-overlay"><div><span>🧌</span><h2>Bücher dem Goblin verfüttern</h2><p>Dateien oder Ordner hier ablegen</p></div></div>}
-    <ImportPanel jobs={jobs} collapsed={collapsed} toggle={() => setCollapsed(!collapsed)} />
+    <ImportPanel jobs={jobs} collapsed={collapsed} toggle={() => setCollapsed(!collapsed)} retry={(jobId, itemId) => {
+      void retryImportStep(jobId, itemId).then(job => mergeJobs([job])).catch(err => setError(err instanceof Error ? err.message : 'Wiederholung fehlgeschlagen'))
+    }} />
     {selected && <Detail book={selected} tagOptions={filterOptions.tags.map(tag => tag.label)} close={closeDetail} filterByTag={filterByTag} refreshed={book => { setSelected(book); setBooks(current => current.map(item => item.id === book.id ? book : item)); setCoverVersions(current => ({ ...current, [book.id]: Date.now() })); loadBooks(); loadFilterOptions() }} />}
   </div>
 }

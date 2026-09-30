@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     ai_custom_api_key: SecretStr = SecretStr("")
     ai_tagging_model: str = "gpt-5.4-nano"
     ai_language_model: str = "gpt-5.4-nano"
+    ai_language_fallback_enabled: bool = True
     ai_translation_model: str = "gpt-5.4-mini"
     ai_translation_qa_model: str = "gpt-5.4-mini"
     ai_translation_editor_model: str = "gpt-5.4"
@@ -51,6 +52,12 @@ class Settings(BaseSettings):
     auth_secure_cookies: bool = False
     max_upload_bytes: int = Field(default=200 * 1024 * 1024, ge=1, le=2 * 1024 * 1024 * 1024)
     max_upload_files: int = Field(default=20, ge=1, le=100)
+    import_concurrency: int = Field(default=3, ge=1, le=16)
+    provider_concurrency: int = Field(default=2, ge=1, le=16)
+    max_queued_import_files: int = Field(default=100, ge=1, le=1000)
+    max_staging_bytes: int = Field(default=2 * 1024 * 1024 * 1024, ge=1)
+    max_backup_upload_bytes: int = Field(default=100 * 1024 * 1024 * 1024, ge=1)
+    max_backup_unpacked_bytes: int = Field(default=500 * 1024 * 1024 * 1024, ge=1)
 
     @property
     def library_dir(self) -> Path:
