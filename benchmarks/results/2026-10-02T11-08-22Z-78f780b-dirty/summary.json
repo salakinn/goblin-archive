@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-10-02T11-08-22Z-78f780b-dirty",
+  "status": "blocked",
+  "mode": "baseline",
+  "started_at_utc": "2026-10-02T11:08:22Z",
+  "finished_at_utc": "2026-10-02T11:08:22Z",
+  "protocol_id": "import-10k-v1",
+  "protocol_sha256": null,
+  "dataset_id": null,
+  "runner_sha256": null,
+  "environment_fingerprint": null,
+  "comparison_group": null,
+  "revision_a": "78f780b3c91622aa24934fab21303da01500f747",
+  "revision_b": null,
+  "patch_sha256_a": null,
+  "patch_sha256_b": null,
+  "reference_run_id": null,
+  "previous_compatible_run_id": null,
+  "declared_differences": [],
+  "metrics_a": {
+    "valid_runs": null,
+    "invalid_runs": null,
+    "import_total_seconds_median": null,
+    "import_total_seconds_min": null,
+    "import_total_seconds_max": null,
+    "import_total_seconds_mean": null,
+    "import_total_seconds_sample_stddev": null,
+    "coefficient_of_variation": null,
+    "files_per_minute_median": null,
+    "backend_peak_rss_bytes_median": null,
+    "backend_peak_rss_bytes_max": null
+  },
+  "metrics_b": null,
+  "comparison": {
+    "paired_time_saved_percent_median": null,
+    "paired_time_saved_percent_ci95": null,
+    "historical_time_saved_percent_vs_reference": null,
+    "historical_time_saved_percent_vs_previous": null,
+    "reliably_faster": null
+  },
+  "validation_passed": null,
+  "reason": "Kein geeigneter konsistenter Ausgangsbestand mit 10.000 archivierten Büchern verfügbar: goblin-data/goblin.db enthält 0 Bücher. Das versiegelte Paket benchmarks/.local/import-10k-v1 fehlt; ohne Snapshot und Piloterwartungen kann keine Referenzmessung beginnen.",
+  "limitations": [
+    "Keine Messläufe und keine Rohzeiten erhoben.",
+    "Kein Vergleich mit einer import-10k-v1-Referenz oder kompatiblen Messreihe möglich.",
+    "Lokale Produkt- und Benchmark-Dateien sind nicht committet; mangels Messstart wurde kein getesteter Patch eingefroren."
+  ],
+  "artifacts": {
+    "report": "result.md",
+    "preflight": "preflight.json"
+  }
+}

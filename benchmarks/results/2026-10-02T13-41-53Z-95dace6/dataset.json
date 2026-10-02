@@ -1,0 +1,76 @@
+{
+  "analysis_counts": {
+    "book_comparisons": 0,
+    "book_fingerprints": 0,
+    "book_similarity_buckets": 0
+  },
+  "batches": [
+    [
+      "input_00001",
+      "input_00002",
+      "input_00003",
+      "input_00004",
+      "input_00005",
+      "input_00006",
+      "input_00007",
+      "input_00008",
+      "input_00009",
+      "input_00010"
+    ],
+    [
+      "input_00011",
+      "input_00012",
+      "input_00013",
+      "input_00014"
+    ],
+    [
+      "input_00015",
+      "input_00016",
+      "input_00017",
+      "input_00018",
+      "input_00019"
+    ],
+    [
+      "input_00020",
+      "input_00021",
+      "input_00022",
+      "input_00023",
+      "input_00024",
+      "input_00025",
+      "input_00026",
+      "input_00027",
+      "input_00028",
+      "input_00029",
+      "input_00030",
+      "input_00031",
+      "input_00032",
+      "input_00033",
+      "input_00034",
+      "input_00035",
+      "input_00036",
+      "input_00037",
+      "input_00038",
+      "input_00039"
+    ],
+    [
+      "input_00040",
+      "input_00041",
+      "input_00042",
+      "input_00043"
+    ]
+  ],
+  "dataset_id": "6d4cdf1b98258a171cc16bdbd925952ac3b68e49312e54189675fa4838e8943f",
+  "expected_books": 0,
+  "formats": {
+    ".epub": 16,
+    ".fb2": 7,
+    ".mobi": 2,
+    ".pdf": 18
+  },
+  "input_bytes": 705636721,
+  "input_count": 43,
+  "input_manifest_sha256": "6f23fe48232543790363441f567a4b133d1254d36c4d328ed3d2cb71c7291f10",
+  "protocol_id": "import-smoke-v1",
+  "snapshot_manifest_sha256": "e689f9c2d7e9a948623fc7e20f5d68f96b5e36d52fe378a0589dcd4f4310d526",
+  "snapshot_source": "/home/steffen/Work/goblin-archive/benchmarks/.local/smoke/source"
+}

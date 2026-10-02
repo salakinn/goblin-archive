@@ -1,0 +1,20 @@
+{
+  "backend_workers": 1,
+  "completion_interval_seconds": 0.01,
+  "import_concurrency": 1,
+  "max_queued_import_files": 100,
+  "max_staging_bytes": 2147483648,
+  "max_upload_bytes": 209715200,
+  "max_upload_files": 20,
+  "post_memory_seconds": 10,
+  "pre_start_pause_seconds": 5,
+  "protocol_id": "import-smoke-v1",
+  "provider_concurrency": 2,
+  "ready_timeout_seconds": 120,
+  "required_runs": 10,
+  "resource_interval_seconds": 0.1,
+  "run_timeout_seconds": 1800,
+  "runner_version": 1,
+  "scratch_dir": "/home/steffen/Work/goblin-archive/benchmarks/.local/run-archives",
+  "upload_timeout_seconds": 300
+}

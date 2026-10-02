@@ -1,0 +1,73 @@
+{
+  "artifacts": {
+    "report": "result.md",
+    "runs": "runs/"
+  },
+  "comparison": {
+    "historical_time_saved_percent_vs_previous": null,
+    "historical_time_saved_percent_vs_reference": null,
+    "paired_time_saved_percent_ci95": null,
+    "paired_time_saved_percent_median": null,
+    "reliably_faster": null
+  },
+  "comparison_group": "85bc8d32220805031c96cce09f0d6c0204c8367795f257330805f948a7f46170",
+  "dataset_id": "6d4cdf1b98258a171cc16bdbd925952ac3b68e49312e54189675fa4838e8943f",
+  "declared_differences": [],
+  "environment_fingerprint": "ef1555e9b4de975b632eb60fe55c84c54301fa64106ddf8e7ffc752efdad6c48",
+  "executed_run_order": [
+    "warmup_ref",
+    "01_ref",
+    "02_ref",
+    "03_ref"
+  ],
+  "finished_at_utc": "2026-10-02T13:32:39.991604+00:00",
+  "limitations": [],
+  "metrics_a": {
+    "backend_peak_rss_bytes_max": 597450752,
+    "backend_peak_rss_bytes_median": 579330048,
+    "coefficient_of_variation": 0.2096143381829881,
+    "files_per_minute_median": 48.20685728922205,
+    "import_total_seconds_max": 72.908719453,
+    "import_total_seconds_mean": 58.816595467333336,
+    "import_total_seconds_median": 53.519356894,
+    "import_total_seconds_min": 50.021710055,
+    "import_total_seconds_sample_stddev": 12.328801733061615,
+    "invalid_runs": 0,
+    "valid_runs": 3
+  },
+  "metrics_b": null,
+  "mode": "baseline",
+  "patch_sha256_a": null,
+  "patch_sha256_b": null,
+  "phase_counters": {
+    "a": {},
+    "b": null
+  },
+  "phases": {
+    "a": {},
+    "b": null
+  },
+  "planned_run_order": [
+    "warmup_ref",
+    "01_ref",
+    "02_ref",
+    "03_ref"
+  ],
+  "previous_compatible_run_id": null,
+  "protocol_id": "import-smoke-v1",
+  "protocol_sha256": "7eaf54a2ec7fd6657c9b2805db0d6840cee6e1a71ddbfdda87d63ff117859699",
+  "read_load": {
+    "a": {},
+    "b": null
+  },
+  "reason": "Zu wenige gültige Läufe, fehlende Diagnostik/Leselast oder Variationskoeffizient über 5 %",
+  "reference_run_id": null,
+  "revision_a": "95dace688c26484df7ab7a212cc52685fee5f0da",
+  "revision_b": null,
+  "run_id": "2026-10-02T13-26-51Z-95dace6",
+  "runner_sha256": "45675dc81977fa6a644d59a908c994c86a40e21c2df76d8b502d7442ba7d5b99",
+  "schema_version": 1,
+  "started_at_utc": "2026-10-02T13:27:04.160826+00:00",
+  "status": "invalid",
+  "validation_passed": true
+}

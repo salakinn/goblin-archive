@@ -224,6 +224,11 @@ Hintergrund zu Sicherheit und Performance steht im
 [Sicherheitsaudit](docs/security-audit.md) und im
 [Performanceaudit](docs/performance-audit.md).
 
+Die Anleitung für reproduzierbare Importbenchmarks bei 10.000 E-Books und die
+Messhistorie liegen zentral unter [benchmarks/](benchmarks/README.md).
+Ein KI-Auftrag „Mache einen Benchmark“ folgt diesem Ablauf und legt dort einen
+neuen Ergebnisbericht samt Rohdaten und Vergleich zur passenden Referenz ab.
+
 ## Datenverzeichnis
 
 Standardmäßig nutzt Goblin Archivar `./goblin-data`. Ein anderer Ort kann vor dem Start gesetzt werden:

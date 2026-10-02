@@ -1,0 +1,73 @@
+{
+  "artifacts": {
+    "report": "result.md",
+    "runs": "runs/"
+  },
+  "comparison": {
+    "historical_time_saved_percent_vs_previous": null,
+    "historical_time_saved_percent_vs_reference": null,
+    "paired_time_saved_percent_ci95": null,
+    "paired_time_saved_percent_median": null,
+    "reliably_faster": null
+  },
+  "comparison_group": "c291b6d3dd47015a3eafae5fec08a50e6a14c103af5623fb93a348af64e0209a",
+  "dataset_id": "6d4cdf1b98258a171cc16bdbd925952ac3b68e49312e54189675fa4838e8943f",
+  "declared_differences": [],
+  "environment_fingerprint": "dff404bd7da4ca429ca837006ea7c82b177c381a93893e451e927e1cf387ffe2",
+  "executed_run_order": [
+    "warmup_ref",
+    "01_ref",
+    "02_ref",
+    "03_ref"
+  ],
+  "finished_at_utc": "2026-10-02T13:41:47.351177+00:00",
+  "limitations": [],
+  "metrics_a": {
+    "backend_peak_rss_bytes_max": 601001984,
+    "backend_peak_rss_bytes_median": 586711040,
+    "coefficient_of_variation": 0.028649556387546408,
+    "files_per_minute_median": 23.799137005842656,
+    "import_total_seconds_max": 111.445262901,
+    "import_total_seconds_mean": 108.36306113533334,
+    "import_total_seconds_median": 108.407292221,
+    "import_total_seconds_min": 105.236628284,
+    "import_total_seconds_sample_stddev": 3.104553630323871,
+    "invalid_runs": 0,
+    "valid_runs": 3
+  },
+  "metrics_b": null,
+  "mode": "baseline",
+  "patch_sha256_a": null,
+  "patch_sha256_b": null,
+  "phase_counters": {
+    "a": {},
+    "b": null
+  },
+  "phases": {
+    "a": {},
+    "b": null
+  },
+  "planned_run_order": [
+    "warmup_ref",
+    "01_ref",
+    "02_ref",
+    "03_ref"
+  ],
+  "previous_compatible_run_id": null,
+  "protocol_id": "import-smoke-v1",
+  "protocol_sha256": "7eaf54a2ec7fd6657c9b2805db0d6840cee6e1a71ddbfdda87d63ff117859699",
+  "read_load": {
+    "a": {},
+    "b": null
+  },
+  "reason": null,
+  "reference_run_id": null,
+  "revision_a": "78f780b3c91622aa24934fab21303da01500f747",
+  "revision_b": null,
+  "run_id": "2026-10-02T13-32-53Z-78f780b-recheck",
+  "runner_sha256": "45675dc81977fa6a644d59a908c994c86a40e21c2df76d8b502d7442ba7d5b99",
+  "schema_version": 1,
+  "started_at_utc": "2026-10-02T13:33:04.582768+00:00",
+  "status": "completed",
+  "validation_passed": true
+}

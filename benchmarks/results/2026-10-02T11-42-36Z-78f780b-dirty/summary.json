@@ -1,0 +1,73 @@
+{
+  "artifacts": {
+    "report": "result.md",
+    "runs": "runs/"
+  },
+  "comparison": {
+    "historical_time_saved_percent_vs_previous": null,
+    "historical_time_saved_percent_vs_reference": null,
+    "paired_time_saved_percent_ci95": null,
+    "paired_time_saved_percent_median": null,
+    "reliably_faster": null
+  },
+  "comparison_group": "6977a356bf93852ad221aeb6db138f244907c449384a941a8bc8709800807b81",
+  "dataset_id": "6d4cdf1b98258a171cc16bdbd925952ac3b68e49312e54189675fa4838e8943f",
+  "declared_differences": [],
+  "environment_fingerprint": "77ce06284724d305a55a23a9c4709f1313a1241400c28b8b84c19cc0289d750b",
+  "executed_run_order": [
+    "warmup_ref",
+    "01_ref",
+    "02_ref",
+    "03_ref"
+  ],
+  "finished_at_utc": "2026-10-02T11:55:03.862802+00:00",
+  "limitations": [],
+  "metrics_a": {
+    "backend_peak_rss_bytes_max": 571596800,
+    "backend_peak_rss_bytes_median": 565104640,
+    "coefficient_of_variation": 0.04741056990351356,
+    "files_per_minute_median": 15.595351592932978,
+    "import_total_seconds_max": 177.919529022,
+    "import_total_seconds_mean": 168.78630921633334,
+    "import_total_seconds_median": 165.433910523,
+    "import_total_seconds_min": 163.005488104,
+    "import_total_seconds_sample_stddev": 8.002255111857027,
+    "invalid_runs": 0,
+    "valid_runs": 3
+  },
+  "metrics_b": null,
+  "mode": "baseline",
+  "patch_sha256_a": null,
+  "patch_sha256_b": null,
+  "phase_counters": {
+    "a": {},
+    "b": null
+  },
+  "phases": {
+    "a": {},
+    "b": null
+  },
+  "planned_run_order": [
+    "warmup_ref",
+    "01_ref",
+    "02_ref",
+    "03_ref"
+  ],
+  "previous_compatible_run_id": null,
+  "protocol_id": "import-smoke-v1",
+  "protocol_sha256": "7eaf54a2ec7fd6657c9b2805db0d6840cee6e1a71ddbfdda87d63ff117859699",
+  "read_load": {
+    "a": {},
+    "b": null
+  },
+  "reason": null,
+  "reference_run_id": null,
+  "revision_a": "78f780b3c91622aa24934fab21303da01500f747",
+  "revision_b": null,
+  "run_id": "2026-10-02T11-42-36Z-78f780b-dirty",
+  "runner_sha256": "45675dc81977fa6a644d59a908c994c86a40e21c2df76d8b502d7442ba7d5b99",
+  "schema_version": 1,
+  "started_at_utc": "2026-10-02T11:42:47.300502+00:00",
+  "status": "completed",
+  "validation_passed": true
+}

@@ -1,0 +1,23 @@
+{
+  "comparison_group": "6977a356bf93852ad221aeb6db138f244907c449384a941a8bc8709800807b81",
+  "dataset_id": "6d4cdf1b98258a171cc16bdbd925952ac3b68e49312e54189675fa4838e8943f",
+  "environment_fingerprint": "77ce06284724d305a55a23a9c4709f1313a1241400c28b8b84c19cc0289d750b",
+  "mode": "baseline",
+  "planned_run_order": [
+    "warmup_ref",
+    "01_ref",
+    "02_ref",
+    "03_ref"
+  ],
+  "previous_compatible_run_id": null,
+  "previous_median_seconds": null,
+  "protocol_id": "import-smoke-v1",
+  "protocol_sha256": "7eaf54a2ec7fd6657c9b2805db0d6840cee6e1a71ddbfdda87d63ff117859699",
+  "reference_median_seconds": null,
+  "reference_run_id": null,
+  "required_runs": 3,
+  "revision_a": "78f780b3c91622aa24934fab21303da01500f747",
+  "revision_b": null,
+  "runner_sha256": "45675dc81977fa6a644d59a908c994c86a40e21c2df76d8b502d7442ba7d5b99",
+  "started_at_utc": "2026-10-02T11:42:47.300502+00:00"
+}

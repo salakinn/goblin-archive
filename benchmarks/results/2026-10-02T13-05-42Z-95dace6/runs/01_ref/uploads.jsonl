@@ -1,0 +1,5 @@
+{"batch": ["input_00001", "input_00002", "input_00003", "input_00004", "input_00005", "input_00006", "input_00007", "input_00008", "input_00009", "input_00010"], "bytes": 176286946, "end_ns": 16139930154475, "start_ns": 16138634092089, "status": 202}
+{"batch": ["input_00011", "input_00012", "input_00013", "input_00014"], "bytes": 204827254, "end_ns": 16143236476960, "start_ns": 16139930924327, "status": 202}
+{"batch": ["input_00015", "input_00016", "input_00017", "input_00018", "input_00019"], "bytes": 197402904, "end_ns": 16145631810524, "start_ns": 16143238137090, "status": 202}
+{"batch": ["input_00020", "input_00021", "input_00022", "input_00023", "input_00024", "input_00025", "input_00026", "input_00027", "input_00028", "input_00029", "input_00030", "input_00031", "input_00032", "input_00033", "input_00034", "input_00035", "input_00036", "input_00037", "input_00038", "input_00039"], "bytes": 119147878, "end_ns": 16146832247744, "start_ns": 16145634267303, "status": 202}
+{"batch": ["input_00040", "input_00041", "input_00042", "input_00043"], "bytes": 7971739, "end_ns": 16146920197954, "start_ns": 16146835290359, "status": 202}

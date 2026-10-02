@@ -1,0 +1,23 @@
+{
+  "checked_at_utc": "2026-10-02T11:08:22Z",
+  "revision": "78f780b3c91622aa24934fab21303da01500f747",
+  "working_tree_dirty": true,
+  "source_database": "goblin-data/goblin.db",
+  "source_books": 0,
+  "required_books": 10000,
+  "source_quick_check": "ok",
+  "input_source": "/home/steffen/Work/Testdaten",
+  "input_files": 43,
+  "input_formats": {
+    ".epub": 16,
+    ".fb2": 7,
+    ".mobi": 2,
+    ".pdf": 18
+  },
+  "input_total_bytes": 705636721,
+  "bundle_path": "benchmarks/.local/import-10k-v1",
+  "bundle_present": false,
+  "verify_command": ".venv/bin/python benchmarks/tools/benchmark_import.py verify --bundle benchmarks/.local/import-10k-v1",
+  "verify_result": "FileNotFoundError: benchmarks/.local/import-10k-v1/dataset.json",
+  "compatible_reference_present": false
+}

@@ -1,0 +1,3310 @@
+{
+  "input_00001": {
+    "archived_file_sha256": "aeff85f3ef65ca60cd37095f14d12c865c4501050aa1ce678b839c25c7eef6de",
+    "cover_sha256": "9788c8f30dc6d5b1faf70635bfdae304d80e7798843fb179fdde9f1a3860e063",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "unavailable",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 0
+    },
+    "format": "mobi",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 750,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 500
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.mobi",
+        "format": "mobi",
+        "sha256": "aeff85f3ef65ca60cd37095f14d12c865c4501050aa1ce678b839c25c7eef6de",
+        "size": 1470404
+      },
+      "import": {
+        "original_filename": "Das Harvard-Konzept by Fisher, Roger (z-lib.org).mobi"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Fisher, Roger"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "Karriere",
+            "Ratgeber/Recht",
+            "Finanzen/Ausbildung",
+            "Beruf"
+          ]
+        },
+        "isbn": {
+          "source": "embedded",
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": null
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Campus Verlag"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Das Harvard-Konzept"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "aeff85f3ef65ca60cd37095f14d12c865c4501050aa1ce678b839c25c7eef6de",
+    "status": "finished",
+    "title": "Das Harvard-Konzept"
+  },
+  "input_00002": {
+    "archived_file_sha256": "978f9a8788554193166206de259a7ebeb233fba818234721f07ab588fbb70bd6",
+    "cover_sha256": "4cc185e9c02900fcca481f372783b81986c768a026c7bd4de1d46ebcd0a436a2",
+    "fingerprint": {
+      "signature_json": "[580287763904674, 159453592181641, 266821475408772, 94889707477223, 1032832939265274, 169447811748716, 28205574462997, 226187317934731, 176829163968431, 118245831615201, 126142744379954, 90882123809024, 243573097641359, 267858932312977, 215022024985277, 194861283859012, 818330978651247, 97336580473437, 613258537352384, 537644049592390, 213644113584154, 11415401205978, 48253948846301, 207602851915244, 371189857897437, 88669981253046, 156116159067911, 89650962198232, 17502401633870, 12516718985569, 239718237839108, 45214714504650]",
+      "status": "complete",
+      "text_hash": "a05237a4b1f195ded1970f7c2bcd5545a69295136735b287533e0d8ddc1ad0a8",
+      "version": 3,
+      "word_count": 106291
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 900,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 596
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "978f9a8788554193166206de259a7ebeb233fba818234721f07ab588fbb70bd6",
+        "size": 1673270
+      },
+      "import": {
+        "original_filename": "The Bitcoin Standard_ The Decentralized Alternative to Central Banking by Saifedean Ammous.epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Saifedean Ammous"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "en"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2018
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "The Bitcoin Standard"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "978f9a8788554193166206de259a7ebeb233fba818234721f07ab588fbb70bd6",
+    "status": "finished",
+    "title": "The Bitcoin Standard"
+  },
+  "input_00003": {
+    "archived_file_sha256": "132df636babac8abd8b4c9e1e69b4ce62458b130ac068e1f1467a1587f1c0d88",
+    "cover_sha256": "4f9d44b4530aacebf13fdfd351ec92f8c0b86ba6f960ed664c85c4b7cb850cc9",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "unavailable",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 0
+    },
+    "format": "mobi",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 751,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 480
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.mobi",
+        "format": "mobi",
+        "sha256": "132df636babac8abd8b4c9e1e69b4ce62458b130ac068e1f1467a1587f1c0d88",
+        "size": 3269819
+      },
+      "import": {
+        "original_filename": "Marshall, Tim - Die Macht der Geographie_ Wie sich Weltpolitik anhand von 10 Karten erklären lässt (2015, Deutscher Taschenbuch Verlag) - libgen.li.mobi"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Marshall, Tim"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": "embedded",
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2015
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "dtv Verlagsgesellschaft mbH & Co. KG, München"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Die Macht der Geographie"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "132df636babac8abd8b4c9e1e69b4ce62458b130ac068e1f1467a1587f1c0d88",
+    "status": "finished",
+    "title": "Die Macht der Geographie"
+  },
+  "input_00004": {
+    "archived_file_sha256": "3d4b159602a7435e9bb35159c7f6b924b3826f01e10a80dbcb43b6e35bf0e4a2",
+    "cover_sha256": "e28080eb670832df10f397bf02de1c41c56c828c29a27bf9133e16b3eae0d940",
+    "fingerprint": {
+      "signature_json": "[506078320092172, 928847619503799, 794012020754816, 586381231743105, 878110960169974, 1233185643344803, 701388277486597, 475084979760662, 396416805283263, 184287014559788, 662368242092342, 69987272710849, 1075664816669109, 182605127381122, 1059879313216587, 121936602693499, 405318772623337, 57494016442845, 122950296155808, 215107239448078, 427982070367339, 1185972249019097, 894781091357035, 643408894030328, 748895870145661, 194824299163057, 664202435026212, 308602463230429, 70417670272812, 2124814606858657, 522528439527547, 348970977540444]",
+      "status": "complete",
+      "text_hash": "7e6799c8f86b139edb51517175b1f54252ce3f8e22c4164c3936813e4ed192bf",
+      "version": 3,
+      "word_count": 29144
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1920,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1358
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "3d4b159602a7435e9bb35159c7f6b924b3826f01e10a80dbcb43b6e35bf0e4a2",
+        "size": 6373733
+      },
+      "import": {
+        "original_filename": "Python Programming And Maching Learning Understanding How To Code Within 24 Hours 2 In 1.epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Stance, Movch"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "en"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2021
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "python programming and maching learning: Understanding how to code within 24hours with this simplified guide to programming and machine learning using python language(2 in 1)"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "3d4b159602a7435e9bb35159c7f6b924b3826f01e10a80dbcb43b6e35bf0e4a2",
+    "status": "finished",
+    "title": "python programming and maching learning: Understanding how to code within 24hours with this simplified guide to programming and machine learning using python language(2 in 1)"
+  },
+  "input_00005": {
+    "archived_file_sha256": "477e085a2ed16a903b2e02f2bd30cd6eba3f11a8e2c90330ea9c2bd204c35bf8",
+    "cover_sha256": "657e7c9d60bfb35d1c6d495061565b5447e74dde35a8a86c49710f82307c60b2",
+    "fingerprint": {
+      "signature_json": "[2279013118877, 8313117473401, 2312131229771, 407309508529778, 52987458753123, 340871203103035, 213588571242939, 80791278493033, 153647683509963, 400729267295367, 117133888133691, 20426431082442, 139487597350212, 214524571721145, 21669389962347, 38620217830143, 430649676624820, 149057963181220, 212237606212599, 170056891063004, 84377512304960, 83952300959246, 58969189239766, 35201498471105, 131308047042975, 191667382387066, 36626810711241, 92869814536163, 45898535395689, 321898058548946, 120885978193832, 22720519020060]",
+      "status": "complete",
+      "text_hash": "8f8507e73da3c44a83789ab4bde17fe4bc4a70b396770d434725488c8d3afda7",
+      "version": 3,
+      "word_count": 85240
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1131
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "477e085a2ed16a903b2e02f2bd30cd6eba3f11a8e2c90330ea9c2bd204c35bf8",
+        "size": 52300565
+      },
+      "import": {
+        "original_filename": "ABAP Workbench - 100 Tipps & Tricks.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": null,
+          "value": []
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "GPL Ghostscript 9.01"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "ABAP Workbench - 100 Tipps & Tricks"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "477e085a2ed16a903b2e02f2bd30cd6eba3f11a8e2c90330ea9c2bd204c35bf8",
+    "status": "finished",
+    "title": "ABAP Workbench - 100 Tipps & Tricks"
+  },
+  "input_00006": {
+    "archived_file_sha256": "fc05947d3095181f778c8c8f7f297abffac2ff199fc81069f3e23c83b0b1eb2d",
+    "cover_sha256": "07395cbd8c64a748acc7768e831462da13156573604cc09261d662b383cf1e90",
+    "fingerprint": {
+      "signature_json": "[372300723217582, 456464868713701, 1817211883443, 81183380451652, 451643486493637, 914951311478395, 92632038353769, 108770382228001, 513213058949343, 220261189932278, 504818951616102, 71630874898174, 173883259662822, 255701441269449, 15057016252760, 67233303472412, 909704074084922, 5771055730602, 182592030185182, 348786446654509, 583025261741403, 398842945042275, 10545855096840, 620542281010275, 218358770879558, 68290972707280, 385039378839271, 308674053577522, 357373304873530, 213830390831104, 497722193537926, 158987068842328]",
+      "status": "complete",
+      "text_hash": "bd21721b078e8b2b3fe21907fd2a6e881d634736beaf6e14edf2bd6a71730dbd",
+      "version": 3,
+      "word_count": 66558
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "fc05947d3095181f778c8c8f7f297abffac2ff199fc81069f3e23c83b0b1eb2d",
+        "size": 12846892
+      },
+      "import": {
+        "original_filename": "ABAP-Entwicklung in Eclipse __ Copy 6ruj-sen2-fdm4-x3gc.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Daniel Schön"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2015
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 10.1.12 (Windows)"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "ABAP-Entwicklung in Eclipse"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "fc05947d3095181f778c8c8f7f297abffac2ff199fc81069f3e23c83b0b1eb2d",
+    "status": "finished",
+    "title": "ABAP-Entwicklung in Eclipse"
+  },
+  "input_00007": {
+    "duplicate_sha256": "fc05947d3095181f778c8c8f7f297abffac2ff199fc81069f3e23c83b0b1eb2d",
+    "sha256": "fc05947d3095181f778c8c8f7f297abffac2ff199fc81069f3e23c83b0b1eb2d",
+    "status": "duplicate"
+  },
+  "input_00008": {
+    "archived_file_sha256": "27aeb09ec97cdc5e818667720b433f68689b9d676a013079943ee1825a0c6a5f",
+    "cover_sha256": "5f8427ebac74032e782d7b4697c54bdcf58f34cffb52b8b69de7d113aa2c1e72",
+    "fingerprint": {
+      "signature_json": "[465033914187819, 74018600229810, 332945186227789, 548874832297575, 78491619371190, 4829512983643, 306187444083030, 550673995096625, 111700031133532, 322151981460488, 158500561854930, 53838227177129, 151104447222122, 11547259995753, 82085014905398, 49629651516867, 71834592961583, 53886234615578, 326408221164178, 684823038574009, 123992383476547, 67228727497579, 179527669924345, 174124290445959, 27028733702638, 656394280462421, 266318893927718, 513126617179253, 42091262509904, 43381616459081, 322525441841841, 373165887927365]",
+      "status": "complete",
+      "text_hash": "5b7f4f9d42495b9179341634ea01850c9137910c4a30d69395f5fe8ceff11261",
+      "version": 3,
+      "word_count": 91769
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1131
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "27aeb09ec97cdc5e818667720b433f68689b9d676a013079943ee1825a0c6a5f",
+        "size": 55435079
+      },
+      "import": {
+        "original_filename": "ABAP-Programmierrichtlinien.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": null,
+          "value": []
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "GPL Ghostscript 9.01"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "ABAP-Programmierrichtlinien"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "27aeb09ec97cdc5e818667720b433f68689b9d676a013079943ee1825a0c6a5f",
+    "status": "finished",
+    "title": "ABAP-Programmierrichtlinien"
+  },
+  "input_00009": {
+    "archived_file_sha256": "2a34c515009a4737455d0117ec7fe4e6aec89c92870c57a4ed565ecc2dc74022",
+    "cover_sha256": "7095add58a3d6d34f6e1322770f998c872eee488dcc3ac5fb8a947f955cd1c59",
+    "fingerprint": {
+      "signature_json": "[290459260692663, 856411812967175, 182436302008942, 80298120785810, 132014827589821, 27897719625492, 182147562989405, 164784025927024, 129195182944803, 59763296003875, 19898893011076, 141688885933835, 419168767295798, 130693182897233, 78124650774921, 187985640595969, 259486023076236, 108430185332203, 32039619103118, 96226218120483, 8207638505859, 111369666004092, 69871810161287, 146847042506317, 54158583184920, 266938214415388, 14696063715332, 31834536845595, 364953563198922, 136057877016364, 320499206743431, 200249889477902]",
+      "status": "complete",
+      "text_hash": "8a09af6d115c768af2ac333fb2325686674c7e444beb38bb473a15170a82a2f8",
+      "version": 3,
+      "word_count": 124707
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "2a34c515009a4737455d0117ec7fe4e6aec89c92870c57a4ed565ecc2dc74022",
+        "size": 15705485
+      },
+      "import": {
+        "original_filename": "Chargenverwaltung mit SAP.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Marco Richter"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2013
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 11.0 (Windows); modified using iText 2.1.7 by 1T3XT"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Chargenverwaltung mit SAP"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "2a34c515009a4737455d0117ec7fe4e6aec89c92870c57a4ed565ecc2dc74022",
+    "status": "finished",
+    "title": "Chargenverwaltung mit SAP"
+  },
+  "input_00010": {
+    "archived_file_sha256": "bc2840484118d4f455225d46f13dba2a78d7fbad37424f0b8f066275ad9f6fe3",
+    "cover_sha256": "3dfbe68dac85e66e483f832765c8f075caf17067b99c4db518889080101b7f25",
+    "fingerprint": {
+      "signature_json": "[52983909978782, 10248924279030, 250207706233241, 127465698028814, 221955035301774, 82787263265829, 22646609359787, 183489334328621, 109801004445813, 171920181162667, 90245701552597, 141387237167135, 170396908043096, 6827197055514, 64817939077698, 304528585500277, 64785867789331, 5771055730602, 34151293884227, 487470701317600, 670735077445661, 436821444688824, 147236330287792, 3618532821134, 116751623063279, 113431527190513, 393198893933237, 187434317724233, 12109104473076, 94215755892559, 331072604450040, 34232032704355]",
+      "status": "complete",
+      "text_hash": "f56203d5759c7e4faf200d7f8304688c1acb9ebf4867cda8eff387b676359b67",
+      "version": 3,
+      "word_count": 100437
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "bc2840484118d4f455225d46f13dba2a78d7fbad37424f0b8f066275ad9f6fe3",
+        "size": 14364807
+      },
+      "import": {
+        "original_filename": "Custom_Code_SAP_S4HANA.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Emily Celen"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2020
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 11.0 (Windows)"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Custom-Code-Migration nach SAP S/4HANA"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "bc2840484118d4f455225d46f13dba2a78d7fbad37424f0b8f066275ad9f6fe3",
+    "status": "finished",
+    "title": "Custom-Code-Migration nach SAP S/4HANA"
+  },
+  "input_00011": {
+    "archived_file_sha256": "06debca00ca43947bca98cf97e768c43a2eac9278d52e327637ed9bd350a6d3d",
+    "cover_sha256": "3f86ffb510926a022ed440fa877f573c56da8121d9c6d3eead1a235c56105279",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 152313
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1131
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "06debca00ca43947bca98cf97e768c43a2eac9278d52e327637ed9bd350a6d3d",
+        "size": 98073777
+      },
+      "import": {
+        "original_filename": "Discover Logistik mit SAP.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": null,
+          "value": []
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "GPL Ghostscript 9.01"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Discover Logistik mit SAP"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "06debca00ca43947bca98cf97e768c43a2eac9278d52e327637ed9bd350a6d3d",
+    "status": "finished",
+    "title": "Discover Logistik mit SAP"
+  },
+  "input_00012": {
+    "archived_file_sha256": "0cd6c6b3b02baaab528aac18cb5c3fb0e84cafad6487303226dcecb0da3cafe6",
+    "cover_sha256": "e261f0af0e5f477ccea460e589eae9b21d8a3d10ee418e1979b42103fe1d4a7b",
+    "fingerprint": {
+      "signature_json": "[62417392917839, 53067354174115, 2094851462498, 455809117917119, 43168316486753, 143699264193620, 4310457871541, 227765543655142, 304077512095056, 54310849082665, 246884089480551, 15769081413844, 375711813649046, 20949951089221, 120893347554379, 184221302435736, 341436234740696, 262846224586833, 178607604804425, 7866671967085, 207916166886390, 138760140489424, 110142375243457, 19236609745477, 37183527811509, 77472891184784, 31715717929756, 35732789622874, 55090640126917, 17046183084786, 8274006510137, 6160093154686]",
+      "status": "complete",
+      "text_hash": "8fec2dcdf868d9eff48a40d8f4809217e1667f0376e0dee11524658d6c5796b7",
+      "version": 3,
+      "word_count": 119250
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1197
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "0cd6c6b3b02baaab528aac18cb5c3fb0e84cafad6487303226dcecb0da3cafe6",
+        "size": 14143255
+      },
+      "import": {
+        "original_filename": "Einstieg in ABAP.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Karl-Heinz Kühnhauser"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2015
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 11.0 (Windows)"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Einstieg in ABAP"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "0cd6c6b3b02baaab528aac18cb5c3fb0e84cafad6487303226dcecb0da3cafe6",
+    "status": "finished",
+    "title": "Einstieg in ABAP"
+  },
+  "input_00013": {
+    "archived_file_sha256": "60022a1d92b805ce6ffb27605e637b6681ab030cf546cf8d8d3579540b082aef",
+    "cover_sha256": "db75d19c45c8f7122d9bac3d5e3796b432c2c06cdebb3289b1a35495a5fd3f0b",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 161909
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "60022a1d92b805ce6ffb27605e637b6681ab030cf546cf8d8d3579540b082aef",
+        "size": 23879963
+      },
+      "import": {
+        "original_filename": "Kapazitaetsplanung mit SAP.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Binoy Vithayathil"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2014
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 9.5.5 (Windows); modified using iText 2.1.7 by 1T3XT"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Kapazitätsplanung mit SAP"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "60022a1d92b805ce6ffb27605e637b6681ab030cf546cf8d8d3579540b082aef",
+    "status": "finished",
+    "title": "Kapazitätsplanung mit SAP"
+  },
+  "input_00014": {
+    "archived_file_sha256": "64ac7410499734a59b0a0b9ab16396970915d09b2f93f2ec1f9286d5dc33e9c3",
+    "cover_sha256": "8a46b33a7d37952b5201f17f2db97843fa12cd5960ab6f9f189797f6513dcd5d",
+    "fingerprint": {
+      "signature_json": "[53496395454112, 337987185694941, 59927834423593, 69275331155837, 29135487835456, 268360349366113, 7652858257523, 244788507492900, 303184460390727, 5178734827214, 47356152776877, 66082720769395, 63561597559350, 96337062780581, 6094765119488, 302539394332857, 142632113690547, 159038722435504, 246723714295553, 74020986272366, 906859069597, 74771471996712, 160221298417492, 572665151824747, 43188229708476, 155760217121006, 582935272306532, 11717828466482, 78129513291225, 234883245922707, 119818144299060, 157072650281384]",
+      "status": "complete",
+      "text_hash": "50c5cda369ce90871b0559cbf5da3f6b29a8d4c173a4315376593705161e2360",
+      "version": 3,
+      "word_count": 110695
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1131
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "64ac7410499734a59b0a0b9ab16396970915d09b2f93f2ec1f9286d5dc33e9c3",
+        "size": 68730259
+      },
+      "import": {
+        "original_filename": "Praxishandbuch SAP Code Inspector.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": null,
+          "value": []
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "GPL Ghostscript 9.01"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Praxishandbuch SAP Code Inspector"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "64ac7410499734a59b0a0b9ab16396970915d09b2f93f2ec1f9286d5dc33e9c3",
+    "status": "finished",
+    "title": "Praxishandbuch SAP Code Inspector"
+  },
+  "input_00015": {
+    "archived_file_sha256": "73b3742965f9bdc77dd748c48d448e1926ff19de4aedf077db6be94d561065ef",
+    "cover_sha256": "d28aacd4d03defc95a49372812117446b1cb1f2e7a4a53d492856d019d65c24a",
+    "fingerprint": {
+      "signature_json": "[17986875574832, 52031542734510, 79428892083319, 73689133836111, 129728992107130, 36624767200899, 161656425848971, 74243547279166, 139619259122666, 210077317708876, 108146352847885, 28408611326832, 5117841943108, 118999182088639, 27392621559614, 192604377361407, 117908754519519, 633161597794560, 46946115147982, 530828570465339, 166141368287178, 91569505514485, 30789136941339, 18063993078110, 184885122905048, 253754138751078, 269163522963825, 108687300686604, 181665139928773, 221195586692408, 87188427556178, 95147400280939]",
+      "status": "complete",
+      "text_hash": "e0d40aecbe331345e655611b19d14008b4022b48819ada3986ea28cf38c25369",
+      "version": 3,
+      "word_count": 142210
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "73b3742965f9bdc77dd748c48d448e1926ff19de4aedf077db6be94d561065ef",
+        "size": 25730923
+      },
+      "import": {
+        "original_filename": "Qualitätsmanagement mit SAP.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Yvonne Lorenz"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2018
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 10.1.16 (Windows)"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Qualitätsmanagement mit SAP"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "73b3742965f9bdc77dd748c48d448e1926ff19de4aedf077db6be94d561065ef",
+    "status": "finished",
+    "title": "Qualitätsmanagement mit SAP"
+  },
+  "input_00016": {
+    "archived_file_sha256": "0d1cf5915e039b81ddaa559dfe382c1fe43c2f1f1088566c032ab8a1f6be42b2",
+    "cover_sha256": "b0068cf9b6e614436b506be0765478e3b160acce3561b9d652f77f938a4c7e3e",
+    "fingerprint": {
+      "signature_json": "[144315063155607, 5975965834884, 79961340461476, 14918933018356, 223735263358916, 73014989677965, 320334965158176, 35806546657100, 554988232924569, 2734264315711, 143050690870709, 3220949080300, 27827775334442, 448503817867007, 177097190762969, 42285529525575, 285861751903405, 299907614408208, 67763267109341, 161091429873966, 24064485567632, 9782090360106, 49098322846579, 234764814169382, 553988874404321, 315129702079599, 26156063360133, 14098840787859, 515649458579299, 53235961515561, 519295279465248, 416098018623018]",
+      "status": "complete",
+      "text_hash": "046934f8ed3ac4d709a908a65b08679ea2deed6fbb4bbbd3d8027883fff1372e",
+      "version": 3,
+      "word_count": 104930
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "0d1cf5915e039b81ddaa559dfe382c1fe43c2f1f1088566c032ab8a1f6be42b2",
+        "size": 10037802
+      },
+      "import": {
+        "original_filename": "SAP EWM - Technische Grundlagen und Programmierung.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Daniela Schapler"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 6.0 (Windows)"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "SAP EWM – Technische Grundlagen und Programmierung"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "0d1cf5915e039b81ddaa559dfe382c1fe43c2f1f1088566c032ab8a1f6be42b2",
+    "status": "finished",
+    "title": "SAP EWM – Technische Grundlagen und Programmierung"
+  },
+  "input_00017": {
+    "archived_file_sha256": "c52dcf16f3c528140cdcc8fc2de7f26cf2a0e0ce4b5e77afe2023faa05bc652d",
+    "cover_sha256": "337e61aafa460cc47b25d380746b97ee8cd11229d2d78365e830aa888c7ef0f1",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "complete",
+      "text_hash": "65c116bcb27c35a77a2478b49e8f969f0ffcd0198cbb66af1fa4f45a53dd933b",
+      "version": 3,
+      "word_count": 149083
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "c52dcf16f3c528140cdcc8fc2de7f26cf2a0e0ce4b5e77afe2023faa05bc652d",
+        "size": 35466601
+      },
+      "import": {
+        "original_filename": "SAP Fiori - Implementierung und Entwicklung.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Michael Englbrecht"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2017
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 10.1.16 (Windows)"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "SAP Fiori"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "c52dcf16f3c528140cdcc8fc2de7f26cf2a0e0ce4b5e77afe2023faa05bc652d",
+    "status": "finished",
+    "title": "SAP Fiori"
+  },
+  "input_00018": {
+    "archived_file_sha256": "fd7b4a934caa151e3c3b41a5cad2f3947323d77e58c15c9db0abc24904629d6f",
+    "cover_sha256": "3ad0bf0a1f0b9a485c0135e247acbf9030447743f6e79447d14672ab95fd0838",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 163673
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "fd7b4a934caa151e3c3b41a5cad2f3947323d77e58c15c9db0abc24904629d6f",
+        "size": 36498404
+      },
+      "import": {
+        "original_filename": "SAP Interactive Forms by Adobe.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Jürgen Hauser"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 9.0.0 (Windows); modified using iText 2.1.7 by 1T3XT"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "SAP Interactive Forms by Adobe"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "fd7b4a934caa151e3c3b41a5cad2f3947323d77e58c15c9db0abc24904629d6f",
+    "status": "finished",
+    "title": "SAP Interactive Forms by Adobe"
+  },
+  "input_00019": {
+    "archived_file_sha256": "12d7404389f6e8774c1382a231e17651a043bc88ca2f2d5c2b0bcc19c5018237",
+    "cover_sha256": "08f1c7cae4d173c4c84c4227359dcffcb9aa3d5244cc1e538e288a3d45b5e79e",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 150399
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1362
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "12d7404389f6e8774c1382a231e17651a043bc88ca2f2d5c2b0bcc19c5018237",
+        "size": 89669174
+      },
+      "import": {
+        "original_filename": "Schroedinger programmiert ABAP.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Roland Schwaiger"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2014
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Adobe PDF Library 10.0.1; modified using iText 2.1.7 by 1T3XT"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Schrödinger programmiert ABAP"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "12d7404389f6e8774c1382a231e17651a043bc88ca2f2d5c2b0bcc19c5018237",
+    "status": "finished",
+    "title": "Schrödinger programmiert ABAP"
+  },
+  "input_00020": {
+    "archived_file_sha256": "94e363904add40d40fa4f0c1f45a6acecdec26f683be9055372100df30ad8df1",
+    "cover_sha256": "b611ad25f910d23c934de6abc68d0e7cc23a1eb5f2926916019597e259406010",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "complete",
+      "text_hash": "c3f8320cd25f1019cb43fab6d4b75a4522998817254847d7bb32a4a57df1aa7d",
+      "version": 3,
+      "word_count": 144331
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "94e363904add40d40fa4f0c1f45a6acecdec26f683be9055372100df30ad8df1",
+        "size": 46253091
+      },
+      "import": {
+        "original_filename": "Transport und Versand mit SAP LES - Praxishandbuch __ Copy mzgk-f9ib-ahq6-2t5y.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Othmar Gau"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2010
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 8.1.0 (Windows); modified using iText 2.1.7 by 1T3XT"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Praxishandbuch Transport und Versand mit SAP LES"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "94e363904add40d40fa4f0c1f45a6acecdec26f683be9055372100df30ad8df1",
+    "status": "finished",
+    "title": "Praxishandbuch Transport und Versand mit SAP LES"
+  },
+  "input_00021": {
+    "archived_file_sha256": "2b84a0804684035be06b626a5ea448c3ebe3b3109f281223d63aea0a7aab392e",
+    "cover_sha256": "93aa934b9643a4ef9e0d68cb3caa70efed50c77a9cee5bf32943f7be4702e090",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "complete",
+      "text_hash": "8fbbe3d174550bd37afe4732b8b25da49bb5b56cc041576f89843bde3aaa5999",
+      "version": 3,
+      "word_count": 149080
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "2b84a0804684035be06b626a5ea448c3ebe3b3109f281223d63aea0a7aab392e",
+        "size": 25177355
+      },
+      "import": {
+        "original_filename": "Warehouse Management mit SAP ERP.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "André Käber"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2011
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 8.1.0 (Windows); modified using iText 2.1.7 by 1T3XT"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Warehouse Management mit SAP ERP"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "2b84a0804684035be06b626a5ea448c3ebe3b3109f281223d63aea0a7aab392e",
+    "status": "finished",
+    "title": "Warehouse Management mit SAP ERP"
+  },
+  "input_00022": {
+    "archived_file_sha256": "754b0e7f23acefcf6cb9b6d75aaaa36e7fedfbeaabad79ce1d8c7a0105be75d0",
+    "cover_sha256": "8988174e5b0a6099cf2b70a60cc039d81d764a63a058c8a1c8a5ee89ee25ef1e",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 219118
+    },
+    "format": "pdf",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1120
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.pdf",
+        "format": "pdf",
+        "sha256": "754b0e7f23acefcf6cb9b6d75aaaa36e7fedfbeaabad79ce1d8c7a0105be75d0",
+        "size": 33154934
+      },
+      "import": {
+        "original_filename": "Warehouse Management mit SAP EWM.pdf"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Gunther Sanchez"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": null,
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": null,
+          "value": null
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2013
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Acrobat Distiller 9.5.5 (Windows)"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Warehouse Management mit SAP EWM"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "754b0e7f23acefcf6cb9b6d75aaaa36e7fedfbeaabad79ce1d8c7a0105be75d0",
+    "status": "finished",
+    "title": "Warehouse Management mit SAP EWM"
+  },
+  "input_00023": {
+    "archived_file_sha256": "9e592150b381cc8197382cf30ab81b981cea501217bb12351e03043f7fbeeec0",
+    "cover_sha256": "57d1c48b55839c767dc0d6fffc98143341d7ddb10e2ad954e418b68f7b670396",
+    "fingerprint": {
+      "signature_json": "[231823909001643, 91365249005282, 1692533112922842, 240707753796915, 572308289126568, 347035584905778, 217760449175708, 1055752165918515, 1538774423853390, 2217948106493031, 2828653464947286, 1505159041871279, 464517760909672, 472578395530614, 288354881922641, 1856464595636335, 304648169905789, 255729730526397, 275997398501684, 418925974676312, 495425653172718, 122469324697680, 551943327498030, 136965281222861, 275899310311720, 408678466376402, 266728431041869, 1022311228874095, 875562248809920, 79337007338607, 1449856134293014, 19261380046195]",
+      "status": "complete",
+      "text_hash": "da6bc5528cd98f70e15e862401ead593728ebd289f5a126f29c249bc4647d067",
+      "version": 3,
+      "word_count": 25702
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1443,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 983
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "9e592150b381cc8197382cf30ab81b981cea501217bb12351e03043f7fbeeec0",
+        "size": 1799565
+      },
+      "import": {
+        "original_filename": "Alice im Wunderland by Carroll, Lewis (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Carroll, L"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": "Die Serie \"Meisterwerke der Literatur\" beinhaltet die Klassiker der deutschen und weltweiten Literatur in einer einzigartigen Sammlung für Ihren eBook Reader. Lesen Sie die besten Werke großer Schriftsteller,Poeten, Autoren und Philosophen auf Ihrem Reader. Dieses Werk bietet zusätzlich * Eine Biografie/Bibliografie des Autors. Dies ist die Original-Übersetzung von Antonie Zimmermann aus dem Jahr 1869 und der damals gültigen Rechtschreibung. Alice im Wunderland (ursprünglich: Alices Abenteuer im Wunderland; englischer Originaltitel: Alice’s Adventures in Wonderland) ist ein erstmals 1865 erschienenes Kinderbuch des britischen Schriftstellers Lewis Carroll. Die fiktionale Welt, in der Alice im Wunderland angesiedelt ist, spielt in solch einer Weise mit Logik, dass sich die Erzählung unter Mathematikern und Kindern gleichermaßen großer Beliebtheit erfreut. Sie enthält zahlreiche satirische Anspielungen – nicht nur auf persönliche Freunde Carrolls, sondern auch auf die Schullektionen, die Kinder im England jener Zeit auswendig lernen mussten. (aus wikipedia.de)"
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "Klassiker"
+          ]
+        },
+        "isbn": {
+          "source": "embedded",
+          "value": "9783849607890"
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Alice im Wunderland"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "9e592150b381cc8197382cf30ab81b981cea501217bb12351e03043f7fbeeec0",
+    "status": "finished",
+    "title": "Alice im Wunderland"
+  },
+  "input_00024": {
+    "archived_file_sha256": "ae71127dbc22c48da54f32d314f97c148ae9e628b1c9f29c750d4b71c6babce6",
+    "cover_sha256": "39dd0f4587c3ee43e6b33cf55ccb4152089470781326a008e3897949b19e7df9",
+    "fingerprint": {
+      "signature_json": "[45633949353945, 62894060581058, 9181663253181, 84652766676178, 102245049464901, 91726167256080, 26044252049831, 126302744101240, 140679939879147, 74093391589870, 131326721934232, 110301378560579, 8688410313917, 92507188777282, 95764742834204, 98186001426146, 670485740200184, 65087003631630, 44551803344500, 99509836873147, 437061276067024, 216108729980490, 165686182309191, 100049004197987, 83501243190464, 43956631226800, 173094366794198, 90411282404377, 248489425333010, 96018699028008, 30003738393218, 7993323762447]",
+      "status": "complete",
+      "text_hash": "3eefe31fb04aa703d5255c2b88125d84e55fa5dc5fa0330cac61f87430958179",
+      "version": 3,
+      "word_count": 143889
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 680,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 510
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "ae71127dbc22c48da54f32d314f97c148ae9e628b1c9f29c750d4b71c6babce6",
+        "size": 1163258
+      },
+      "import": {
+        "original_filename": "American Psycho by Ellis, Bret Easton (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Bret Easton Ellis"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2013
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "American Psycho"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "ae71127dbc22c48da54f32d314f97c148ae9e628b1c9f29c750d4b71c6babce6",
+    "status": "finished",
+    "title": "American Psycho"
+  },
+  "input_00025": {
+    "archived_file_sha256": "6c1c37148da26a4b241fa30d883318680dde415cedeb5503278b24715dddd68e",
+    "cover_sha256": "c16b4d0de3d77b7c70f599cf7d976540e20c8a19b1365147dda4fbe01b6b9074",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 175373
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1000,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 631
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "6c1c37148da26a4b241fa30d883318680dde415cedeb5503278b24715dddd68e",
+        "size": 969790
+      },
+      "import": {
+        "original_filename": "Blackout (Marc Elsberg) (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Elsberg, Marc"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": "embedded",
+          "value": "9783641074319"
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "PeP eBook"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "BLACKOUT"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "6c1c37148da26a4b241fa30d883318680dde415cedeb5503278b24715dddd68e",
+    "status": "finished",
+    "title": "BLACKOUT"
+  },
+  "input_00026": {
+    "archived_file_sha256": "4e69ac015e12533fc2524dcdbd6b983b6c4139904b408fad0bc9a4adbccf3368",
+    "cover_sha256": "d4f205c3d76168734e598a8f2f0684f1335ffc4370746d075ad169d1048dd493",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 192209
+    },
+    "format": "fb2",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 240,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 240
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.fb2",
+        "format": "fb2",
+        "sha256": "4e69ac015e12533fc2524dcdbd6b983b6c4139904b408fad0bc9a4adbccf3368",
+        "size": 1334682
+      },
+      "import": {
+        "original_filename": "Harry Potter und der Feuerkelch.fb2"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Joanne K. Rowling"
+          ]
+        },
+        "description": {
+          "source": null,
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "sf_fantasy"
+          ]
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": null,
+          "value": null
+        },
+        "publisher": {
+          "source": null,
+          "value": null
+        },
+        "series": {
+          "source": "embedded",
+          "value": "Harry Potter"
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Harry Potter und der Feuerkelch"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "4e69ac015e12533fc2524dcdbd6b983b6c4139904b408fad0bc9a4adbccf3368",
+    "status": "finished",
+    "title": "Harry Potter und der Feuerkelch"
+  },
+  "input_00027": {
+    "archived_file_sha256": "65f3d295983a53da1badbf9e9ddb6acc0cb62d8f2d83d3cb9196ae0c2bcf2eb3",
+    "cover_sha256": "f136f531fe62df1d137c9cc7de00ccb6ee65e7050f249a42aa72295bb15cf526",
+    "fingerprint": {
+      "signature_json": "[17256343910697, 81009474173718, 200466695266684, 267862560691749, 267455091661085, 141317107746037, 261835638408966, 181609925183589, 421636046269707, 38472374667535, 632005586649021, 646385678390, 99849129681438, 35977154318466, 18388508983189, 341881487694237, 103468813773970, 195209555808872, 62810260507310, 111856817000303, 180344964493908, 216812553872427, 352930419325489, 724371068114262, 143708567109785, 178925369243785, 590162789395109, 94429820953265, 696409178684851, 7599492941165, 48882330822153, 293892220476187]",
+      "status": "complete",
+      "text_hash": "86bfc1e7628bc81c721a0f548ccadace087ae8b8dba48e127b29218f404942f9",
+      "version": 3,
+      "word_count": 107987
+    },
+    "format": "fb2",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 240,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 240
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.fb2",
+        "format": "fb2",
+        "sha256": "65f3d295983a53da1badbf9e9ddb6acc0cb62d8f2d83d3cb9196ae0c2bcf2eb3",
+        "size": 774956
+      },
+      "import": {
+        "original_filename": "Harry Potter und der Gefangene von Askaban.fb2"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Joanne K. Rowling"
+          ]
+        },
+        "description": {
+          "source": null,
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "sf_fantasy"
+          ]
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": null,
+          "value": null
+        },
+        "publisher": {
+          "source": null,
+          "value": null
+        },
+        "series": {
+          "source": "embedded",
+          "value": "Harry Potter"
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Harry Potter und der Gefangene von Askaban"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "65f3d295983a53da1badbf9e9ddb6acc0cb62d8f2d83d3cb9196ae0c2bcf2eb3",
+    "status": "finished",
+    "title": "Harry Potter und der Gefangene von Askaban"
+  },
+  "input_00028": {
+    "archived_file_sha256": "45e015611a232f0cd6099a0e7e03881385e1c6c022004c447a4520232935d17d",
+    "cover_sha256": null,
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 176490
+    },
+    "format": "fb2",
+    "metadata": {
+      "cover": null,
+      "file": {
+        "cover_filename": null,
+        "filename": "book.fb2",
+        "format": "fb2",
+        "sha256": "45e015611a232f0cd6099a0e7e03881385e1c6c022004c447a4520232935d17d",
+        "size": 1217544
+      },
+      "import": {
+        "original_filename": "Harry Potter und der Halbblutprinz.fb2"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Joanne K. Rowling"
+          ]
+        },
+        "description": {
+          "source": null,
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "sf_fantasy"
+          ]
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2005
+        },
+        "publisher": {
+          "source": null,
+          "value": null
+        },
+        "series": {
+          "source": "embedded",
+          "value": "Harry Potter (de)"
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Harry Potter und der Halbblutprinz"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "45e015611a232f0cd6099a0e7e03881385e1c6c022004c447a4520232935d17d",
+    "status": "finished",
+    "title": "Harry Potter und der Halbblutprinz"
+  },
+  "input_00029": {
+    "archived_file_sha256": "bc4d46a9b5f3b601a0c728218c39a920d5eb6b52005ac51c2eee24c67f5f2d4d",
+    "cover_sha256": "6bdf4d9163c31a79a66f1a7412eec66de56485a3670b6293f20352122da07480",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 255473
+    },
+    "format": "fb2",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 240,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 240
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.fb2",
+        "format": "fb2",
+        "sha256": "bc4d46a9b5f3b601a0c728218c39a920d5eb6b52005ac51c2eee24c67f5f2d4d",
+        "size": 1794398
+      },
+      "import": {
+        "original_filename": "Harry Potter und der Orden des Phönix.fb2"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Joanne K. Rowling"
+          ]
+        },
+        "description": {
+          "source": null,
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "sf_fantasy"
+          ]
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": null,
+          "value": null
+        },
+        "publisher": {
+          "source": null,
+          "value": null
+        },
+        "series": {
+          "source": "embedded",
+          "value": "Harry Potter"
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Harry Potter und der Orden des Phönix"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "bc4d46a9b5f3b601a0c728218c39a920d5eb6b52005ac51c2eee24c67f5f2d4d",
+    "status": "finished",
+    "title": "Harry Potter und der Orden des Phönix"
+  },
+  "input_00030": {
+    "archived_file_sha256": "4a913a6cc3062a817289a5758f6d6136389f22d098a93c14ef7ba9fe2786ee2c",
+    "cover_sha256": "34d4edecf6bb2343191884c1b0d326c14594034d06c85bb2f7ce43f14bd65d5d",
+    "fingerprint": {
+      "signature_json": "[242522599348439, 24504405682526, 375392435805235, 97817955498704, 196649607263751, 32502289278513, 9035137377605, 16511486552810, 38025359178322, 153636826849847, 83123522428382, 73681330267258, 157550803450270, 7257923624597, 230816292502727, 243024453859074, 131797898468364, 463135719252256, 80721253054135, 16923421492827, 126278992094966, 138714681665715, 22808501975692, 15488013919189, 254588493239946, 218895199352736, 439285226416004, 35889406099622, 14864658494806, 207833014530358, 120508007678102, 229599026224601]",
+      "status": "complete",
+      "text_hash": "f4ae8fc20e76bb0c85da3b27562f9d166153de591ce1d7f18efbff74642a1ea2",
+      "version": 3,
+      "word_count": 80010
+    },
+    "format": "fb2",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 240,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 240
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.fb2",
+        "format": "fb2",
+        "sha256": "4a913a6cc3062a817289a5758f6d6136389f22d098a93c14ef7ba9fe2786ee2c",
+        "size": 561019
+      },
+      "import": {
+        "original_filename": "Harry Potter und der Stein der Weisen.fb2"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Joanne. K. Rowling"
+          ]
+        },
+        "description": {
+          "source": null,
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "sf_fantasy"
+          ]
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": null,
+          "value": null
+        },
+        "publisher": {
+          "source": null,
+          "value": null
+        },
+        "series": {
+          "source": "embedded",
+          "value": "Harry Potter"
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Harry Potter und der Stein der Weisen"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "4a913a6cc3062a817289a5758f6d6136389f22d098a93c14ef7ba9fe2786ee2c",
+    "status": "finished",
+    "title": "Harry Potter und der Stein der Weisen"
+  },
+  "input_00031": {
+    "archived_file_sha256": "12d24e98f58212a412b027c849dc55a9bb7d364ae2ab76c4e5915868e8ac4c4f",
+    "cover_sha256": "85b8d6d993e6605f553fdb00cc485403f89d399ea66ed9a9e78a68600161f7a2",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 207578
+    },
+    "format": "fb2",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 793,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 559
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.fb2",
+        "format": "fb2",
+        "sha256": "12d24e98f58212a412b027c849dc55a9bb7d364ae2ab76c4e5915868e8ac4c4f",
+        "size": 1649670
+      },
+      "import": {
+        "original_filename": "Harry Potter und die Heiligtümer des Todes.fb2"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Джоан Роулинг"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": "Joanne K. Rowling HARRY POTTER und die Heiligtümer des Todes Aus dem Englischen von Klaus Fritz Inhalt: An eine Rückkehr nach Hogwarts ist für Harry nicht zu denken. Er muss alles daransetzen, die fehlenden Horkruxe zu finden, um zu vollenden, was Dumbledore und er begonnen haben. Erst wenn sie zerstört sind, kann Voldemorts Schreckensherrschaft vergehen. Mit Ron und Hermine an seiner Seite und einem magischen Zelt im Gepäck begibt sich Harry auf eine gefährliche Reise, quer durch das ganze Land. Als die drei dabei auf die rätselhaften Heiligtümer des Todes stoßen, muss Harry sich entscheiden. Soll er dieser Spur folgen? Doch er ahnt schon jetzt: Welche Wahl er auch trifft – am Ende des Weges wird der Dunkle Lord auf ihn warten... Die Eingangszitate sind entnommen aus: Aischylos: Orestie. Das Opfer am Grabe. In einer Übersetzung von Ulrich von Wilamowitz-Moellendorf. Berlin 1896. William Penn: Früchte der Einsamkeit. Zweyte Abtheilung. In einer Übersetzung von Friedrich von Schiller. Friedensthal 1803."
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "child_sf"
+          ]
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": null,
+          "value": null
+        },
+        "publisher": {
+          "source": null,
+          "value": null
+        },
+        "series": {
+          "source": "embedded",
+          "value": "Harry Potter (de)"
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Harry Potter und die Heiligtümer des Todes"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "12d24e98f58212a412b027c849dc55a9bb7d364ae2ab76c4e5915868e8ac4c4f",
+    "status": "finished",
+    "title": "Harry Potter und die Heiligtümer des Todes"
+  },
+  "input_00032": {
+    "archived_file_sha256": "c6a33234cd64c792c7556285148c5c641a5562c4465cafe22c76a3edb6764a95",
+    "cover_sha256": "1f714ae915d11d7516324abf371546ac4f28d378e44204904b92aa96eac6b10f",
+    "fingerprint": {
+      "signature_json": "[169928075825655, 709341917559202, 449628757069326, 418607528980651, 470506889396391, 456945988420833, 275641924915388, 195965189318087, 261626901992365, 358782279160071, 197452480314245, 54072653201307, 22865360267566, 64735523468800, 114352648201168, 284870905756505, 102909936051745, 188815307636230, 40894286136228, 492116771993753, 1220704026552634, 454309520833976, 17347124806663, 15488013919189, 85356224539514, 91841299586485, 151621791257145, 349015728662656, 142250335136273, 87799637438326, 225626499055708, 560028181555030]",
+      "status": "complete",
+      "text_hash": "0acba56d8954d8f05996bcd34cc1b38ed6e3ba1da89dcb5649717c0c647e4f82",
+      "version": 3,
+      "word_count": 86303
+    },
+    "format": "fb2",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 240,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 240
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.fb2",
+        "format": "fb2",
+        "sha256": "c6a33234cd64c792c7556285148c5c641a5562c4465cafe22c76a3edb6764a95",
+        "size": 623132
+      },
+      "import": {
+        "original_filename": "Harry Potter und die Kammer des Schreckens.fb2"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Joanne K. Rowling"
+          ]
+        },
+        "description": {
+          "source": null,
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "sf_fantasy"
+          ]
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": null,
+          "value": null
+        },
+        "publisher": {
+          "source": null,
+          "value": null
+        },
+        "series": {
+          "source": "embedded",
+          "value": "Harry Potter"
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Harry Potter und die Kammer des Schreckens"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "c6a33234cd64c792c7556285148c5c641a5562c4465cafe22c76a3edb6764a95",
+    "status": "finished",
+    "title": "Harry Potter und die Kammer des Schreckens"
+  },
+  "input_00033": {
+    "archived_file_sha256": "08af27405dc2978d7848107083b7575e7e1657fb1d62ce90f6fc304835b5c2ac",
+    "cover_sha256": "e7301f29e1952ebffcfbc898589b177ef4d754a428e3d10d5fdbd59bc2816312",
+    "fingerprint": {
+      "signature_json": "[378055761900356, 31081503848703, 106998274702535, 5590032780644, 62087524937041, 32693948981192, 154684601870369, 608887889305135, 1625734861031289, 45662869018521, 283996186590115, 181621356119214, 209181501767657, 193454456587177, 427840399589244, 564644176273064, 5857328582731, 663394191284748, 82902407528412, 202471870011620, 120914849913803, 25383549041334, 51889563141512, 358537209335276, 305231862942349, 645598748452173, 37611580162722, 546866313334284, 35922394627414, 1055348813331478, 1101511504739030, 371170182788795]",
+      "status": "complete",
+      "text_hash": "979f65b5f92e81e078ca4b89d6d39d082d8ae7949cfecd7da6e7da4db07297cf",
+      "version": 3,
+      "word_count": 64455
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 981,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 591
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "08af27405dc2978d7848107083b7575e7e1657fb1d62ce90f6fc304835b5c2ac",
+        "size": 247579
+      },
+      "import": {
+        "original_filename": "Picknick am Wegesrand. (Strugazki, Arkady Strugatsky, Boris) (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Strugazki, Arkadi & Boris"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Picknick am Wegesrand"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "08af27405dc2978d7848107083b7575e7e1657fb1d62ce90f6fc304835b5c2ac",
+    "status": "finished",
+    "title": "Picknick am Wegesrand"
+  },
+  "input_00034": {
+    "archived_file_sha256": "656997af859cab7cca5eb8f094c3329ee9105492eb7f5a01cebd74479aa1e193",
+    "cover_sha256": "72845d7c973210be74f3e6ab3b7e9fc8ee6724b55f4eedcb9cd79a4b312e1ccc",
+    "fingerprint": {
+      "signature_json": "[103010642452403, 110318371131078, 71192811295926, 29559159380364, 799055001320086, 36703888817489, 319831441332822, 305320524086746, 263663714255561, 28527432224089, 77910665367716, 553736590945497, 127195211909905, 99410293234242, 148088779137011, 187361197651212, 49630256416557, 240092613413571, 463378179825295, 580417808164867, 58785749847235, 266256185719612, 213501737329894, 594819022908612, 86516575774160, 1567169573583245, 686313723177559, 412065972889609, 69396453480992, 285825668568986, 583419410855755, 274476635536118]",
+      "status": "complete",
+      "text_hash": "470bd12964693879f85b7f4f5ab568cec34a5307731dedaa99f1f11367ed506b",
+      "version": 3,
+      "word_count": 67318
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 538,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 354
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "656997af859cab7cca5eb8f094c3329ee9105492eb7f5a01cebd74479aa1e193",
+        "size": 390887
+      },
+      "import": {
+        "original_filename": "Spuk in Hill House (Jackson Shirley) (z-library.sk, 1lib.sk, z-lib.sk).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Shirley Jackson"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": [
+            "Shirley Jackson",
+            "Spuk in Hill House",
+            "Psychothriller GmbH"
+          ]
+        },
+        "isbn": {
+          "source": "embedded",
+          "value": "9783942261531"
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2013
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Psychothriller GmbH"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Spuk in Hill House"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "656997af859cab7cca5eb8f094c3329ee9105492eb7f5a01cebd74479aa1e193",
+    "status": "finished",
+    "title": "Spuk in Hill House"
+  },
+  "input_00035": {
+    "archived_file_sha256": "dbeb8fbed91c128159e502cc35238993703d6354c383d94e717516956fa76bb5",
+    "cover_sha256": "23bff7ce043e41f07da7f35a0ceeb6600f2b1d1b66d56596d1853eb8a6941061",
+    "fingerprint": {
+      "signature_json": "[4866929361117, 238960759811473, 643666620025206, 5137534219400, 194767442956756, 64138029244111, 427820260034508, 137755853233476, 424257339752321, 391723788011960, 160036198187717, 131269256203477, 70606882184786, 254852437274010, 790292556278985, 178481602976833, 199941717492479, 481590931894586, 878391105754902, 19053710632007, 28939863627374, 138760461524906, 355934260571123, 62166493597978, 65613109958554, 164243655707980, 9910552460546, 179877188595114, 48209273171874, 18314592537265, 315172571682854, 16997396095799]",
+      "status": "complete",
+      "text_hash": "f2e7edb3c7f45911ef48bf66fdef38cca5ce6c70d4ad4ae10a7333ae62194250",
+      "version": 3,
+      "word_count": 99884
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1200,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 900
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "dbeb8fbed91c128159e502cc35238993703d6354c383d94e717516956fa76bb5",
+        "size": 403498
+      },
+      "import": {
+        "original_filename": "The Walking Dead (Kirkman, Robert) (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Bonansinga, Jay",
+            "Kirkman, Robert"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2012
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Random House DE"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "The Walking Dead: Roman (German Edition)"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "dbeb8fbed91c128159e502cc35238993703d6354c383d94e717516956fa76bb5",
+    "status": "finished",
+    "title": "The Walking Dead: Roman (German Edition)"
+  },
+  "input_00036": {
+    "archived_file_sha256": "65d00c62b0fd7a5bceea7a8e818c750309b74df58fb3133ad53626dcafa83e96",
+    "cover_sha256": "acc797dbd7f92cb92f3ac7ae1a3271c38f6564189e235c8f82fdd8e53dfdce9c",
+    "fingerprint": {
+      "signature_json": "[189043299642885, 297910656567248, 481941616687506, 130069146050470, 431509305111850, 17777328847803, 24486868476395, 38766074248572, 86539672352570, 325740057854207, 74907443110109, 92428168262050, 44389676669901, 226623309023566, 111608349796919, 119978974413612, 69990490971969, 134135251786212, 4378933124054, 3183589204338, 202920299348708, 154814034519510, 119039645014469, 7685815153532, 3005438607639, 117255850061668, 441755804239909, 223876840732025, 89281609224828, 72963340202188, 67645751042780, 236447477004438]",
+      "status": "complete",
+      "text_hash": "505ef2c9e92c44ad53275f557336eda626d1c34c4708efb7f987be4c2a9a92a3",
+      "version": 3,
+      "word_count": 94199
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 500,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 315
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "65d00c62b0fd7a5bceea7a8e818c750309b74df58fb3133ad53626dcafa83e96",
+        "size": 469401
+      },
+      "import": {
+        "original_filename": "The Walking Dead - 02 (Kirkman, Robert [Kirkman, Robert]) (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Kirkman, Robert"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": null
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "The Walking Dead - 02"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "65d00c62b0fd7a5bceea7a8e818c750309b74df58fb3133ad53626dcafa83e96",
+    "status": "finished",
+    "title": "The Walking Dead - 02"
+  },
+  "input_00037": {
+    "archived_file_sha256": "00c74d1e11fb3e7f889f206ebc198bdbf0992e50f0d1c325e86d3eb0c2861eb4",
+    "cover_sha256": "338d7b1dda592610db839a47c5e725bbbcd5acec6881df43293fa0edbcca771c",
+    "fingerprint": {
+      "signature_json": "[152269923291501, 170128968389943, 453430525550909, 620443135291498, 80673959096402, 227942535934770, 465657989255508, 63558558734299, 198229215401569, 303185167169260, 28167281229509, 182586507766293, 78265746007564, 297188068879050, 385044722802518, 50010357139075, 19456008628838, 259111722614661, 454028907470813, 449008384162602, 262171661809215, 45926505867931, 187918714493181, 249717517093962, 138685422831863, 18474767410933, 268657187540339, 210833121094558, 8489238031626, 114677346638557, 60543078420246, 720710814180007]",
+      "status": "complete",
+      "text_hash": "1d02b3c4f6533b56a50bcdae0b52cd7729a80e7268b89dec1581e7d0f5a11cd4",
+      "version": 3,
+      "word_count": 80216
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1600,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1009
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "00c74d1e11fb3e7f889f206ebc198bdbf0992e50f0d1c325e86d3eb0c2861eb4",
+        "size": 397763
+      },
+      "import": {
+        "original_filename": "The Walking Dead - 03 (Kirkman, Robert [Kirkman, Robert]) (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Kirkman, Robert"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": null
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "The Walking Dead - 03"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "00c74d1e11fb3e7f889f206ebc198bdbf0992e50f0d1c325e86d3eb0c2861eb4",
+    "status": "finished",
+    "title": "The Walking Dead - 03"
+  },
+  "input_00038": {
+    "archived_file_sha256": "b577cce5e33740aa651ba4c5c0214bcfd85393a69e5c18615dc3a5332a28dd59",
+    "cover_sha256": "70202e0ed3301e6c1e9bbb1c576089c9cc5f750688d21f42671d60085ba2772c",
+    "fingerprint": {
+      "signature_json": "[365667359388811, 172264344435234, 381500036116000, 293380395502492, 695511699732673, 170904281471270, 464662326935829, 192110148226860, 172740970143065, 183382039403315, 165696634484912, 694428927816300, 175304877383135, 280714864738441, 642899679185176, 212482424705497, 66744714510654, 19408755592444, 108430290072194, 128245313373714, 57751680728500, 154814034519510, 419534709053070, 153886125442273, 261251638436897, 117671128271568, 22510134314513, 474131675963546, 103467618740128, 214130911245120, 584069166889174, 72669050855388]",
+      "status": "complete",
+      "text_hash": "37d074210899f1130b51c0f780adc178b8ef44955c3851c42e72543a7506fa51",
+      "version": 3,
+      "word_count": 91570
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 751,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 470
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "b577cce5e33740aa651ba4c5c0214bcfd85393a69e5c18615dc3a5332a28dd59",
+        "size": 357967
+      },
+      "import": {
+        "original_filename": "The Walking Dead - 04 (Kirkman, Robert [Kirkman, Robert]) (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Kirkman, Robert"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": null
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "The Walking Dead - 04"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "b577cce5e33740aa651ba4c5c0214bcfd85393a69e5c18615dc3a5332a28dd59",
+    "status": "finished",
+    "title": "The Walking Dead - 04"
+  },
+  "input_00039": {
+    "archived_file_sha256": "9bc9815dabaed6a29bd9f4546c5d985ad3f57937af6964e1a048ea247de0e19a",
+    "cover_sha256": "8779227dc6ad24ac1fa627d7fafab12181e5b03b9f160113a02bdf4128e06175",
+    "fingerprint": {
+      "signature_json": "[22519876771710, 454946155405054, 154024122465122, 81634443069837, 482263388374852, 29952528063554, 233051711548728, 72468894747938, 123821469630722, 587021574229527, 167436920366449, 193557780890816, 66140471436240, 29085554690575, 426193890054857, 121139354872378, 78587224549954, 47295786501406, 210899233344999, 30895384806701, 162232386073349, 327919599396714, 132852919080176, 38419707803464, 198538865242871, 212011975485367, 19261648618350, 195501881946803, 232693984202920, 168222048543454, 29708510105683, 223291963679474]",
+      "status": "complete",
+      "text_hash": "f2de73653e939b94838328d0ab1ce75a448b5924478a2f656f11eea506981317",
+      "version": 3,
+      "word_count": 98359
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 863,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 575
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "9bc9815dabaed6a29bd9f4546c5d985ad3f57937af6964e1a048ea247de0e19a",
+        "size": 407389
+      },
+      "import": {
+        "original_filename": "The Walking Dead Rise of the Governor (Robert Kirkman [Kirkman, Robert]) (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Robert Kirkman"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": "<p class=\"description\">In the Walking Dead universe, there is no greater villain than The Governor. The despot who runs the walled-off town of Woodbury, he has his own sick sense of justice: whether it’s forcing prisoners to battle zombies in an arena for the townspeople’s amusement, or chopping off the appendages of those who cross him. The Governor was voted “Villain of the Year” by Wizard magazine the year he debuted, and his story arc was the most controversial in the history of the Walking Dead comic book series. Now, for the first time, fans of The Walking Dead will discover how The Governor became the man he is, and what drove him to such extremes.</p>"
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "en"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2011
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "Macmillan"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "The Walking Dead: Rise of the Governor"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "9bc9815dabaed6a29bd9f4546c5d985ad3f57937af6964e1a048ea247de0e19a",
+    "status": "finished",
+    "title": "The Walking Dead: Rise of the Governor"
+  },
+  "input_00040": {
+    "archived_file_sha256": "33a53395fe4ed0045b537ce6033ed2cfce06209d6f3677cdb114346ce7e10df0",
+    "cover_sha256": "65a7267b1fbf8a464c779eaefe6c9bced98a3ac31e87946065f697233f9ee936",
+    "fingerprint": {
+      "signature_json": "[13765703504090, 341931639824055, 655839032812153, 55119467541096, 743040206132486, 22678626367206, 625936235948278, 303847369733697, 218051225291155, 263203573628641, 267973151436378, 747978493105497, 15233465879760, 88077263897662, 267386382529548, 638394644832784, 362563547259809, 569891205218947, 857602655693346, 306181722491401, 487445907714321, 292201166075591, 69065050491792, 133713923764466, 45465394287739, 20264864188947, 447829820409711, 41262064308696, 184308825444361, 150059810355080, 495456561435042, 750114816927776]",
+      "status": "complete",
+      "text_hash": "71cf841c22a173fd6c56c3d7ea869212d5045e9aecc797265d74be0873ba4a7b",
+      "version": 3,
+      "word_count": 72200
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 475,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 300
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "33a53395fe4ed0045b537ce6033ed2cfce06209d6f3677cdb114346ce7e10df0",
+        "size": 331218
+      },
+      "import": {
+        "original_filename": "Menschenjagt -- Stephen King -- 2c3d2699498b9552f64af872e690c7bb -- Anna’s Archive.epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Stephen King"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": "<p>Wir schreiben das Jahr 2025. Reality-Shows im Fernsehen sind die populärste Form der Unterhaltung für die Massen - und der beste Weg, schnell an Geld zu kommen. Vorausgesetzt man ist verzweifelt genug. Ben Richards ist verzweifelt genug: Seine kleine Tochter ist schwer krank, und einen Arzt kann sich die Familie nicht leisten. Als Kandidat der lukrativsten, aber auch gefährlichsten Show \"Menschenjagd\" muß Richards 30 Tage durchhalten, dann winkt ihm eine Billion Dollar Preisgeld. Doch er wird nicht nur vor laufender Kamera von professionellen Killern gehetzt - das ganz Land ist aufgerufen, sich an der Jagd zu beteiligen. </p>"
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": 2011
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Menschenjagt"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "33a53395fe4ed0045b537ce6033ed2cfce06209d6f3677cdb114346ce7e10df0",
+    "status": "finished",
+    "title": "Menschenjagt"
+  },
+  "input_00041": {
+    "archived_file_sha256": "48180accd88bb0bd65b371d0a861c80f64bc43a9c75dd1bc1317405f408ff7c2",
+    "cover_sha256": "031d31b25ce0ebcb0ec48b00d2dee0c55e1615be27c44a88a48c697881075e61",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 154889
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 1651,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 1275
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "48180accd88bb0bd65b371d0a861c80f64bc43a9c75dd1bc1317405f408ff7c2",
+        "size": 3447323
+      },
+      "import": {
+        "original_filename": "Der Kastanienmann - Søren Sveistrup.epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Søren Sveistrup"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": null
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": "d-Goldmann HC"
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "Der Kastanienmann"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "48180accd88bb0bd65b371d0a861c80f64bc43a9c75dd1bc1317405f408ff7c2",
+    "status": "finished",
+    "title": "Der Kastanienmann"
+  },
+  "input_00042": {
+    "cover_sha256": "031d31b25ce0ebcb0ec48b00d2dee0c55e1615be27c44a88a48c697881075e61",
+    "fingerprint": {
+      "reason": "Text überschreitet das Ähnlichkeitslimit",
+      "signature": [],
+      "status": "partial",
+      "text_hash": null,
+      "word_count": 154889
+    },
+    "metadata": {
+      "_title_cleanup_history": [],
+      "authors": {
+        "source": "embedded",
+        "value": [
+          "Søren Sveistrup"
+        ]
+      },
+      "description": {
+        "source": "embedded",
+        "value": null
+      },
+      "genres": {
+        "source": "embedded",
+        "value": []
+      },
+      "isbn": {
+        "source": null,
+        "value": null
+      },
+      "language": {
+        "source": "embedded",
+        "value": "de"
+      },
+      "publication_year": {
+        "source": "embedded",
+        "value": null
+      },
+      "publisher": {
+        "source": "embedded",
+        "value": "d-Goldmann HC"
+      },
+      "series": {
+        "source": null,
+        "value": null
+      },
+      "title": {
+        "source": "embedded",
+        "value": "Der Kastanienmann"
+      }
+    },
+    "preview_status": "ready",
+    "sha256": "dd7922dfc173953fb7071522e4f7174bc66e1def8e6619600b180891617f3f54",
+    "status": "needs_review"
+  },
+  "input_00043": {
+    "archived_file_sha256": "6f047ce4d6d37ef3ef2bc5b663d670489e395443bbe050da814969c4a00fb338",
+    "cover_sha256": "2bd0605172c0b4a99d56b2ef60f60f0ceb756f33c473bdbd91a060f1cb66c4b4",
+    "fingerprint": {
+      "signature_json": "[]",
+      "status": "partial",
+      "text_hash": null,
+      "version": 3,
+      "word_count": 263763
+    },
+    "format": "epub",
+    "metadata": {
+      "cover": {
+        "filename": "cover.jpg",
+        "height": 673,
+        "mime_type": "image/jpeg",
+        "provider": null,
+        "source": "embedded",
+        "source_id": null,
+        "width": 443
+      },
+      "file": {
+        "cover_filename": "cover.jpg",
+        "filename": "book.epub",
+        "format": "epub",
+        "sha256": "6f047ce4d6d37ef3ef2bc5b663d670489e395443bbe050da814969c4a00fb338",
+        "size": 746172
+      },
+      "import": {
+        "original_filename": "Gnadenlos by Clancy, Tom (z-lib.org).epub"
+      },
+      "metadata": {
+        "authors": {
+          "source": "embedded",
+          "value": [
+            "Clancy, Tom"
+          ]
+        },
+        "description": {
+          "source": "embedded",
+          "value": null
+        },
+        "genres": {
+          "source": "embedded",
+          "value": []
+        },
+        "isbn": {
+          "source": null,
+          "value": null
+        },
+        "language": {
+          "source": "embedded",
+          "value": "de"
+        },
+        "publication_year": {
+          "source": "embedded",
+          "value": null
+        },
+        "publisher": {
+          "source": "embedded",
+          "value": null
+        },
+        "series": {
+          "source": null,
+          "value": null
+        },
+        "title": {
+          "source": "embedded",
+          "value": "01 - Gnadenlos"
+        }
+      },
+      "providers_consulted_successfully": [],
+      "schema_version": 1,
+      "title_cleanup_history": []
+    },
+    "sha256": "6f047ce4d6d37ef3ef2bc5b663d670489e395443bbe050da814969c4a00fb338",
+    "status": "finished",
+    "title": "01 - Gnadenlos"
+  }
+}
