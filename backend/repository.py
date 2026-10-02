@@ -4,9 +4,10 @@ import json
 import re
 import time
 from threading import Lock
-from typing import Any
+from typing import Any, TypeVar
 
 from sqlalchemy import delete, func, select, text
+from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import Session, selectinload
 
 from backend.metadata import clean_tag_name, language_label, normalize_language, normalize_tag_name
@@ -15,6 +16,7 @@ from backend.metadata_normalization import VERSION as NORMALIZATION_VERSION, nor
 
 _filter_cache: tuple[str, float, dict[str, list[dict[str, Any]]]] | None = None
 _filter_cache_lock = Lock()
+_Named = TypeVar("_Named", Author, Genre, Tag)
 
 
 def invalidate_filter_cache() -> None:
@@ -102,14 +104,32 @@ def update_book_comparison(session: Session, book: Book) -> None:
         record.authors_json = json.dumps(value.authors)
 
 
+def _get_or_create(session: Session, model: type[_Named], column: Any, value: Any,
+                   **fields: Any) -> _Named:
+    """Fetch a row by a unique column, inserting it only if still missing.
+
+    Concurrent importers may insert the same name between the lookup and the
+    insert. `ON CONFLICT DO NOTHING` absorbs that race, and the follow-up
+    lookup returns the row the other transaction created, so no import fails
+    with `UNIQUE constraint failed`.
+    """
+    existing = session.scalar(select(model).where(column == value))
+    if existing is not None:
+        return existing
+    session.execute(insert(model).values(**fields).on_conflict_do_nothing())
+    session.flush()
+    created = session.scalar(select(model).where(column == value))
+    if created is None:
+        raise RuntimeError(f"{model.__name__} konnte nicht angelegt werden: {value!r}")
+    return created
+
+
 def get_or_create_author(session: Session, name: str) -> Author:
-    existing = session.scalar(select(Author).where(Author.name == name))
-    return existing or Author(name=name)
+    return _get_or_create(session, Author, Author.name, name, name=name)
 
 
 def get_or_create_genre(session: Session, name: str) -> Genre:
-    existing = session.scalar(select(Genre).where(Genre.name == name))
-    return existing or Genre(name=name)
+    return _get_or_create(session, Genre, Genre.name, name, name=name)
 
 
 def get_or_create_tag(session: Session, name: str) -> Tag:
@@ -117,13 +137,8 @@ def get_or_create_tag(session: Session, name: str) -> Tag:
     normalized = normalize_tag_name(cleaned)
     if not normalized:
         raise ValueError("Tag darf nicht leer sein")
-    existing = session.scalar(select(Tag).where(Tag.normalized_name == normalized))
-    if existing:
-        return existing
-    tag = Tag(name=cleaned, normalized_name=normalized)
-    session.add(tag)
-    session.flush()
-    return tag
+    return _get_or_create(session, Tag, Tag.normalized_name, normalized,
+                          name=cleaned, normalized_name=normalized)
 
 
 def list_authors(session: Session) -> list[dict[str, Any]]:

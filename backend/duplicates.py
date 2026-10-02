@@ -9,8 +9,9 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
 
+import numpy
+import pypdfium2
 from ebooklib import ITEM_DOCUMENT, epub
-from pypdf import PdfReader
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
@@ -19,9 +20,10 @@ from backend.metadata_normalization import (Comparison, VERSION as NORMALIZATION
                                             apply_aliases, normalize)
 from backend.models import Book, BookComparison, BookFingerprint, BookSimilarityBucket, MetadataAlias
 
-TEXT_VERSION = 2
+TEXT_VERSION = 3
 MAX_FILE_BYTES = 100_000_000
 MAX_TEXT_CHARS = 4_000_000
+SIGNATURE_CHUNK = 16_384
 
 
 class _PlainText(HTMLParser):
@@ -55,6 +57,36 @@ class Fingerprint:
     signature: tuple[int, ...] = ()
 
 
+def _pdf_text(path: Path) -> str:
+    """Extract PDF text with PDFium.
+
+    PDFium opens files that carry an empty owner password, which the previous
+    pypdf path rejected outright. Such files therefore gain text analysis.
+    Documents needing a real user password still raise.
+    """
+    try:
+        document = pypdfium2.PdfDocument(str(path))
+    except pypdfium2.PdfiumError as exc:
+        raise ValueError(f"PDF konnte nicht gelesen werden: {exc}") from exc
+    parts: list[str] = []
+    size = 0
+    try:
+        for page in document:
+            textpage = page.get_textpage()
+            try:
+                part = textpage.get_text_range() or ""
+            finally:
+                textpage.close()
+                page.close()
+            size += len(part)
+            if size > MAX_TEXT_CHARS:
+                raise ValueError("Text überschreitet das Analyselimit")
+            parts.append(part)
+    finally:
+        document.close()
+    return " ".join(parts)
+
+
 def normalized_text(path: Path, file_format: str) -> str:
     if path.stat().st_size > MAX_FILE_BYTES:
         raise ValueError("Datei überschreitet das Analyselimit")
@@ -70,18 +102,7 @@ def normalized_text(path: Path, file_format: str) -> str:
             parts.append(" ".join(parser.parts))
         raw = " ".join(parts)
     elif file_format == "pdf":
-        reader = PdfReader(str(path))
-        if reader.is_encrypted:
-            raise ValueError("PDF ist verschlüsselt")
-        parts = []
-        size = 0
-        for page in reader.pages:
-            part = page.extract_text() or ""
-            size += len(part)
-            if size > MAX_TEXT_CHARS:
-                raise ValueError("Text überschreitet das Analyselimit")
-            parts.append(part)
-        raw = " ".join(parts)
+        raw = _pdf_text(path)
     elif file_format == "fb2":
         parts = []
         size = 0
@@ -111,9 +132,25 @@ def shingles(text: str) -> set[int]:
 
 
 def signature_for(shingle_values: set[int]) -> tuple[int, ...]:
-    mask = (1 << 64) - 1
-    return tuple(min(((value * (2 * seed + 1) + seed * 0x9e3779b97f4a7c15) & mask)
-                     for value in shingle_values) for seed in range(32)) if shingle_values else ()
+    """MinHash signature over 32 permutations.
+
+    Vectorised with NumPy; the result is bit-identical to the previous
+    per-seed Python loop. Unsigned 64-bit overflow wraps exactly like the
+    former explicit `& mask`, so stored signatures stay comparable.
+    """
+    if not shingle_values:
+        return ()
+    values = numpy.fromiter(shingle_values, dtype=numpy.uint64, count=len(shingle_values))
+    seeds = numpy.arange(32, dtype=numpy.uint64)
+    factors = numpy.uint64(2) * seeds + numpy.uint64(1)
+    offsets = seeds * numpy.uint64(0x9e3779b97f4a7c15)
+    best = numpy.full(32, numpy.iinfo(numpy.uint64).max, dtype=numpy.uint64)
+    # Bounded chunks keep peak memory independent of the shingle count.
+    with numpy.errstate(over="ignore"):
+        for start in range(0, values.size, SIGNATURE_CHUNK):
+            block = values[start:start + SIGNATURE_CHUNK, None] * factors[None, :] + offsets[None, :]
+            numpy.minimum(best, block.min(axis=0), out=best)
+    return tuple(int(value) for value in best)
 
 
 def buckets(signature: tuple[int, ...]) -> list[str]:
