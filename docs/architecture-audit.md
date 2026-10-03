@@ -445,7 +445,7 @@ Reihenfolge der SSE-Ereignisse eine Zusage ist. Das steht nirgends.
 verliert den Job. Das eigene Update startet den Container neu und ist deshalb
 gegen laufende Importe gesperrt (der Laufzeitcheck in `install_available_update`) — der Schaden wird
 also erkannt und von Hand vermieden, aber nicht aufgelöst. Ausgearbeitet in
-`docs/features/feature-01-importjobs.md`.
+`docs/backlog/feature-01-importjobs.md`.
 
 **Die Filter-Cache-Invalidierung ist an den Import gekoppelt.** `imports.py` ruft
 `invalidate_filter_cache()` fünfmal auf. Das ist korrekt, aber es zeigt, wie

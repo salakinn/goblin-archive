@@ -13,6 +13,7 @@ CHUNK = 1024 * 1024
 MAX_BYTES = 200 * CHUNK
 MAX_FILES = 20
 PROTOCOL = "import-10k-v1"
+FOLDER_PROTOCOL = "import-folder-v1"
 EXTENSIONS = {".epub", ".pdf", ".mobi", ".azw3", ".fb2"}
 
 
@@ -140,8 +141,13 @@ def prepare(config_path: Path) -> Path:
     production = Path(config.get("production_dir", ROOT / "goblin-data")).resolve()
     scratch = Path(config.get("scratch_dir", ROOT / "benchmarks/.local/run-archives")).resolve()
     expected = int(config.get("expected_books", 10_000))
+    protocol_id = config.get("protocol_id", PROTOCOL)
     separate(source, inputs, bundle, production, scratch)
-    if expected != 10_000 and not config.get("smoke_test"):
+    if protocol_id == FOLDER_PROTOCOL and expected != 0:
+        raise ValueError("import-folder-v1 benötigt ein leeres Ausgangsarchiv")
+    if protocol_id not in {PROTOCOL, FOLDER_PROTOCOL} and not config.get("smoke_test"):
+        raise ValueError(f"Unbekanntes Protokoll: {protocol_id}")
+    if protocol_id == PROTOCOL and expected != 10_000 and not config.get("smoke_test"):
         raise ValueError("Für import-10k-v1 sind exakt 10.000 Ausgangsbücher erforderlich")
     if not source.is_dir() or not inputs.is_dir() or not (source / "goblin.db").is_file():
         raise ValueError("snapshot_source oder input_source fehlt")
@@ -197,15 +203,24 @@ def prepare(config_path: Path) -> Path:
             current_size += entry["bytes"]
         if current:
             batches.append(current)
+        failed_paths = set(config.get("expected_failed_paths", []))
+        known_paths = {entry["path"] for entry in input_entries}
+        if failed_paths - known_paths:
+            raise ValueError(f"Erwartete Fehlerdateien fehlen: {sorted(failed_paths - known_paths)}")
+        if failed_paths and protocol_id != FOLDER_PROTOCOL:
+            raise ValueError("Erwartete Eingabefehler nur für import-folder-v1 erlaubt")
+        expected_failed_ids = [entry["input_id"] for entry in input_entries
+                               if entry["path"] in failed_paths]
         write_json(bundle / "snapshot-manifest.json", {"files": snapshot_entries})
         input_paths = {entry["path"] for entry in input_entries}
         write_json(bundle / "input-manifest.json", {"files": input_entries,
                                                       "companions": [e for e in all_entries if e["path"] not in input_paths]})
         db_info = db_check(bundle / "snapshot" / "goblin.db", bundle / "snapshot" / "library", expected)
-        dataset = {"protocol_id": PROTOCOL if expected == 10_000 else "import-smoke-v1",
+        dataset = {"protocol_id": ("import-smoke-v1" if config.get("smoke_test") else protocol_id),
                    "snapshot_manifest_sha256": digest(bundle / "snapshot-manifest.json"),
                    "input_manifest_sha256": digest(bundle / "input-manifest.json"),
                    "expected_books": expected, "input_count": len(input_entries),
+                   "expected_failed_input_ids": expected_failed_ids,
                    "input_bytes": sum(e["bytes"] for e in input_entries),
                    "formats": dict(Counter(Path(e["path"]).suffix.lower() for e in input_entries)),
                    "batches": batches, "snapshot_source": str(source),
@@ -213,8 +228,9 @@ def prepare(config_path: Path) -> Path:
         dataset["dataset_id"] = data_hash(dataset)
         write_json(bundle / "dataset.json", dataset)
         concurrency = int(config.get("import_concurrency", 3))
-        if concurrency != 3 and not config.get("smoke_test"):
-            raise ValueError("import-10k-v1 benötigt drei Importarbeiter")
+        required_concurrency = 1 if protocol_id == FOLDER_PROTOCOL else 3
+        if concurrency != required_concurrency and not config.get("smoke_test"):
+            raise ValueError(f"{protocol_id} benötigt {required_concurrency} Importarbeiter")
         if concurrency < 1:
             raise ValueError("import_concurrency muss positiv sein")
         protocol = {"protocol_id": dataset["protocol_id"], "import_concurrency": concurrency,
@@ -226,6 +242,7 @@ def prepare(config_path: Path) -> Path:
                     "run_timeout_seconds": 1800, "pre_start_pause_seconds": 5,
                     "post_memory_seconds": 10, "required_runs": 10,
                     "scratch_dir": str(scratch),
+                    "batch_wave_files": 80 if protocol_id == FOLDER_PROTOCOL else None,
                     "runner_version": 1}
         write_json(bundle / "protocol.json", protocol)
         write_json(bundle / "expected-results.json", {"status": "pending_pilots", "items": []})
@@ -257,6 +274,10 @@ def verify(bundle: Path, *, require_expectations: bool = False) -> dict:
                  "backend_workers": 1, "required_runs": 10}
         if dataset["expected_books"] != 10_000 or any(protocol.get(k) != v for k, v in fixed.items()):
             raise ValueError("Feste Werte von import-10k-v1 wurden verändert")
+    elif dataset["protocol_id"] == FOLDER_PROTOCOL:
+        if (dataset["expected_books"] != 0 or protocol.get("batch_wave_files") != 80 or
+                protocol.get("import_concurrency") != 1):
+            raise ValueError("Feste Werte von import-folder-v1 wurden verändert")
     verify_files(bundle / "snapshot", read_json(snapshot_manifest)["files"])
     expected_inputs = read_json(input_manifest)
     input_ids = [entry["input_id"] for entry in expected_inputs["files"]]

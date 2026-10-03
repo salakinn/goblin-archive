@@ -2,7 +2,9 @@
 
 Der Runner ist [benchmark_import.py](benchmark_import.py). Er implementiert
 `prepare`, `verify`, `baseline`, `compare` und `report` gemäß
-[Messvorschrift](../import-10k.md). Die Backend-Anpassung für lokale Messungen
+[Messvorschrift](../import-folder.md) für den Standardbenchmark mit dem
+vollständigen Testdatenordner. Die separate 10k-Vorschrift steht in
+[import-10k.md](../import-10k.md). Die Backend-Anpassung für lokale Messungen
 liegt in `server.py`. Sie deaktiviert externe Provider und Nachbearbeitung und
 schreibt Abschlussnachweise. Große Testarchive und Piloten bleiben unter
 `benchmarks/.local/`.
@@ -24,7 +26,16 @@ Konfiguration für `prepare` als `benchmarks/.local/benchmark-config.json`:
 }
 ```
 
-`snapshot_source` muss eine konsistente `goblin.db` und die zugehörige
+Für den Ordnerbenchmark ergänze `"protocol_id": "import-folder-v1"` und
+`"expected_books": 0`. Verwende als `snapshot_source` eine initialisierte,
+leere Testdatenbank und setze `input_source` auf den aktuellen Testdatenordner.
+Der Runner verwendet einen Importarbeiter, zwei Piloten, einen Aufwärmlauf und
+drei gemessene Läufe. Dokumentiert defekte Eingaben stehen in
+`expected_failed_paths` der lokalen Konfiguration.
+Bei mehr als 80 Dateien wartet er in der Messzeit zwischen Uploadwellen auf
+vollständige automatische Verarbeitung.
+
+Für `import-10k-v1` muss `snapshot_source` eine konsistente `goblin.db` und die zugehörige
 `library/` enthalten. Bei mehr als 10.000 Büchern wählt `prepare` anhand
 von SHA-256 und Buch-ID exakt 10.000 aus. Bei weniger als 10.000 bricht es ab.
 `input_source` darf Begleitdateien enthalten; nur EPUB, PDF, MOBI, AZW3 und FB2

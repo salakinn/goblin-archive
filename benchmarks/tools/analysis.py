@@ -163,7 +163,7 @@ def report(folder: Path) -> dict:
               meta_a["coefficient_of_variation"] <= 0.05 and
               (not b or (meta_b["coefficient_of_variation"] is not None and
                          meta_b["coefficient_of_variation"] <= 0.05)))
-    extra_expected = 0 if metadata["protocol_id"] == "import-smoke-v1" else (6 if b else 3)
+    extra_expected = 0 if metadata["protocol_id"] in {"import-smoke-v1", "import-folder-v1"} else (6 if b else 3)
     extra_valid = (len(diagnostics) == extra_expected and len(load_runs) == extra_expected and
                    all(row["status"] == "completed" for row in diagnostics + load_runs))
     if metadata["protocol_id"] == "import-10k-v1":
@@ -180,7 +180,7 @@ def report(folder: Path) -> dict:
         series_status = "aborted"
         reason = next((entry.get("reason") for entry in all_recorded
                        if entry["status"] == "aborted"), "Keine Laufdaten vorhanden")
-    elif valid and stable and extra_valid:
+    elif valid and (stable or metadata["protocol_id"] == "import-folder-v1") and extra_valid:
         series_status, reason = "completed", None
     else:
         series_status = "invalid"

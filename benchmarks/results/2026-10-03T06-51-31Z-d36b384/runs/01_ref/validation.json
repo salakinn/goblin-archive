@@ -1,0 +1,11 @@
+{
+  "books_after": 421,
+  "errors": [],
+  "passed": true,
+  "result_counts": {
+    "duplicate": 2,
+    "failed": 2,
+    "finished": 421,
+    "needs_review": 2
+  }
+}

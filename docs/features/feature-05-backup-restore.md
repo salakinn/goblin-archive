@@ -107,7 +107,7 @@ als Schreibziele verwendet.
 Ein Restore startet keine kostenpflichtigen KI-Aufträge oder Übersetzungen
 automatisch neu. Unterbrochene Vorgänge werden nachvollziehbar markiert.
 Wiederaufnahme persistierter Importaufträge richtet sich nach
-[Feature 01](feature-01-importjobs.md); das Backup macht flüchtige Tasks nicht
+[Feature 01](../backlog/feature-01-importjobs.md); das Backup macht flüchtige Tasks nicht
 nachträglich wiederaufnehmbar.
 
 ## Validierung und Ausfallsicherheit

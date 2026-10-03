@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CLI for the versioned import-10k benchmark protocol."""
+"""CLI for the versioned Goblin import benchmark protocols."""
 from __future__ import annotations
 
 import argparse
@@ -193,7 +193,7 @@ def baseline(args):
     target = revision(args.revision)
     if target != read_json(bundle / "expected-results.json")["revision"]:
         raise ValueError("Referenzrevision weicht von den eingefrorenen Piloten ab")
-    count = args.smoke_runs or 10
+    count = args.smoke_runs or (3 if checked["dataset"]["protocol_id"] == "import-folder-v1" else 10)
     if args.smoke_runs and checked["dataset"]["protocol_id"] != "import-smoke-v1":
         raise ValueError("--smoke-runs nur mit Smoke-Datensatz erlaubt")
     with checkout(target) as tree:
@@ -281,11 +281,11 @@ def compare(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    prep = commands.add_parser("prepare", help="10k-Paket kopieren, prüfen und zwei Piloten ausführen")
+    prep = commands.add_parser("prepare", help="Benchmark-Paket kopieren, prüfen und zwei Piloten ausführen")
     prep.add_argument("--config", type=Path, required=True)
     check = commands.add_parser("verify", help="Hashes und Datenbankintegrität prüfen")
     check.add_argument("--bundle", type=Path, required=True)
-    base = commands.add_parser("baseline", help="Unveränderte Referenz zehnmal messen")
+    base = commands.add_parser("baseline", help="Unveränderte Referenz gemäß Protokoll messen")
     base.add_argument("--bundle", type=Path, required=True)
     base.add_argument("--revision", required=True)
     base.add_argument("--output", type=Path, required=True)

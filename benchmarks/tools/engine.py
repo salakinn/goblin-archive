@@ -419,7 +419,9 @@ def run_one(bundle: Path, output: Path, *, revision_dir: Path = ROOT,
             id_to_entry = {entry["input_id"]: entry for entry in checked["inputs"]}
             mapped, ids, jobs = {}, set(), []
             first = last = None
-            for batch in dataset["batches"]:
+            wave_files = protocol.get("batch_wave_files")
+            wave_count = 0
+            for batch_index, batch in enumerate(dataset["batches"]):
                 paths = [(item_id, bundle / "inputs" / id_to_entry[item_id]["path"])
                          for item_id in batch]
                 boundary = f"goblin-benchmark-{secrets.token_hex(12)}"
@@ -449,6 +451,15 @@ def run_one(bundle: Path, output: Path, *, revision_dir: Path = ROOT,
                     ids.add(item["id"])
                 write_json(output / "item-map.json", mapped)
                 last = ended
+                wave_count += len(batch)
+                if (wave_files and wave_count >= wave_files and
+                        batch_index + 1 < len(dataset["batches"])):
+                    deadline = time.monotonic() + protocol["run_timeout_seconds"] - (last - first) / 1e9
+                    if observation == "events":
+                        _completion(output / "completions.jsonl", ids, deadline)
+                    else:
+                        _completion_poll(client, jobs, data_dir, ids, deadline)
+                    wave_count = 0
             if first is None or last is None:
                 raise ValueError("Leere Batchliste")
             deadline = time.monotonic() + protocol["run_timeout_seconds"] - (last - first) / 1e9
@@ -511,11 +522,17 @@ def verify_files_for_run(data_dir: Path, entries: list[dict]):
 def validate_result(data_dir: Path, dataset: dict, results: dict, events: dict,
                     previews: dict, expectations: dict | None) -> dict:
     errors = []
+    expected_failed = set(dataset.get("expected_failed_input_ids", []))
     if len(results) != dataset["input_count"]:
         errors.append("Nicht alle Eingaben haben ein Ergebnis")
     for input_id, result in results.items():
-        if result["status"] not in {"finished", "duplicate", "needs_review"}:
+        if result["status"] == "failed" and input_id in expected_failed:
+            if not events[input_id].get("error"):
+                errors.append(f"{input_id}: erwarteter Fehler ohne Fehlermeldung")
+        elif result["status"] not in {"finished", "duplicate", "needs_review"}:
             errors.append(f"{input_id}: Status {result['status']}")
+        elif input_id in expected_failed:
+            errors.append(f"{input_id}: erwarteter Importfehler blieb aus")
         if result["status"] == "needs_review":
             preview = previews.get(events[input_id]["preview_id"])
             if not preview or preview["status"] != "ready" or preview["error"]:

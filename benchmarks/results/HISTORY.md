@@ -4,16 +4,23 @@ Hier wird jede Messreihe nach ihrem Abschluss mit Ergebnislink eingetragen.
 Die neueste Reihe steht oben. Zeiten in Sekunden, Speicher in MiB; `—` bedeutet
 nicht gemessen oder nicht vergleichbar. Referenzen gelten nur für ihre Gruppe.
 
-**Aktueller Stand:** Die Importoptimierung aus `95dace6` ist gemessen. Direkt
-nacheinander erhoben: alte Revision `78f780b` **108,41 s**, neue Revision
-`95dace6` **53,43 s** — **50,7 % kürzer** bei gleichzeitig besserer
-Analyseabdeckung (vollständige Fingerprints 21 → 27, fehlende 13 → 2). Details
-und Einordnung: [Vergleichsnotiz](2026-10-02-vergleich-95dace6.md).
-Der 10.000-Bücher-Benchmark bleibt mangels Ausgangsbestand blockiert; eine
-Referenz nach `import-10k-v1` fehlt weiterhin.
+**Aktueller Standard:** [Ordnerreferenz vom 3. Oktober 2026](2026-10-03T06-51-31Z-d36b384/result.md):
+427 unterstützte Dateien, leeres Archiv, ein Importarbeiter, drei gültige
+Läufe, Median **70,226 s**. Pro Lauf: 421 archiviert, zwei identische
+Duplikate, zwei Prüffälle und zwei dokumentiert defekte EPUBs. Der frühere
+blockierte 10k-Vorprüfbericht vom selben Tag wurde durch diese neue
+Aufgabenfestlegung überholt. Für `import-folder-v1` gibt es noch keine
+kompatible Vorgängermessung auf dieser Hardware.
+
+Die frühere [Vergleichsnotiz](2026-10-02-vergleich-95dace6.md) zu 43 Dateien
+bleibt als historische Messung erhalten, ist wegen des anderen Datensatzes
+und der anderen Hardware aber kein Vergleich für die Ordnerreferenz. Die
+10.000-Bücher-Messung bleibt ein separates Ausbauziel ohne Referenz.
 
 | Messreihe / Bericht | Status | Vergleichsgruppe | Rolle / Referenz | Commit | Gültige Läufe A/B | Importmedian B bzw. Referenz (s) | Änderung zur Referenz | Speicherpeak (MiB) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [2026-10-03T06-51-31Z-d36b384](2026-10-03T06-51-31Z-d36b384/result.md) | completed | `3c6f114ca71e` | Referenz | `d36b384c018d` | 3/— | 70.226 | — % | 1419.2 |
+| [2026-10-03T06-30-34Z-d36b384](2026-10-03T06-30-34Z-d36b384/result.md) | blocked | — | 10k-Referenz geplant; keine vorhanden | `d36b384c018d` | —/— | — | — | — |
 | [2026-10-02T13-41-53Z-95dace6](2026-10-02T13-41-53Z-95dace6/result.md) | invalid | `b7cc34a98594` | Referenz | `95dace688c26` | 3/— | 53.433 | — % | 559.8 |
 | [2026-10-02T13-32-53Z-78f780b-recheck](2026-10-02T13-32-53Z-78f780b-recheck/result.md) | completed | `c291b6d3dd47` | Referenz | `78f780b3c916` | 3/— | 108.407 | — % | 573.2 |
 | [2026-10-02T13-26-51Z-95dace6](2026-10-02T13-26-51Z-95dace6/result.md) | invalid | `85bc8d322208` | Referenz | `95dace688c26` | 3/— | 53.519 | — % | 569.8 |

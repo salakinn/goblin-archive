@@ -1,0 +1,34 @@
+{
+  "bundle_path": "benchmarks/.local/import-10k-v1",
+  "bundle_present": false,
+  "candidate_source_dbs_found": [
+    "/home/steffen/Schreibtisch/Entwicklungen/GoblinArchive/goblin-data/goblin.db"
+  ],
+  "checked_at_utc": "2026-10-03T06:30:34.942028+00:00",
+  "compatible_reference_present": false,
+  "hardware": {
+    "cpu_model": "AMD Ryzen 7 7800X3D 8-Core Processor",
+    "logical_cpus": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43"
+  },
+  "input_files": 427,
+  "input_formats": {
+    ".epub": 395,
+    ".fb2": 7,
+    ".mobi": 2,
+    ".pdf": 23
+  },
+  "input_largest_bytes": 98073777,
+  "input_manifest_sha256": "f0c950c98266b9d954ca152b52b43bcfb899392a328b923471659577674986b3",
+  "input_source": "/home/steffen/Schreibtisch/Entwicklungen/TestDaten",
+  "input_total_bytes": 2133530565,
+  "required_books": 10000,
+  "revision": "d36b384c018d7f7214f2f40cc670034df914415e",
+  "source_books": 38,
+  "source_database": "/home/steffen/Schreibtisch/Entwicklungen/GoblinArchive/goblin-data/goblin.db",
+  "source_foreign_key_violations": 0,
+  "source_quick_check": "ok",
+  "verify_command": ".venv/bin/python benchmarks/tools/benchmark_import.py verify --bundle benchmarks/.local/import-10k-v1",
+  "verify_result": "FileNotFoundError: dataset.json",
+  "working_tree_dirty": true
+}

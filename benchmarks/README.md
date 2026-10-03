@@ -2,11 +2,12 @@
 
 Dies ist die zentrale Ablage für Benchmark-Anleitung, Messergebnisse und
 Vergleichshistorie. Der Auftrag **„Mache einen Benchmark“** bedeutet standardmäßig:
-Importzeiten bei einer bestehenden Bibliothek mit 10.000 E-Books messen, Ergebnis
-hier speichern und dem Nutzer kurz zusammenfassen.
+den vollständigen unterstützten Inhalt des lokalen Testdatenordners in ein leeres,
+isoliertes Archiv importieren, Ergebnis hier speichern und kurz zusammenfassen.
 
-Die verbindliche Messvorschrift steht in [import-10k.md](import-10k.md), insbesondere
-Abschnitt 8. Der Einstieg für künftige KI-Sitzungen ist in der obersten
+Die aktuelle Messvorschrift steht in [import-folder.md](import-folder.md).
+Der 10.000-Bücher-Benchmark in [import-10k.md](import-10k.md) ist ein späteres,
+getrenntes Ausbauziel. Der Einstieg für künftige KI-Sitzungen ist in der obersten
 `AGENTS.md` des Repositorys verankert.
 
 ## Ablage
@@ -14,6 +15,7 @@ Abschnitt 8. Der Einstieg für künftige KI-Sitzungen ist in der obersten
 ```text
 benchmarks/
   README.md                 Ablauf für den Auftrag „Mache einen Benchmark“
+  import-folder.md           Standardmessung mit dem vollständigen Testdatenordner
   import-10k.md              Vollständige Messvorschrift, Protokoll import-10k-v1
   tools/                    Wiederverwendbare Messwerkzeuge
   templates/                Vorlagen für Ergebnisbericht und Zusammenfassung
@@ -58,14 +60,13 @@ Commit und veröffentliche nichts.
    eingefrorene Paket und die Referenzrevision. Wähle die älteste gültige
    Referenz derselben Vergleichsgruppe als feste Referenz und die jüngste
    kompatible erfolgreiche Messreihe als zusätzlichen historischen Vergleich.
-4. Prüfe den [vorhandenen Runner](tools/README.md) mit `verify`. Ein 10k-Datenpaket
+4. Prüfe den [vorhandenen Runner](tools/README.md) mit `verify`. Ein Datenpaket
    und eine Referenzmessung müssen separat erstellt werden. Ersetze die Messung
-   nicht durch eine Schätzung oder einen kleinen Ersatztest. Fehlen zwingend
-   benötigte Bücher oder Zugänge, dokumentiere die Voraussetzung konkret.
-5. Ohne kompatible Referenz: Führe die zehn Referenzläufe gemäß Protokoll aus.
-   Mit kompatibler Referenz und geändertem Produktcode: Führe die zehn A/B-Paare
+   nicht durch eine Schätzung. Fehlen zwingende Voraussetzungen, dokumentiere sie.
+5. Ohne kompatible Referenz: Führe die Referenzläufe gemäß Protokoll aus.
+   Mit kompatibler Referenz und geändertem Produktcode: Führe die A/B-Paare
    gegen die eingefrorene Referenzrevision aus. Bei identischem Produktstand
-   wiederhole zehn Referenzläufe; bewerte Reproduzierbarkeit statt Codebeschleunigung.
+   wiederhole die Referenzläufe; bewerte Reproduzierbarkeit statt Codebeschleunigung.
    Verwende für beide Revisionen denselben eingefrorenen Runner.
 6. Speichere Rohdaten während der Ausführung, validiere jedes Ergebnis und
    erstelle danach `result.md` und `summary.json`. Berichte auch ungültige und

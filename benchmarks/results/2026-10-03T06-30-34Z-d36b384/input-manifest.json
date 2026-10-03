@@ -1,0 +1,2140 @@
+{
+  "files": [
+    {
+      "bytes": 1470404,
+      "path": "1_Fachbücher/Business/Das Harvard-Konzept by Fisher, Roger (z-lib.org).mobi",
+      "sha256": "aeff85f3ef65ca60cd37095f14d12c865c4501050aa1ce678b839c25c7eef6de"
+    },
+    {
+      "bytes": 1673270,
+      "path": "1_Fachbücher/Finanzen/The Bitcoin Standard_ The Decentralized Alternative to Central Banking by Saifedean Ammous EPUB/The Bitcoin Standard_ The Decentralized Alternative to Central Banking by Saifedean Ammous.epub",
+      "sha256": "978f9a8788554193166206de259a7ebeb233fba818234721f07ab588fbb70bd6"
+    },
+    {
+      "bytes": 3269819,
+      "path": "1_Fachbücher/Geopolitik Geschichte/Geopolitik/Marshall, Tim - Die Macht der Geographie_ Wie sich Weltpolitik anhand von 10 Karten erklären lässt (2015, Deutscher Taschenbuch Verlag) - libgen.li.mobi",
+      "sha256": "132df636babac8abd8b4c9e1e69b4ce62458b130ac068e1f1467a1587f1c0d88"
+    },
+    {
+      "bytes": 6373733,
+      "path": "1_Fachbücher/Informatik/Python Programming And Maching Learning Understanding How To Code Within 24 Hours 2 In 1/Book/Python Programming And Maching Learning Understanding How To Code Within 24 Hours 2 In 1.epub",
+      "sha256": "3d4b159602a7435e9bb35159c7f6b924b3826f01e10a80dbcb43b6e35bf0e4a2"
+    },
+    {
+      "bytes": 52300565,
+      "path": "1_Fachbücher/Informatik/SAP/ABAP Workbench - 100 Tipps & Tricks.pdf",
+      "sha256": "477e085a2ed16a903b2e02f2bd30cd6eba3f11a8e2c90330ea9c2bd204c35bf8"
+    },
+    {
+      "bytes": 12846892,
+      "path": "1_Fachbücher/Informatik/SAP/ABAP-Entwicklung in Eclipse __ Copy 6ruj-sen2-fdm4-x3gc.pdf",
+      "sha256": "fc05947d3095181f778c8c8f7f297abffac2ff199fc81069f3e23c83b0b1eb2d"
+    },
+    {
+      "bytes": 12846892,
+      "path": "1_Fachbücher/Informatik/SAP/ABAP-Entwicklung in Eclipse.pdf",
+      "sha256": "fc05947d3095181f778c8c8f7f297abffac2ff199fc81069f3e23c83b0b1eb2d"
+    },
+    {
+      "bytes": 55435079,
+      "path": "1_Fachbücher/Informatik/SAP/ABAP-Programmierrichtlinien.pdf",
+      "sha256": "27aeb09ec97cdc5e818667720b433f68689b9d676a013079943ee1825a0c6a5f"
+    },
+    {
+      "bytes": 15705485,
+      "path": "1_Fachbücher/Informatik/SAP/Chargenverwaltung mit SAP.pdf",
+      "sha256": "2a34c515009a4737455d0117ec7fe4e6aec89c92870c57a4ed565ecc2dc74022"
+    },
+    {
+      "bytes": 14364807,
+      "path": "1_Fachbücher/Informatik/SAP/Custom_Code_SAP_S4HANA.pdf",
+      "sha256": "bc2840484118d4f455225d46f13dba2a78d7fbad37424f0b8f066275ad9f6fe3"
+    },
+    {
+      "bytes": 98073777,
+      "path": "1_Fachbücher/Informatik/SAP/Discover Logistik mit SAP.pdf",
+      "sha256": "06debca00ca43947bca98cf97e768c43a2eac9278d52e327637ed9bd350a6d3d"
+    },
+    {
+      "bytes": 14143255,
+      "path": "1_Fachbücher/Informatik/SAP/Einstieg in ABAP.pdf",
+      "sha256": "0cd6c6b3b02baaab528aac18cb5c3fb0e84cafad6487303226dcecb0da3cafe6"
+    },
+    {
+      "bytes": 23879963,
+      "path": "1_Fachbücher/Informatik/SAP/Kapazitaetsplanung mit SAP.pdf",
+      "sha256": "60022a1d92b805ce6ffb27605e637b6681ab030cf546cf8d8d3579540b082aef"
+    },
+    {
+      "bytes": 68730259,
+      "path": "1_Fachbücher/Informatik/SAP/Praxishandbuch SAP Code Inspector.pdf",
+      "sha256": "64ac7410499734a59b0a0b9ab16396970915d09b2f93f2ec1f9286d5dc33e9c3"
+    },
+    {
+      "bytes": 25730923,
+      "path": "1_Fachbücher/Informatik/SAP/Qualitätsmanagement mit SAP.pdf",
+      "sha256": "73b3742965f9bdc77dd748c48d448e1926ff19de4aedf077db6be94d561065ef"
+    },
+    {
+      "bytes": 10037802,
+      "path": "1_Fachbücher/Informatik/SAP/SAP EWM - Technische Grundlagen und Programmierung.pdf",
+      "sha256": "0d1cf5915e039b81ddaa559dfe382c1fe43c2f1f1088566c032ab8a1f6be42b2"
+    },
+    {
+      "bytes": 35466601,
+      "path": "1_Fachbücher/Informatik/SAP/SAP Fiori - Implementierung und Entwicklung.pdf",
+      "sha256": "c52dcf16f3c528140cdcc8fc2de7f26cf2a0e0ce4b5e77afe2023faa05bc652d"
+    },
+    {
+      "bytes": 36498404,
+      "path": "1_Fachbücher/Informatik/SAP/SAP Interactive Forms by Adobe.pdf",
+      "sha256": "fd7b4a934caa151e3c3b41a5cad2f3947323d77e58c15c9db0abc24904629d6f"
+    },
+    {
+      "bytes": 89669174,
+      "path": "1_Fachbücher/Informatik/SAP/Schroedinger programmiert ABAP.pdf",
+      "sha256": "12d7404389f6e8774c1382a231e17651a043bc88ca2f2d5c2b0bcc19c5018237"
+    },
+    {
+      "bytes": 46253091,
+      "path": "1_Fachbücher/Informatik/SAP/Transport und Versand mit SAP LES - Praxishandbuch __ Copy mzgk-f9ib-ahq6-2t5y.pdf",
+      "sha256": "94e363904add40d40fa4f0c1f45a6acecdec26f683be9055372100df30ad8df1"
+    },
+    {
+      "bytes": 25177355,
+      "path": "1_Fachbücher/Informatik/SAP/Warehouse Management mit SAP ERP.pdf",
+      "sha256": "2b84a0804684035be06b626a5ea448c3ebe3b3109f281223d63aea0a7aab392e"
+    },
+    {
+      "bytes": 33154934,
+      "path": "1_Fachbücher/Informatik/SAP/Warehouse Management mit SAP EWM.pdf",
+      "sha256": "754b0e7f23acefcf6cb9b6d75aaaa36e7fedfbeaabad79ce1d8c7a0105be75d0"
+    },
+    {
+      "bytes": 1799565,
+      "path": "2_Unterhaltung/Alice im Wunderland by Carroll, Lewis (z-lib.org).epub",
+      "sha256": "9e592150b381cc8197382cf30ab81b981cea501217bb12351e03043f7fbeeec0"
+    },
+    {
+      "bytes": 1163258,
+      "path": "2_Unterhaltung/American Psycho by Ellis, Bret Easton (z-lib.org).epub",
+      "sha256": "ae71127dbc22c48da54f32d314f97c148ae9e628b1c9f29c750d4b71c6babce6"
+    },
+    {
+      "bytes": 969790,
+      "path": "2_Unterhaltung/Blackout (Marc Elsberg) (z-lib.org).epub",
+      "sha256": "6c1c37148da26a4b241fa30d883318680dde415cedeb5503278b24715dddd68e"
+    },
+    {
+      "bytes": 1334682,
+      "path": "2_Unterhaltung/Harry Potter/Harry Potter und der Feuerkelch.fb2",
+      "sha256": "4e69ac015e12533fc2524dcdbd6b983b6c4139904b408fad0bc9a4adbccf3368"
+    },
+    {
+      "bytes": 774956,
+      "path": "2_Unterhaltung/Harry Potter/Harry Potter und der Gefangene von Askaban.fb2",
+      "sha256": "65f3d295983a53da1badbf9e9ddb6acc0cb62d8f2d83d3cb9196ae0c2bcf2eb3"
+    },
+    {
+      "bytes": 1217544,
+      "path": "2_Unterhaltung/Harry Potter/Harry Potter und der Halbblutprinz.fb2",
+      "sha256": "45e015611a232f0cd6099a0e7e03881385e1c6c022004c447a4520232935d17d"
+    },
+    {
+      "bytes": 1794398,
+      "path": "2_Unterhaltung/Harry Potter/Harry Potter und der Orden des Phönix.fb2",
+      "sha256": "bc4d46a9b5f3b601a0c728218c39a920d5eb6b52005ac51c2eee24c67f5f2d4d"
+    },
+    {
+      "bytes": 561019,
+      "path": "2_Unterhaltung/Harry Potter/Harry Potter und der Stein der Weisen.fb2",
+      "sha256": "4a913a6cc3062a817289a5758f6d6136389f22d098a93c14ef7ba9fe2786ee2c"
+    },
+    {
+      "bytes": 1649670,
+      "path": "2_Unterhaltung/Harry Potter/Harry Potter und die Heiligtümer des Todes.fb2",
+      "sha256": "12d24e98f58212a412b027c849dc55a9bb7d364ae2ab76c4e5915868e8ac4c4f"
+    },
+    {
+      "bytes": 623132,
+      "path": "2_Unterhaltung/Harry Potter/Harry Potter und die Kammer des Schreckens.fb2",
+      "sha256": "c6a33234cd64c792c7556285148c5c641a5562c4465cafe22c76a3edb6764a95"
+    },
+    {
+      "bytes": 247579,
+      "path": "2_Unterhaltung/Picknick am Wegesrand. (Strugazki, Arkady Strugatsky, Boris) (z-lib.org).epub",
+      "sha256": "08af27405dc2978d7848107083b7575e7e1657fb1d62ce90f6fc304835b5c2ac"
+    },
+    {
+      "bytes": 403498,
+      "path": "2_Unterhaltung/The Walking Dead/The Walking Dead (Kirkman, Robert) (z-lib.org).epub",
+      "sha256": "dbeb8fbed91c128159e502cc35238993703d6354c383d94e717516956fa76bb5"
+    },
+    {
+      "bytes": 469401,
+      "path": "2_Unterhaltung/The Walking Dead/The Walking Dead - 02 (Kirkman, Robert [Kirkman, Robert]) (z-lib.org).epub",
+      "sha256": "65d00c62b0fd7a5bceea7a8e818c750309b74df58fb3133ad53626dcafa83e96"
+    },
+    {
+      "bytes": 397763,
+      "path": "2_Unterhaltung/The Walking Dead/The Walking Dead - 03 (Kirkman, Robert [Kirkman, Robert]) (z-lib.org).epub",
+      "sha256": "00c74d1e11fb3e7f889f206ebc198bdbf0992e50f0d1c325e86d3eb0c2861eb4"
+    },
+    {
+      "bytes": 357967,
+      "path": "2_Unterhaltung/The Walking Dead/The Walking Dead - 04 (Kirkman, Robert [Kirkman, Robert]) (z-lib.org).epub",
+      "sha256": "b577cce5e33740aa651ba4c5c0214bcfd85393a69e5c18615dc3a5332a28dd59"
+    },
+    {
+      "bytes": 407389,
+      "path": "2_Unterhaltung/The Walking Dead/The Walking Dead Rise of the Governor (Robert Kirkman [Kirkman, Robert]) (z-lib.org).epub",
+      "sha256": "9bc9815dabaed6a29bd9f4546c5d985ad3f57937af6964e1a048ea247de0e19a"
+    },
+    {
+      "bytes": 1236291,
+      "path": "Uncategorized (177 books)/Alena Schroeder - Junge Frau, am Fenster stehend, Abendlicht, blaues Kleid/Alena Schröder - Junge Frau, am Fenster stehend, Abendlicht, blaues Kleid.epub",
+      "sha256": "707d47c73e02c7708a804389580b5c1d100ce640d20d90c971eff2d68c90e2b7"
+    },
+    {
+      "bytes": 1846803,
+      "path": "Uncategorized (177 books)/Alexander Osang - Die Leben der Elena Silber/Alexander Osang - Die Leben der Elena Silber.epub",
+      "sha256": "632f5e8988db3843181a1f86ffca8a070a1a70f11fdc73fc99d9eb2d5d041642"
+    },
+    {
+      "bytes": 535221,
+      "path": "Uncategorized (177 books)/Alexandra Christo - Elian und Lira – Das wilde Herz der See/Alexandra Christo - Elian und Lira – Das wilde Herz der See.epub",
+      "sha256": "4717eca44247cae62de5ecc47885d4cb15b878ea839bf86431b276c839cff12f"
+    },
+    {
+      "bytes": 22219212,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 01 - Alles voller Kaninchen.epub",
+      "sha256": "a7971e4090e4beacdbbb60d15729e1dfbdf1cdfb9f9a14bdede0f1806cdb21a0"
+    },
+    {
+      "bytes": 39885788,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 02 - Wie belaemmert ist das denn¿.epub",
+      "sha256": "9c30bed1c90c83e38d9df9b5c5b1d47d0baa181dd3ab8248a10479b697188546"
+    },
+    {
+      "bytes": 47524500,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 03 - Hier steckt der Wurm drin.epub",
+      "sha256": "f5a8a6a476958280eb9355e40116d19c8aae5ac16032676c31b41707b4bd8d0b"
+    },
+    {
+      "bytes": 29841554,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 04 - Daher weht der Hase!.epub",
+      "sha256": "244cadc025cafc9ea1b131ac24169be3f83b9454de87f5ae1db0f7982b45b8f3"
+    },
+    {
+      "bytes": 32538906,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 05 - Ich glaub, meine Kroete pfeift!.epub",
+      "sha256": "461fcaa349f57c4ea498f6cc98dd53ee72d9c5b1c6c017ec11e78490ca35e648"
+    },
+    {
+      "bytes": 38444584,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 06 - Den Letzten knutschen die Elche.epub",
+      "sha256": "58ae062bdec6d69acd523feeb9e262acbfd3a82165cb63da66bdcd30f97ed43e"
+    },
+    {
+      "bytes": 47017220,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 07 - Und taeglich gruesst der Camembaer.epub",
+      "sha256": "8f368e64277c5aea1f6eb177132e507dc65c05b1fccb41a5c456f326ca370828"
+    },
+    {
+      "bytes": 51342455,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 08 - Kein Drama ohne Lama.epub",
+      "sha256": "80f7d6de978baada4b65b5b1ccabbacf4d4e2678c1b8d38b5d04dadfdc25508b"
+    },
+    {
+      "bytes": 50832847,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 09 - Das reinste Katzentheater .epub",
+      "sha256": "50ac5f02c05dda34103a04375889b019a156517135b65fbee76d0a5f51781314"
+    },
+    {
+      "bytes": 47578999,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 10 - Der Schuh des Känguru.epub",
+      "sha256": "33caf9244a59b6d5d94f6afb2f5abef91e7c8e8473a2725d785adf877aef1ad8"
+    },
+    {
+      "bytes": 34071905,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 10,5 - Süsser die Esel nie singen - Advents-Kalenderbuch.epub",
+      "sha256": "9c2701e9fc3953bc7f8a31e064b264b94a7fb5a05a09c798b11b2bceb80d9317"
+    },
+    {
+      "bytes": 52672806,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 11 - Volle Kanne Koala.epub",
+      "sha256": "9a474b7d8dc03b6717deae9f80eeb3c596fdfb01fe8c759285cc839c7b66a63b"
+    },
+    {
+      "bytes": 53911926,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 12 - Eine Natter macht die Flatter.epub",
+      "sha256": "3723f66b0bfedbbae71c83b422c53f8ba477d2eca1291c1a8c3eab3ebbdcd8c7"
+    },
+    {
+      "bytes": 55585313,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 13 - Wenn die Frösche zweimal quaken.epub",
+      "sha256": "3995f069c92dbe407e245c6a53c143b1a041f1b09c9f00afd9998ba9851c3c78"
+    },
+    {
+      "bytes": 68178136,
+      "path": "Uncategorized (177 books)/Alice Pantermueller - Mein Lotta-Leben 1-14/Pantermüller, Alice - Mein Lotta-Leben 14 - Da lachen ja die Hunde.epub",
+      "sha256": "9b508d508927ac95b2e88321cb770123ebfda7bd5f0aa7ed7a3152e78406689f"
+    },
+    {
+      "bytes": 797739,
+      "path": "Uncategorized (177 books)/Alison Weir - Die Tudor-Koeniginnen 01 - Katharina von Aragón - Die wahre Koenigin/Alison Weir - Die Tudor-Königinnen 01 - Katharina von Aragón - Die wahre Königin.epub",
+      "sha256": "1d8df1811eb8a462534f3239ab33c3455292d677bd7bb75c1a2f135f0e020c50"
+    },
+    {
+      "bytes": 1197603,
+      "path": "Uncategorized (177 books)/Alison Weir - Die Tudor-Koeniginnen 02 - Anne Boleyn - Die Mutter der Koenigin/Alison Weir - Die Tudor-Königinnen 02 - Anne Boleyn - Die Mutter der Königin.epub",
+      "sha256": "35bf2303772111ed8da4307da6abd5c3b3f99a196861aed2dd3e466819b6be2b"
+    },
+    {
+      "bytes": 679816,
+      "path": "Uncategorized (177 books)/Alva Furisto - Elly 1-3/Furisto, Alva - Elly 01 - Unverbindlich.epub",
+      "sha256": "7a55b960879cfec004106740e1421c96557b572c34e9645b9c142b35d38a1ce5"
+    },
+    {
+      "bytes": 739164,
+      "path": "Uncategorized (177 books)/Alva Furisto - Elly 1-3/Furisto, Alva - Elly 02 - Unbeständig.epub",
+      "sha256": "be60f8264827dc11795f4c2a555062519cd186bbb368b0fe9b49ffe64d0c4459"
+    },
+    {
+      "bytes": 688882,
+      "path": "Uncategorized (177 books)/Alva Furisto - Elly 1-3/Furisto, Alva - Elly 03 - Unschuldig.epub",
+      "sha256": "007b7323784e59ac34b1dd418a93428dbf89365e1c85bacede9f74de53f51abc"
+    },
+    {
+      "bytes": 1873298,
+      "path": "Uncategorized (177 books)/Amy Suiter Clarke - Der Countdown-Killer - Nur du kannst ihn finden/Amy Suiter Clarke - Der Countdown-Killer - Nur du kannst ihn finden.epub",
+      "sha256": "fc8c62516de8ea21a5a4592348691bade401f38afe2a0713ec1269007d077416"
+    },
+    {
+      "bytes": 479603,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Ana Dee - Bergström & Viklund 04 - Dunkle Schatten auf deiner Seele.epub",
+      "sha256": "20b8bd4ad306cc115b46a66125572f9a858e175cb8730217ac84224223caa112"
+    },
+    {
+      "bytes": 407846,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Ana Dee - Linda Sventon 02 - Opferkinder.epub",
+      "sha256": "7217c02f08e3dd1f523025d52f883885b8dad47664868467133267e9a87df8fb"
+    },
+    {
+      "bytes": 290789,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Bergström & Viklund 01 - Verschollen in den Bergen.epub",
+      "sha256": "278e575eebe76316ee68b59dafb501d23109ec2cb019d6b791fe93ee043d89b9"
+    },
+    {
+      "bytes": 470723,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Bergström & Viklund 02 - So still ruht der See.epub",
+      "sha256": "2064def44b386f5555ef88cd7a20a04aced32f8b0b59a4522fef990617b96fcd"
+    },
+    {
+      "bytes": 298905,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Bergström & Viklund 03 - Die Kälte im Herzen.epub",
+      "sha256": "801be1e985d731319abadfb821d358657ab280af8d7cf3322c7f4a27ee7733f6"
+    },
+    {
+      "bytes": 980166,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Bis dein Atem gefriert.epub",
+      "sha256": "8f6056e5283c54cb708b98a72cda831f9fbd65c0139c522ea4a7fe070d87be2d"
+    },
+    {
+      "bytes": 152453,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Burggeheimnis.epub",
+      "sha256": "6630320a4bc567fdb1e7636931db8bfdd36e8ac0ffcfe8896d2d8346a73e790b"
+    },
+    {
+      "bytes": 799517,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Das Böse in mir.epub",
+      "sha256": "641f1ee8fe08208243c6678473e6405fbc18c1f381dcc5346fecfd4352ce6a04"
+    },
+    {
+      "bytes": 1185092,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Die Angst ist dein Feind.epub",
+      "sha256": "d87d43d241a05f6b9546f93def9d4df01e44900b0b38e268a94dd0098b66fc80"
+    },
+    {
+      "bytes": 355098,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Kaltes Herz.epub",
+      "sha256": "8ca61a45ce313a0ed67f6afc563d7cb5bc987287b42f2edbf01e78c6277c540e"
+    },
+    {
+      "bytes": 752926,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Sommer voller Angst (Gesamtausgabe).epub",
+      "sha256": "55eea684ce6dccbaabcda88e11b1739f7e8d6a1b4e6661ed1ff3f1cf86b50d86"
+    },
+    {
+      "bytes": 345136,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Soulless Places - Seelenlose Orte.epub",
+      "sha256": "e9324f809e53390da54669ff16d4f1e188c84a36fe4052ef660d3850f6f5990d"
+    },
+    {
+      "bytes": 336738,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Sündenkinder.epub",
+      "sha256": "148fa9576c2dc9bd76bd48ef90789d9f86a59d0df6036fcd7c9331676cc6d43e"
+    },
+    {
+      "bytes": 802360,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Thomas Fields 01 - Zwillingsschmerz.epub",
+      "sha256": "e12c0c76e76647b3bc0bb5ff285706ed81bace7018fe26e2c193fbed4ad7768b"
+    },
+    {
+      "bytes": 570555,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Thomas Fields 01-02 - Zwillingsopfer (Sammelband).epub",
+      "sha256": "5936a73e2576b2293dea1d71069be76e740114ec835ca774069bd8b801a7919b"
+    },
+    {
+      "bytes": 518103,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Thomas Fields 02 - Zwillingszorn (Zwillingslügen).epub",
+      "sha256": "5a8f833da1f81ae28cad8448d7e6d3e3235800f9409556a1c86e9702b9056fee"
+    },
+    {
+      "bytes": 679378,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Tränenherz.epub",
+      "sha256": "14fe685c64f40c862061d9b701472ef6f1da177aa60e1772cf03c4515a4af681"
+    },
+    {
+      "bytes": 268756,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Tödliche Amnesie.epub",
+      "sha256": "fb5cce635c55511aaa75d7a4e05d595dbdb59ec6847ce40f7618398f83ab3671"
+    },
+    {
+      "bytes": 292708,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Verborgene Sünden.epub",
+      "sha256": "0d8f0d7beca34121e140c83e92e65eba7c6c822c672ba02004f340d5929dc9da"
+    },
+    {
+      "bytes": 673362,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Vermächtnis der Schuld.epub",
+      "sha256": "8dd829e88ad6ea5bd736665d1c3561702e96d33e76e1a2224135cd3d5f3ff22f"
+    },
+    {
+      "bytes": 261761,
+      "path": "Uncategorized (177 books)/Ana Dee Sammlung/Dee, Ana - Winterschatten - Eine ungesühnte Schuld.epub",
+      "sha256": "15e5c8eb8a50a6b38007301b2fbcbb483b9296261fcd8ddd12dbef5a24177b36"
+    },
+    {
+      "bytes": 2135571,
+      "path": "Uncategorized (177 books)/Andrea Bottlinger - Die Kompassmacherin/Andrea Bottlinger - Die Kompassmacherin.epub",
+      "sha256": "7730d15f3e43787084e5c3b84016019dc11e2993eadef9bf0c29faf9b15c6e94"
+    },
+    {
+      "bytes": 224193,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 01 - Die Form des Wassers.epub",
+      "sha256": "1a6e72debfee92f71ce2722ef89dad6b9114bff4ad39f094c653b418bcf6cc45"
+    },
+    {
+      "bytes": 356486,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 02 - Der Hund aus Terracotta.epub",
+      "sha256": "aba49ae4dc01112845d7d51a1b4f3a92d24557b3bed2dd3d9156348aeffa5cac"
+    },
+    {
+      "bytes": 492712,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 03 - Der Dieb der süßen Dinge.epub",
+      "sha256": "33d69ac9588227808d5b9549a1d200fbe5922f79bf45d149c9f2a9e8edd65f32"
+    },
+    {
+      "bytes": 184743,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 04 - Die Stimme der Violine.epub",
+      "sha256": "5fafafdcccaf11fb5b6a8b833c026571c1b39658e1597cfcbf39fa8a08dd8d46"
+    },
+    {
+      "bytes": 224050,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 05 - Das Spiel des Patriarchen.epub",
+      "sha256": "40dc7791e5e986f5136d0c2db1a92c4fd5f32db34741d94a4b3ebebf91292ffe"
+    },
+    {
+      "bytes": 184537,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 06 - Der Kavalier der späten Stunde.epub",
+      "sha256": "c8216358cbcc596ac54d532c08adccc171969819e0d2a2ab180b9958dfe48e25"
+    },
+    {
+      "bytes": 221998,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 07 - Das kalte Lächeln des Meeres.epub",
+      "sha256": "2fb86f8bd6271c932a172150e239a89a1b0b44c7190bad1dba06aad3e16af9cc"
+    },
+    {
+      "bytes": 211031,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 08 - Die Passion des stillen Rächers.epub",
+      "sha256": "a42e2cc2cb5005bfd511090a712d35be70b7d593874cc2ce0a06b45794c7e5e2"
+    },
+    {
+      "bytes": 257635,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 09 - Die dunkle Wahrheit des Mondes.epub",
+      "sha256": "b809a445c2eaf71e4e60b45ebbc19e30ef8aacc0a1ab0bc90d27f9e629286c80"
+    },
+    {
+      "bytes": 230480,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 10 - Die schwarze Seele des Sommers.epub",
+      "sha256": "f2a8d5d13d2f3e921bc198e548613b073666267768bb6617e81335ea66477579"
+    },
+    {
+      "bytes": 217780,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 11 - Die Flügel der Sphinx.epub",
+      "sha256": "8295e6a217606e7481efacf83e5c40794bb85261590a8902fc221638b949406e"
+    },
+    {
+      "bytes": 510751,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 12 - Die Spur des Fuchses.epub",
+      "sha256": "ccd0e9bb09b59f20f1c5980a0a9dad60a7eeb0389d0c5283451362c0978b7bf9"
+    },
+    {
+      "bytes": 352692,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 13 - Das Ritual der Rache.epub",
+      "sha256": "1e016a572acfda9ce52b88f7262d8912d1af2531d3d0fbf8c16c9c071ab43188"
+    },
+    {
+      "bytes": 351369,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 14 - Die Tage des Zweifels.epub",
+      "sha256": "16733f8d7e8f55397da03198b2455c6f707c5e995d0714d6c5205722c20e2ce5"
+    },
+    {
+      "bytes": 490055,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 15 - Der Tanz der Möwe.epub",
+      "sha256": "96132d8952dbb97457a85cf1bfbbb55a7daff106c2131295c246e1e5ec9a76de"
+    },
+    {
+      "bytes": 422839,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 16 - Das Spiel des Poeten.epub",
+      "sha256": "6ad74f8f3a06e303160d50de616a5cf57b82ca94bbcb1c55ef0030f4e3933a25"
+    },
+    {
+      "bytes": 480718,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 17 - Das Lächeln der Signorina.epub",
+      "sha256": "734cb0c2e5b58a201604be2f681e744cbd24a6433b7824ae2a9b7e64c72b60fd"
+    },
+    {
+      "bytes": 362360,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 18 - Das Labyrinth der Spiegel.epub",
+      "sha256": "cf4b0794464927650ab566c65e939c892f5fd932a966a5f55747d9bea93f4d14"
+    },
+    {
+      "bytes": 253107,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 19 - Die Spur des Lichts.epub",
+      "sha256": "ed5cae991d6b9b69a5dc7179ab10b59aa9dc2ecfb1ab83b4428b2b229668813b"
+    },
+    {
+      "bytes": 229802,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 20 - Eine Stimme in der Nacht.epub",
+      "sha256": "da5785e6446310806f1c1767acac8d94f72f0d1d8009f36911eac324223e8552"
+    },
+    {
+      "bytes": 261851,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 21 - Das Nest der Schlangen.epub",
+      "sha256": "871659c1d8fae167cd9ddad05748f67e947030afa103f51b8fbafea13329b548"
+    },
+    {
+      "bytes": 437012,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 22 - Das Bild der Pyramide.epub",
+      "sha256": "e9f058a735f58fdad5315d1492191b0c2a24e00e5aa8b8ecf3d193cdbd29b96d"
+    },
+    {
+      "bytes": 806475,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano 23 - Das Karussell der Verwechslungen.epub",
+      "sha256": "f4196a943d932d29bba884fd370d612e942aaa9633cae33af9ff82f21fc62ad2"
+    },
+    {
+      "bytes": 516590,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano Story 01 - Das Paradies der kleinen Sünder.epub",
+      "sha256": "4f15993b40a65618b39fa0bbf8cb1dc194cae7f1ee86065bb089c482ba009cc8"
+    },
+    {
+      "bytes": 295773,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano Story 02 - Die Nacht des einsamen Träumers.epub",
+      "sha256": "29aa5ab673c7a36741e193b8c0a7f7dc2a2a07a5aee2ddba0000c2b869c714bb"
+    },
+    {
+      "bytes": 245606,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano Story 03 - Die Rache des schönen Geschlechts.epub",
+      "sha256": "154063266b697ef7eebb5378d2197f408bd3a2949d4887768352e24844bb03d5"
+    },
+    {
+      "bytes": 502368,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano Story 04 - Der falsche Liebreiz der Vergeltung.epub",
+      "sha256": "3f54a090b70197ad7d113bd1d07a580666ba07efe04b64114fa32b6db3b3ec2c"
+    },
+    {
+      "bytes": 860820,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano Story 05 - Das süsse Antlitz des Todes.epub",
+      "sha256": "aec940337db5cd66b5b7958e21a3118b5c0dae134a0d7e4b084fa74958ed2e14"
+    },
+    {
+      "bytes": 624146,
+      "path": "Uncategorized (177 books)/Andrea Camilleri - Commissario Montalbano 01 - 23/Andrea Camilleri - Commissario Montalbano Story 06 - Der ehrliche Dieb.epub",
+      "sha256": "37e7ee829a5db04ced98015c147257f4d36c6374e169e580702667fe5efa4952"
+    },
+    {
+      "bytes": 1920989,
+      "path": "Uncategorized (177 books)/Andreas Brandhorst - Sleepless 01 - Schlaflose Nacht/Andreas Brandhorst - Schlaflose Nacht (Sleepless 1).epub",
+      "sha256": "9811f61e0561f7f3e412058b81b3b81d981f767a52645dc07abd83a27ff3997a"
+    },
+    {
+      "bytes": 8976412,
+      "path": "Uncategorized (177 books)/Andreas Fath - Rheines Wasser/Andreas Fath - Rheines Wasser.epub",
+      "sha256": "88b1f6735ec575782429147a381bf7405090940af71be1631948aae40822ee3e"
+    },
+    {
+      "bytes": 616139,
+      "path": "Uncategorized (177 books)/Anna Jacobs - Die Australien-Toechter - Swan River Saga 1-3/Jacobs, Anna - Australien-Tochter 02 - Wo das Gluck erstrahlt.epub",
+      "sha256": "b1363ffa8c7dac97dabef425cecc2481a19f877b4e73dc0d03af891d7b352df4"
+    },
+    {
+      "bytes": 402793,
+      "path": "Uncategorized (177 books)/Anna Jacobs - Die Australien-Toechter - Swan River Saga 1-3/Jacobs, Anna - Australien-Tochter 03 - Wo die Liebe dich erwartet.epub",
+      "sha256": "2cab6949c80b1902106875a3962b455c35809592fc1ca1177aeb7a1a3010ecfa"
+    },
+    {
+      "bytes": 1601965,
+      "path": "Uncategorized (177 books)/Anna Jacobs - Die Australien-Toechter - Swan River Saga 1-3/Jacobs, Anna - Australien-Töchter 01. Wo die Hoffnung dich findet -.epub",
+      "sha256": "1a7592c0f1637e8c3b0055cff0365c5eb017fba6a806be59217f8ffedaa38060"
+    },
+    {
+      "bytes": 1682536,
+      "path": "Uncategorized (177 books)/Annina Safran - Die Saga von Eldrid 1-3/Der Spiegelwächter_ Die Saga von Eldrid (German Edition).epub",
+      "sha256": "b3d975d7581cb0f4775c874fc40990e8c7129498ee610e47c0afef0849e3e4ae"
+    },
+    {
+      "bytes": 1259974,
+      "path": "Uncategorized (177 books)/Annina Safran - Die Saga von Eldrid 1-3/Die Suche nach dem Schattendorf_ Die Saga von Eldrid - Band 2 (German Edition).epub",
+      "sha256": "41d69a0bfe77595c507a9cb03e14e79fca16effcb2befef6682f421530dbd4bf"
+    },
+    {
+      "bytes": 1752629,
+      "path": "Uncategorized (177 books)/Annina Safran - Die Saga von Eldrid 1-3/Im Land der Nuria_ Die Saga von Eldrid (German Edition).epub",
+      "sha256": "490eeacce488202933415d6251000e8b01a4fbc7ea068784e39658fb5346be3f"
+    },
+    {
+      "bytes": 4255336,
+      "path": "Uncategorized (177 books)/Antonia Michaelis - Die Amazonas-Detektive 01 - Verschwoerung im Dschungel/Antonia Michaelis - Die Amazonas-Detektive 01 - Verschwörung im Dschungel.epub",
+      "sha256": "e317a3ae84380401b9c587497714655e515786fb1ef349695e8166eb798e102b"
+    },
+    {
+      "bytes": 2852559,
+      "path": "Uncategorized (177 books)/Arno Strobel - SPY 1-3/Arno Strobel - SPY - Highspeed London.epub",
+      "sha256": "7a0f25449653d38bfbc9e3bfde1e599679d17bf6586c74424531de2e9da60686"
+    },
+    {
+      "bytes": 2250724,
+      "path": "Uncategorized (177 books)/Arno Strobel - SPY 1-3/Arno Strobel - SPY - Hotspot Kinshasa.epub",
+      "sha256": "ad6cef493129d50a0e4025c51700e06ecbe65723d1a9123fe95c03de0fce7197"
+    },
+    {
+      "bytes": 2403181,
+      "path": "Uncategorized (177 books)/Arno Strobel - SPY 1-3/Arno Strobel - SPY - Operation Himalaya.epub",
+      "sha256": "95fc1a5fcc6ea140485b6e19114ef44fa3b187b95e621f8785f290d628361eab"
+    },
+    {
+      "bytes": 634813,
+      "path": "Uncategorized (177 books)/Assaf Gavron - Achtzehn Hiebe/Gavron, Assaf - Achtzehn Hiebe.epub",
+      "sha256": "ea69b2ee5be82d65d3c615f3ba8350328d2ef59f8f7c05bd46bb0fd8bcc0333c"
+    },
+    {
+      "bytes": 2884729,
+      "path": "Uncategorized (177 books)/B.C. Schiller - Targa Hendricks 01 - Der Moment, bevor du stirbst/B.C. Schiller - Targa Hendricks 01 - Der Moment, bevor du stirbst.epub",
+      "sha256": "f92dd22ca780487c0a6e861195ce9904100478efdb4cb4168e8e312ec18c2dbf"
+    },
+    {
+      "bytes": 2539640,
+      "path": "Uncategorized (177 books)/B.C. Schiller - Targa Hendricks 02 - Immer wenn du tötest/B.C. Schiller - Targa Hendricks 02 - Immer wenn du tötest.epub",
+      "sha256": "5245ab2fd8fc3f111e33ccdbc3ccf9241eaec208a37b2ad4c8802d58a68797d5"
+    },
+    {
+      "bytes": 468397,
+      "path": "Uncategorized (177 books)/B.C. Schiller - Targa Hendricks 03 - Dunkeltot, wie deine Seele/B.C. Schiller - Targa Hendricks 02 - Dunkeltot, wie deine Seele.epub",
+      "sha256": "0f1a919a4c43ccd58dacf0f50ac2ad7930a452aa363069c593da5856e5d8f278"
+    },
+    {
+      "bytes": 4403406,
+      "path": "Uncategorized (177 books)/Bambi.pdf",
+      "sha256": "009734df9725fc046cc8538318fe73c442e9cce04e2ccbc361d60939a3e75194"
+    },
+    {
+      "bytes": 3453013,
+      "path": "Uncategorized (177 books)/Bernhard Wucherer - Der Geheimbund der 45/Bernhard Wucherer - Der Geheimbund der 45.epub",
+      "sha256": "16f1dad5cceef82e60dd5555da75c127d05d9543cc18c975310ab7782ce4bcc4"
+    },
+    {
+      "bytes": 730300,
+      "path": "Uncategorized (177 books)/Blade.pdf",
+      "sha256": "7b50848183b776cc61f7a8bf99703d4152b64a39322b72d770d0884b26150bf5"
+    },
+    {
+      "bytes": 883434,
+      "path": "Uncategorized (177 books)/C. Cussler & G. Brown - Kurt Austin 16 - Das Jericho-Programm/Clive Cussler & Graham Brown - Kurt Austin 16 - Das Jericho-Programm.epub",
+      "sha256": "e448158c8384cef37ab42a214878e203216e6bbe450cd19efd5fe1eaa341ec1c"
+    },
+    {
+      "bytes": 2130024,
+      "path": "Uncategorized (177 books)/Caroline Corcoran - Die Nachbarin/Caroline Corcoran - Die Nachbarin.epub",
+      "sha256": "b1c8a35ad5602eb764d94fe3ec70c1e6bc18909eb3ab676e989ff7df8760ec0c"
+    },
+    {
+      "bytes": 1272802,
+      "path": "Uncategorized (177 books)/Carsten Schuette - Schaerengrab/Carsten Schuette - Schaerengrab.epub",
+      "sha256": "f255747254b2fcd6113acf9dc10cebba41a2604872b7278c5b61429ead90fc24"
+    },
+    {
+      "bytes": 1176474,
+      "path": "Uncategorized (177 books)/Cay Rademacher - Stille Nacht in der Provence/Cay Rademacher - Stille Nacht in der Provence.epub",
+      "sha256": "bef009e526d111bc14c79f32de880db6acbdbd35741e9ac4b04fb767f956c478"
+    },
+    {
+      "bytes": 520936,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 01 - Das Todeswrack.epub",
+      "sha256": "5d606a6b9dff1b8dcfce517274f4cf336f5c312d5a8f5788ae74201ac2e84409"
+    },
+    {
+      "bytes": 487452,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 02 - Brennendes Wasser.epub",
+      "sha256": "d4d506ca91cbd72a2a6f9ff25246e150a16e59412d25ac4e9cfc302f1276b99b"
+    },
+    {
+      "bytes": 478327,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 03 - Flammendes Eis.epub",
+      "sha256": "15f49a52d0008d96cfe6e1ec2d20f6c0e8b4663ab611a870616520ca245a5f87"
+    },
+    {
+      "bytes": 457019,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 04 - Tödliche Beute.epub",
+      "sha256": "d988b0bcf0408ca3080722ddcb8f68f76bde07bd9adf80427d6b7f7f39eed747"
+    },
+    {
+      "bytes": 494753,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 05 - Killeralgen.epub",
+      "sha256": "19aba557915df3261e62c495c4b42ba67c1636b99eaf77aa94bae6f045479a82"
+    },
+    {
+      "bytes": 493832,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 06 - Packeis.epub",
+      "sha256": "98d9926392e9afe9c2fda3bb9a0bbc6923d84190401dedbda2acef9def4b1123"
+    },
+    {
+      "bytes": 471399,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 07 - Höllenschlund.epub",
+      "sha256": "374b27f44a47a2ad30b6b6439dd874d9826784be950779b31292f7a05dfde661"
+    },
+    {
+      "bytes": 489206,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 08 - Eiskalte Brandung.epub",
+      "sha256": "69a3d8627a43d8627584bc8f956a4c39346924e9239dc7c45bafa1bce40eee34"
+    },
+    {
+      "bytes": 479971,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 09 - Teufelstor.epub",
+      "sha256": "ce9a1ad6d110b3b5d4d83a0b2e3b1832a431e0b07e651cf34a6be0a59efc0adb"
+    },
+    {
+      "bytes": 654338,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 10 - Höllensturm.epub",
+      "sha256": "0753bdeb28dde011a223865e65b9d656012d5d88db630ecbddfc49024b70d6c0"
+    },
+    {
+      "bytes": 915854,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 11 - Codename Tartarus.epub",
+      "sha256": "f2ced95505f0058ee09770481798863bfde2cbf805cacc8393ab51d0e9d627f0"
+    },
+    {
+      "bytes": 985032,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 12 - Todeshandel.epub",
+      "sha256": "f30a8c9226676a6f7bd9958a11e9f939408ad29d2419dc08b48a458464a808fc"
+    },
+    {
+      "bytes": 641422,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 13 - Das Osiris-Komplott.epub",
+      "sha256": "a9fd47d25a91c5c5eeaf5f96d17b9335bef486764e27fb349f1a4d82e04b0ab0"
+    },
+    {
+      "bytes": 659062,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 14 - Projekt Nighthawk.epub",
+      "sha256": "dd7e4e94fab610dd2a581952110d6dca57931c46bf221e827d2d5beb8e10d1eb"
+    },
+    {
+      "bytes": 975537,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 15 - Die zweite Sintflut.epub",
+      "sha256": "a40de7d57841f34a181aa28119154a6d5fb0878700c24342278a45200ae34467"
+    },
+    {
+      "bytes": 883434,
+      "path": "Uncategorized (177 books)/Clive Cussler & Graham Brown - Kurt Austin 1-16 (Die NUMA-Akten)/Cussler, Clive - Kurt Austin 16 - Das Jericho-Programm.epub",
+      "sha256": "e448158c8384cef37ab42a214878e203216e6bbe450cd19efd5fe1eaa341ec1c"
+    },
+    {
+      "bytes": 3399024,
+      "path": "Uncategorized (177 books)/Cristina Caboni - Die Gartenvilla/Cristina Caboni - Die Gartenvilla.epub",
+      "sha256": "cabab5a33959636f582e8776132b2524376e52877eb8a0ebe16767ec9a4e3a2a"
+    },
+    {
+      "bytes": 2236180,
+      "path": "Uncategorized (177 books)/Der nasse Fisch by Kutscher Volker (z-lib.org).pdf",
+      "sha256": "0a0faefd546075c1622e5dd432a777e6c89f8d8ad338f5d932e33c2b652844d5"
+    },
+    {
+      "bytes": 689230,
+      "path": "Uncategorized (177 books)/Der stumme Tod by Kutscher Volker (z-lib.org).epub",
+      "sha256": "fcb404277c2d68cf3f6869f5e22d9b8fa773699618d4b1dd729c698dd8a81bbc"
+    },
+    {
+      "bytes": 1850402,
+      "path": "Uncategorized (177 books)/Don DeLillo - Die Stille/Don DeLillo - Die Stille.epub",
+      "sha256": "75abfc0ee987fe95ffd8a4809cc313f5294dbdc57b7643cd97b784332e3ed7dc"
+    },
+    {
+      "bytes": 857080,
+      "path": "Uncategorized (177 books)/Doris Roeckle - Das Muendel der Hexe/Doris Röckle - Das Mündel der Hexe.epub",
+      "sha256": "2c54b3f0223fc015bb82d2af5187ecc69b9631c279825454dad0af1dec20b078"
+    },
+    {
+      "bytes": 866072,
+      "path": "Uncategorized (177 books)/Doris Roeckle - Die Flucht der Magd/Doris Röckle - Die Flucht der Magd.epub",
+      "sha256": "9cac0bc404f3c70eeb9e0da1963b9348a7d4390ab4b00a8ed584b24b8e74b068"
+    },
+    {
+      "bytes": 1069027,
+      "path": "Uncategorized (177 books)/Doris Roeckle - Die List der Schanktochter/Doris Röckle - Die List der Schanktochter.epub",
+      "sha256": "1d16690532e149a049a0ce9500099dd25c0306416f9dc9ce5e9978ca4717aa22"
+    },
+    {
+      "bytes": 917199,
+      "path": "Uncategorized (177 books)/Doris Roeckle - Die Spur der Graefin/Doris Röckle - Die Spur der Gräfin.epub",
+      "sha256": "7eb8323d66335b82bfa831013d3cc37d21cb5456f069dbfff4f0bceccb20f0af"
+    },
+    {
+      "bytes": 2850830,
+      "path": "Uncategorized (177 books)/Dune - Collection.pdf",
+      "sha256": "248e27462e1a684503277470a6746dea293d3e474a9c445651514474ec19610f"
+    },
+    {
+      "bytes": 557365,
+      "path": "Uncategorized (177 books)/E. L. Todd - Sterne 2-3/E. L. Todd - Sterne 02 - Flammende Liebe.epub",
+      "sha256": "2e3af85b4553521dde10cd3a3c816c1bb0f992ab1c4c9c650eb00fc4b03b33a0"
+    },
+    {
+      "bytes": 531173,
+      "path": "Uncategorized (177 books)/E. L. Todd - Sterne 2-3/E. L. Todd - Sterne 03 - Flammendes Schicksal.epub",
+      "sha256": "ccbf058fa8f9d9a181d54b3397070a64c9bbc68378b1321b0ccfdf324f5cf293"
+    },
+    {
+      "bytes": 268862,
+      "path": "Uncategorized (177 books)/Elke Bergsma - Das Schweigen der Opfer/Elke Bergsma - Das Schweigen der Opfer.epub",
+      "sha256": "71852096422eb8cfe277b641754a8a1aed2efd4c5f15b0b9a6f45df573d24ca0"
+    },
+    {
+      "bytes": 10632999,
+      "path": "Uncategorized (177 books)/Elly Blake - Fire & Frost 1-3/Elly Blake - Fire & Frost 01 - Vom Eis berührt.epub",
+      "sha256": "3a247081d31f9feaa8e51bc28357ae3c4ff85f05f0244168b991f8659ddb6d5b"
+    },
+    {
+      "bytes": 1185831,
+      "path": "Uncategorized (177 books)/Elly Blake - Fire & Frost 1-3/Elly Blake - Fire & Frost 02 - Vom Feuer geküsst.epub",
+      "sha256": "e37d643ab7f9bc863dd92e8a7114fbe049185477b5431f8530459f6c840891d4"
+    },
+    {
+      "bytes": 1908662,
+      "path": "Uncategorized (177 books)/Elly Blake - Fire & Frost 1-3/Elly Blake - Fire & Frost 03 - Von der Dunkelheit geliebt.epub",
+      "sha256": "3521c9e86e7d861db325f9233d9e3c40882d13cfc6177dd23b189058bdcda775"
+    },
+    {
+      "bytes": 483779,
+      "path": "Uncategorized (177 books)/Enno Deix - Kolbergs Feuertaufe/Enno Deix - Kolbergs Feuertaufe.epub",
+      "sha256": "86e8e391ffef4e9fd23cb5e7e96d353c1281d4fc83a5d70c639e0cfb1eb18ecb"
+    },
+    {
+      "bytes": 1623220,
+      "path": "Uncategorized (177 books)/Eva Pantleon - Das Leben irgendwo dazwischen/Eva Pantleon - Das Leben irgendwo dazwischen.epub",
+      "sha256": "3a47f71bb29334f98746063fcd5fab91a6273cdf013403d11f0e59b1a2eb24ad"
+    },
+    {
+      "bytes": 1408930,
+      "path": "Uncategorized (177 books)/Everly Sheehan - Mars & Golden/Mars & Golden (German Edition).epub",
+      "sha256": "b3d2cf876bbe3a313429452647ed2de7e3a80db898f9997d225a12041476d3a5"
+    },
+    {
+      "bytes": 1315227,
+      "path": "Uncategorized (177 books)/Fatma Aydemir - Ellbogen/Fatma Aydemir - Ellbogen.epub",
+      "sha256": "da9628ba2c98dc81e08e7eef73e4230dc57e181fb3467534f94df5d91fbedf8b"
+    },
+    {
+      "bytes": 1466330,
+      "path": "Uncategorized (177 books)/Franziska Fischer - Und das Meer vor uns/Franziska Fischer - Und das Meer vor uns.epub",
+      "sha256": "54e370f1047ad0ef907070b6608d60f33108898a9bfd154cb31482623d3bd88a"
+    },
+    {
+      "bytes": 4499032,
+      "path": "Uncategorized (177 books)/Gerd Krumeich - Jeanne d'Arc - Seherin, Kriegerin, Heilige/Jeanne d'Arc - Krumeich, Gerd.epub",
+      "sha256": "63b244040968edf14df3ab263eda2d680412cd96494788000d102ad513afe6d8"
+    },
+    {
+      "bytes": 344803,
+      "path": "Uncategorized (177 books)/Gian Bernard - Robert Forster 01 - Vergessene Rache/Gian Bernard - Robert Forster 01 - Vergessene Rache.epub",
+      "sha256": "c10b5681c9bee84db45e695c54b82e130f76fa66a63235c10b8784728434b634"
+    },
+    {
+      "bytes": 529971,
+      "path": "Uncategorized (177 books)/Gianrico Carofiglio - Guido Guerrieri 01-05/Carofiglio, Gianrico - Guido Guerrieri 01 - Reise in die Nacht.epub",
+      "sha256": "ca296d383ee4724cb32894242a8a2f37c6411c7903abc1359583a8df2110cb10"
+    },
+    {
+      "bytes": 1001356,
+      "path": "Uncategorized (177 books)/Gianrico Carofiglio - Guido Guerrieri 01-05/Carofiglio, Gianrico - Guido Guerrieri 02 - In freiem Fall.epub",
+      "sha256": "d6b505e98457cccf43bbfd1fd145cdebe00cc2ac0c419dbab9ecd57b48f49f22"
+    },
+    {
+      "bytes": 489494,
+      "path": "Uncategorized (177 books)/Gianrico Carofiglio - Guido Guerrieri 01-05/Carofiglio, Gianrico - Guido Guerrieri 03 - Das Gesetz der Ehre.epub",
+      "sha256": "a73e5ccd34f1b4fa35b42160aa01498e6c3c8b2862287122a53c67ce176a0e61"
+    },
+    {
+      "bytes": 678852,
+      "path": "Uncategorized (177 books)/Gianrico Carofiglio - Guido Guerrieri 01-05/Carofiglio, Gianrico - Guido Guerrieri 04 - In ihrer dunkelsten Stunde.epub",
+      "sha256": "7da17ad693a05bc11bfde00ea1d22d2fdac00f266076e140a6e14f2aafe02735"
+    },
+    {
+      "bytes": 318834,
+      "path": "Uncategorized (177 books)/Gianrico Carofiglio - Guido Guerrieri 01-05/Carofiglio, Gianrico - Guido Guerrieri 05 - Eine Frage der Wuerde.epub",
+      "sha256": "295faeadbd6787b6e6bd926e882d13a7903bacbede0c89aeb500e74e8d7c955b"
+    },
+    {
+      "bytes": 1619600,
+      "path": "Uncategorized (177 books)/Gillian White - Die Einsamkeit der Luege/Gillian White - Die Einsamkeit der Lüge.epub",
+      "sha256": "8d2bc3c8c39ae0f637844650fc535e8010dc97794ce278021d3a692b761d43a0"
+    },
+    {
+      "bytes": 383661,
+      "path": "Uncategorized (177 books)/Gunter Skwara - Befreiung aus dem Kokon/Gunter Skwara - Befreiung aus dem Kokon.epub",
+      "sha256": "3ea54228ff4029327dff2d723c3a694b2a7fc912ae5f0ed03eda36f2bf918a2d"
+    },
+    {
+      "bytes": 224022,
+      "path": "Uncategorized (177 books)/Gunther Tabery - Der Mord an Lili W/Gunther Tabery - Der Mord an Lili W..epub",
+      "sha256": "ab354b6e09981eb2f3dd0632c5f0c9b35ce0e66d3cb6caaee45282730ecc6fa2"
+    },
+    {
+      "bytes": 2352142,
+      "path": "Uncategorized (177 books)/Hanna Reet - Ein Mordsgeschenk fuer Agathe/Hanna Reet - Ein Mordsgeschenk fuer Agathe.epub",
+      "sha256": "07c67e184e3adbafd83e3a5ab4e5e42fbe9952334f2ad92448fee8c8b2eece99"
+    },
+    {
+      "bytes": 2303278,
+      "path": "Uncategorized (177 books)/Harald Martenstein - Wut/Wut_ Roman (German Edition).epub",
+      "sha256": "05f535f742b3eddd802e820449e96fc9bb6e6f42ac73008decf8810ba0713250"
+    },
+    {
+      "bytes": 3571375,
+      "path": "Uncategorized (177 books)/Heike Denzau - Dunkle Marsch/Dunkle Marsch - Denzau, Heike.epub",
+      "sha256": "c3fbceb8b753b987bde25220f5fbb510a7a9c37806710cf78604f0a87ba92181"
+    },
+    {
+      "bytes": 583762,
+      "path": "Uncategorized (177 books)/Helen Fields - Luc Callanach 1-4/Fields, Helen - Luc Callanach 03 - Die perfekte Strafe.epub",
+      "sha256": "8dba8d655272b569ed05bc8a1b8f3a50b8d01002afdf5e8b19c1109d6bdc68d4"
+    },
+    {
+      "bytes": 445666,
+      "path": "Uncategorized (177 books)/Helen Fields - Luc Callanach 1-4/Helen Fields - Luc Callanach 01 - Die perfekte Gefährtin.epub",
+      "sha256": "8e590183649d78fd33ee4a1894f6f7d11a5f153374e0cce7c7ba271b291d6f11"
+    },
+    {
+      "bytes": 641506,
+      "path": "Uncategorized (177 books)/Helen Fields - Luc Callanach 1-4/Helen Fields - Luc Callanach 02 - Die perfekte Unschuld.epub",
+      "sha256": "e1a26e7db90421097e0c3639574a3e310f05ba67851d8651ee7448014f8f73bd"
+    },
+    {
+      "bytes": 918130,
+      "path": "Uncategorized (177 books)/Helen Fields - Luc Callanach 1-4/Helen Fields - Luc Callanach 04 - Die perfekte Sünde.epub",
+      "sha256": "19b68a50feb22e71e06b503586a1b2fd3ed18839321a11adda0302cf7fac10c3"
+    },
+    {
+      "bytes": 370427,
+      "path": "Uncategorized (177 books)/Helmut Zell - Auto Exit Now/Helmut Zell - Auto Exit Now.epub",
+      "sha256": "6a0aef7e40d908463b956c7ac2e132bb29bedf5420771cac6ab328a6717a1ab1"
+    },
+    {
+      "bytes": 988601,
+      "path": "Uncategorized (177 books)/Herbert Adams - Jill und Jack/Herbert Adams - Jill und Jack.epub",
+      "sha256": "ef0ec58d0ce4ad35d00e19c52eac9aa656e5d4eabc8b5f8f9635aa82705bc8b9"
+    },
+    {
+      "bytes": 292908,
+      "path": "Uncategorized (177 books)/Ilona Bulazel - Mein Zorn - Dein Schmerz/Mein Zorn - Dein Schmerz_ Psych - Ilona Bulazel.epub",
+      "sha256": "c76ca028239bb2688fec1c724400651428d06ea4351a8b05c1621a921b2e9860"
+    },
+    {
+      "bytes": 32357389,
+      "path": "Uncategorized (177 books)/In 80 Tagen um die Welt.pdf",
+      "sha256": "b75486f86a1bd71f37b0396dc3398b81faa8770d919bfad95c6b6135519d9f00"
+    },
+    {
+      "bytes": 8739503,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der Kleine Drache Kokosnuss - Feuerfeste Freunde.epub",
+      "sha256": "dfe2072809a49b0d2c51316994e73954ab55f10ee813799492411ba0708aa74a"
+    },
+    {
+      "bytes": 19779091,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss - Die Mutprobe.epub",
+      "sha256": "d90357d07a634b8780066ce2677b0ed95d620078b3d2e1a0c51a4e9e3f42f6e8"
+    },
+    {
+      "bytes": 3555191,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss - Expedition auf dem Nil.epub",
+      "sha256": "686484c1f7c8957747e3b1fae2a905bfee7004bb4c7b172130b62abda7f164ab"
+    },
+    {
+      "bytes": 5201217,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss - Hab keine Angst!.epub",
+      "sha256": "fa8837275ec4e0c2ca7631b130a6dad61b84daadf31adde3b0a25bea4a6b632e"
+    },
+    {
+      "bytes": 4062679,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss - Lass uns Zaehne putzen!.epub",
+      "sha256": "f5377b635588e3ed5ebca2a0382be212b1cc45fb031be692207b0863e871318f"
+    },
+    {
+      "bytes": 2871856,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss - Schulausflug ins Abenteuer.epub",
+      "sha256": "20a8d9f1eea6b10e9a75a40fc24b3413795fbedbb69c1db1807229270de3eb98"
+    },
+    {
+      "bytes": 4144141,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss - Schulfest auf dem Feuerfelsen.epub",
+      "sha256": "f123c72973ae2de0538ffeb26f1fadac51ca768fc77ab39e8305112031124c4e"
+    },
+    {
+      "bytes": 8807376,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss - Vorlesebuch zum Film - Feuerfeste Freunde.epub",
+      "sha256": "7f50cb8c52a57bd55ba7740fc7b9370491baaf3a85204f7578ec402528f00725"
+    },
+    {
+      "bytes": 7326864,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss - Vulkan-Alarm auf der Dracheninsel.epub",
+      "sha256": "5225712b86717cc2a162b824dac2e33e04dfb1093c7506452eba2c4fbc37c7a3"
+    },
+    {
+      "bytes": 4790908,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss 03 - reist um die Welt.epub",
+      "sha256": "74ed5627a34f95e4e9d132431e86527a5eee9a5ebb57800d84af9b2bd4fc1929"
+    },
+    {
+      "bytes": 3427510,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss 22 -  Der kleine Drache Kokosnuss bei den Dinosauriern.epub",
+      "sha256": "5978cac525f8608ea4ef36fc8bfa6f04246f7cc3f289d9b00902e062ad7a4177"
+    },
+    {
+      "bytes": 7327641,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss 24 - Vulkan-Alarm auf der Dracheninsel.epub",
+      "sha256": "e26062370a6f52cf68cb30ad041f1b5eb72f222dbe268814b0e152cec5caf4b6"
+    },
+    {
+      "bytes": 2080666,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss auf der Suche nach Atlantis.epub",
+      "sha256": "b472c5e38295d67483362768866553c87656b6c8c604da9bef2ab82449cf8033"
+    },
+    {
+      "bytes": 2638446,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss bei den Indianern.epub",
+      "sha256": "de9b65438dbd98b6a112d55310edcf5f7f57e23667df9193260a47bd05b79283"
+    },
+    {
+      "bytes": 3263520,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss besucht den Weihnachtsmann.epub",
+      "sha256": "b54122b8877373493259408274ad1c9acbe16fcd72a82e13a096d1a80a3ff2e5"
+    },
+    {
+      "bytes": 4909999,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss feiert Weihnachten.epub",
+      "sha256": "29b559baf710eac7b36a68fbfc303f0634e2ff46941ab075ba7807e6f4588999"
+    },
+    {
+      "bytes": 7853527,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss im Spukschloss.epub",
+      "sha256": "c1cae19f9c12114675d8c08bebbda0b5620b3f59641f73ab045637eece31ec75"
+    },
+    {
+      "bytes": 1619391,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss im Weltraum.epub",
+      "sha256": "9a5a35db4029fcb97849be40160057057076c829e085fe803a98cd175bd7e571"
+    },
+    {
+      "bytes": 6973737,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss kommt in die Schule.epub",
+      "sha256": "d5c52af10d9a31b423bf91ebd4883a5b99834109183523a7b110962ffb900862"
+    },
+    {
+      "bytes": 2885036,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss reist in die Steinzeit.epub",
+      "sha256": "9670e76dd66a5fac3588403bf77f98b9c99835e2ae9c74d9cd4a18a8ebeac13e"
+    },
+    {
+      "bytes": 2184721,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und das Geheimnis der Mumie.epub",
+      "sha256": "eea8f22504b15baac08e80b4c0d4b334abb2a7ddbb2f4073e69f7a185316eada"
+    },
+    {
+      "bytes": 1883830,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und das Vampir.epub",
+      "sha256": "43cf5b7fec50d5716f67b431114f8c9d2a42b105c2928294688b7141217e95ed"
+    },
+    {
+      "bytes": 2908600,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und der Schatz im Dschungel.epub",
+      "sha256": "03a3396b963164dd46e69042006b7a2d39e57139575eae72ec000de8d52b36d4"
+    },
+    {
+      "bytes": 2645831,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und der große Zauberer.epub",
+      "sha256": "6bed2139283b76612411cfcaa406b3c90e2b354b9e468e7c27009faa23c52866"
+    },
+    {
+      "bytes": 2371285,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und der schwarze Ritter.epub",
+      "sha256": "dfb1b88d65c858c5fc1c83a3ed5f680014e23d53700235bd74d482cb9bb3b58f"
+    },
+    {
+      "bytes": 8990016,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und die Reise zum Nordpol.epub",
+      "sha256": "1f9568990e32bafa9cf44dbfe44a2308a13255775b30be5897e5078f9b487190"
+    },
+    {
+      "bytes": 2692284,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und die Wetterhexe.epub",
+      "sha256": "3fdf5b26d136003759885f9fa07440d6d85c9d0a2d71b7e5f469c0d78d142265"
+    },
+    {
+      "bytes": 4069911,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und die starken Wikinger.epub",
+      "sha256": "c6f5316d03b3d308b6cfa18d5d9243a3ecbc641497b084ad40f4adccadb8f064"
+    },
+    {
+      "bytes": 6332606,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und die wilden Piraten.epub",
+      "sha256": "425fee81321253cdff670fb54dd72fa1bd2be68d2cfc135d4d5672a32795dce0"
+    },
+    {
+      "bytes": 3757485,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss und seine Abenteuer.epub",
+      "sha256": "a2b35c9806045866557be5b14ebfb84e08e9bfee5cbb59889b6afa5aff574555"
+    },
+    {
+      "bytes": 13202546,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Der kleine Drache Kokosnuss.epub",
+      "sha256": "8609dd53db8908ef27cb83a057aae6d124e49ed8c4ea62773e140417d91828e0"
+    },
+    {
+      "bytes": 6689377,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Erdmaenchen Gustav - Gustav vor, noch ein Tor!.epub",
+      "sha256": "f2ab66115acda5e8982d24026e0c17fc0d413da038ce393fd9fe664b07490973"
+    },
+    {
+      "bytes": 1577439,
+      "path": "Uncategorized (177 books)/Ingo Siegner - Der kleine Drache Kokosnuss (DE eBooks)/Siegner, Ingo - Erdmaennchen Gustav 06 - Kunstraub im Museum.epub",
+      "sha256": "73d6eb06dd647106d29a2c63882a362fe388d5ae816b7be46f362d871fa879a0"
+    },
+    {
+      "bytes": 739669,
+      "path": "Uncategorized (177 books)/Isabella Maldonado - Nina Guerrera 01 - Schreie in der Dunkelheit/Isabella Maldonado - Nina Guerrera 01 - Schreie in der Dunkelheit.epub",
+      "sha256": "6b313aedd70b5e33aea7c7646c1fb900ecc6611ba37e621de6062ff8f011a798"
+    },
+    {
+      "bytes": 842657,
+      "path": "Uncategorized (177 books)/J. Tiedermann - Die Preussen Akten - Der ungeloeste Fall/J. Tiedermann - Die Preussen Akten - Der Ungelöste Fall.epub",
+      "sha256": "02c5c7b1794a060649ff17ac20bf614e28287a0db8b9f1545d09e1298a449ff8"
+    },
+    {
+      "bytes": 498211,
+      "path": "Uncategorized (177 books)/J.C. Philipp - Heimkehr nach Somerset/J.C. Philipp - Heimkehr nach Somerset.epub",
+      "sha256": "28e8827b5a3c305a555884ffec6e105abf2ba081eef416fe66629f38b9060c22"
+    },
+    {
+      "bytes": 482109,
+      "path": "Uncategorized (177 books)/Jack Mars - Der Werdegang von Luke Stone 03/Jack Mars - Der Werdegang von Luke Stone 03 - Die größte Bedrohung.epub",
+      "sha256": "c541cea30ff131bb060a755f62979ed5b436737ab36b3a31f530e2bbda88e36d"
+    },
+    {
+      "bytes": 439090,
+      "path": "Uncategorized (177 books)/Jack Mars - Kent Steele 10 - Rache Null/Jack Mars - Kent Steele 10 - Rache Null.epub",
+      "sha256": "ebefb548a9077cf4636da64eac940c3519b276ec7db44140bfc78d8a5bf77ffb"
+    },
+    {
+      "bytes": 633344,
+      "path": "Uncategorized (177 books)/Janet MacLeod Trotter - Die Frauen der Teeplantage 03 - Die Sehnsucht nach Assam/Janet MacLeod Trotter - Die Frauen der Teeplantage 3 - Die Sehnsucht nach Assam.epub",
+      "sha256": "29780cf0c4093149c666cd936817f0bc885bfb059667650d0ab7f67f26a2b4ed"
+    },
+    {
+      "bytes": 3909968,
+      "path": "Uncategorized (177 books)/Jeff Strand - Ewig Schoen/Jeff Strand - Ewig Schön.epub",
+      "sha256": "a074c4551bbdebe1501218d1f0947a9a0989c710bd8970a41062c105fb609640"
+    },
+    {
+      "bytes": 2600691,
+      "path": "Uncategorized (177 books)/Jeffrey Archer - Soehne des Gluecks/Jeffrey Archer - Söhne des Glücks.epub",
+      "sha256": "1a9048a765c5f8199e7c04e90c6e6cdeb9d9593dcfb153ce281788b52769735a"
+    },
+    {
+      "bytes": 605388,
+      "path": "Uncategorized (177 books)/Joan Weng - Das Fraeulein von Berlin/Das Fräulein von Berlin (German Edition).epub",
+      "sha256": "791d92240e511472b9e9ca7d5922631af246dcb8a8f34dc87a8cb7cf448b6c3a"
+    },
+    {
+      "bytes": 385945,
+      "path": "Uncategorized (177 books)/Johanna Hardt - Feinkostgier/Johanna Hardt - Feinkostgier.epub",
+      "sha256": "5ab7d74bddd6624f58b08e2198738a8d087850a432b5ec45a59f0a65678b927f"
+    },
+    {
+      "bytes": 846184,
+      "path": "Uncategorized (177 books)/John Birmingham - Die kalten Sterne/John Birmingham - Die kalten Sterne.epub",
+      "sha256": "3c2e297a0e23b0d9fe03aa275b110a1f7541c46dc8e1ccb306e9b03e7f7e5419"
+    },
+    {
+      "bytes": 658922,
+      "path": "Uncategorized (177 books)/John Marrs - Wenn Schweigen toetet/John Marrs - Wenn Schweigen tötet.epub",
+      "sha256": "b684ffcdc22a439ba8600d4374fa195322bf311531735326a6ac6de8af2ffa36"
+    },
+    {
+      "bytes": 705599,
+      "path": "Uncategorized (177 books)/John Wray - Gotteskind/John Wray - Gotteskind.epub",
+      "sha256": "457d63c52bbe80704b241879eb331bdba2788a8e2374168b47d888a7c2cd685d"
+    },
+    {
+      "bytes": 415475,
+      "path": "Uncategorized (177 books)/Joshua Anderle, Michael Anderle - Animus 1-6/Joshua Anderle, Michael Anderle - Animus 01 - Novize.epub",
+      "sha256": "10e48c3f5f31534bdcb6c858c951696087cfbbd0453639c04567cc172454e758"
+    },
+    {
+      "bytes": 429323,
+      "path": "Uncategorized (177 books)/Joshua Anderle, Michael Anderle - Animus 1-6/Joshua Anderle, Michael Anderle - Animus 02 - Koop.epub",
+      "sha256": "a5badfb16dea503eb7b5bf695302d2cfdaf9f5f93bd7b52b8b2a8f6041c70f19"
+    },
+    {
+      "bytes": 410051,
+      "path": "Uncategorized (177 books)/Joshua Anderle, Michael Anderle - Animus 1-6/Joshua Anderle, Michael Anderle - Animus 03 - Deathmatch.epub",
+      "sha256": "307dbd756c65d61eb85f48a69ee9fc44fcef38df86682ce092de8a0e444c9634"
+    },
+    {
+      "bytes": 338099,
+      "path": "Uncategorized (177 books)/Joshua Anderle, Michael Anderle - Animus 1-6/Joshua Anderle, Michael Anderle - Animus 04 - Fortschritt.epub",
+      "sha256": "702cdb3f8a0cbe2203b512e675b09c6dd78bd442d6312674e199a0d53336f32c"
+    },
+    {
+      "bytes": 343381,
+      "path": "Uncategorized (177 books)/Joshua Anderle, Michael Anderle - Animus 1-6/Joshua Anderle, Michael Anderle - Animus 05 - Wiedergänger.epub",
+      "sha256": "2418b3b35bf55c3fc1285b32a0a0fb3921223facc9aae59d66f20da930e8a890"
+    },
+    {
+      "bytes": 307044,
+      "path": "Uncategorized (177 books)/Joshua Anderle, Michael Anderle - Animus 1-6/Joshua Anderle, Michael Anderle - Animus 06 - Systemfehler.epub",
+      "sha256": "02cee4d319df96f8f0d432e1a9ad3e917006a55fdcdf45d10071907a43032b26"
+    },
+    {
+      "bytes": 367857,
+      "path": "Uncategorized (177 books)/Julia Quinn - Bridgerton 1-8/Julia Quinn - Bridgerton Familie 01 - Wie erobert man einen Duke.epub",
+      "sha256": "0848700dede8c7ce7444ac837326d69a384505fc29da47935400f6dbfd0a7b7b"
+    },
+    {
+      "bytes": 700038,
+      "path": "Uncategorized (177 books)/Julia Quinn - Bridgerton 1-8/Julia Quinn - Bridgerton Familie 02 - Wie bezaubert man einen Viscount.epub",
+      "sha256": "02f2fd6d5cdca066aca4e9c3225ee4d812d159de6d0eba33beceb51bb3531ce2"
+    },
+    {
+      "bytes": 304805,
+      "path": "Uncategorized (177 books)/Julia Quinn - Bridgerton 1-8/Julia Quinn - Bridgerton Familie 03 - Wie verführt man einen Lord.epub",
+      "sha256": "df40d657c9d06f77b0b1a571679918527c95c7e9da84c05a5a1656ee19ca36af"
+    },
+    {
+      "bytes": 372949,
+      "path": "Uncategorized (177 books)/Julia Quinn - Bridgerton 1-8/Julia Quinn - Bridgerton Familie 04 - Penelopes pikantes Geheimnis.epub",
+      "sha256": "ab9dfd3c1bf1be11b0a8e022b57f2dab64eca8c8ac1609c5ef6dc4ef0729082d"
+    },
+    {
+      "bytes": 479532,
+      "path": "Uncategorized (177 books)/Julia Quinn - Bridgerton 1-8/Julia Quinn - Bridgerton Familie 05 - In Liebe, Ihre Eloise.epub",
+      "sha256": "656919f2655ef32c2a13d83512dce7473385747a08f8d4e9311b00f747b6fe51"
+    },
+    {
+      "bytes": 374705,
+      "path": "Uncategorized (177 books)/Julia Quinn - Bridgerton 1-8/Julia Quinn - Bridgerton Familie 06 - Ein hinreissend verruchter Gentleman.epub",
+      "sha256": "5cb5d805e086eaf2a353e9014ba00764313c175eea22c1bd04269e4b139f871a"
+    },
+    {
+      "bytes": 434935,
+      "path": "Uncategorized (177 books)/Julia Quinn - Bridgerton 1-8/Julia Quinn - Bridgerton Familie 07 - Mitternachtsdiamanten.epub",
+      "sha256": "d5e9ad98ef2ec433d49a5d0a0dceb57768a9b86707d1a9884c8f61f85f62b534"
+    },
+    {
+      "bytes": 446818,
+      "path": "Uncategorized (177 books)/Julia Quinn - Bridgerton 1-8/Julia Quinn - Bridgerton Familie 08 - Hochzeitglocken für Lady Lucy.epub",
+      "sha256": "692de066f85e1410f11b87221024e243622942882516b655a5e2a6d3c0b63f8f"
+    },
+    {
+      "bytes": 2982853,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 01 - Conni auf dem Reiterhof.epub",
+      "sha256": "21537ef5b60196b29f77e953ad78b7ff45fdcb3c1b0016c56ddf21bbfaa3b1a9"
+    },
+    {
+      "bytes": 924494,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 02 - Conni und der Liebesbrief.epub",
+      "sha256": "e7c1d21214aeccd4295c50c2e38b44cc9569baf6dc41936f4f2d851b702fb2e0"
+    },
+    {
+      "bytes": 2294328,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 03 - Conni auf Klassenfahrt.epub",
+      "sha256": "48f801eadd6c4ee91feead2af6a753d6b6ff20a1e94b742607b5f93e0b7bf209"
+    },
+    {
+      "bytes": 2484174,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 04 - Conni feiert Geburtstag.epub",
+      "sha256": "b5b3ec17d704c35c567ac4bbf61be32c56ec5779c8f265d5b4392e7a9ccbd4f5"
+    },
+    {
+      "bytes": 2377042,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 05 - Conni reist ans Mittelmeer.epub",
+      "sha256": "84b4ba84a25c9483db1fef2746ee459f31ea92a13dcc602db2f19daebef10660"
+    },
+    {
+      "bytes": 1460893,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 06 - Conni und der verschwundene Hund.epub",
+      "sha256": "0422c415233c73ad7d5e1d5381a559fd2bb43ac10bc693d0be6fed59165d8ae6"
+    },
+    {
+      "bytes": 1930657,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 07 - Conni rettet Oma.epub",
+      "sha256": "08e3483b19b75cf676ec7d9ccf5e0b39419cc1263bc7d2b58f45d4ffb5c60bc9"
+    },
+    {
+      "bytes": 1837366,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 08 - Conni und das Geheimnis der Kois.epub",
+      "sha256": "ae4364cf7d319df75b1a4ab3f63e4fafbfb0050afbc7121161015671a19bb4cd"
+    },
+    {
+      "bytes": 1066614,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 09 - Conni und die Jungs von nebenan.epub",
+      "sha256": "d56beb5b49545260075252d8a0ac588e60060bf280ff3def87764c4a3eb370e1"
+    },
+    {
+      "bytes": 1079150,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 10 - Conni und das ganz spezielle Weihnachtsfest.epub",
+      "sha256": "91921109f98c8e2db5b292c1ff6cee7b7513d8ff1c455c3be74cb0edbe2b02e4"
+    },
+    {
+      "bytes": 1557976,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 11 - Conni und das Hochzeitsfest.epub",
+      "sha256": "f19383c8eebeed32336158166fc30847ad6729bfa186bf2572321e9613a2a81e"
+    },
+    {
+      "bytes": 1871635,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 12 - Conni in der grossen Stadt.epub",
+      "sha256": "8edf22fb35bd9d5545be7d90d5acca2de2e7008c8465b2ac0db8dcf4631c63fb"
+    },
+    {
+      "bytes": 2243881,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 13 - Conni und die verflixte 13.epub",
+      "sha256": "f9aac5f8eb8eb83f668a1cc50ecf6f5d71383fa6030446ea6254d2e7a561eefe"
+    },
+    {
+      "bytes": 2582049,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 14 - Conni und der Dinoknochen.epub",
+      "sha256": "c342326e83b8425345f9c5b1a173254e50534268d40f32b53ad2a8eeefe27bc4"
+    },
+    {
+      "bytes": 2046467,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 15 - Conni und das tanzende Pony.epub",
+      "sha256": "86d55df1183aca81600d92a9a93d00daf7e0c714142f450a084a4eda5462b064"
+    },
+    {
+      "bytes": 840812,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 16 - Conni und der grosse Schnee.epub",
+      "sha256": "49df3cc655a78adec3672214a731e242e3c6295de4a476fb4fc56bb543508de1"
+    },
+    {
+      "bytes": 1833678,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 17 - Conni rettet die Tiere.epub",
+      "sha256": "7cbb0d3c7319dac6dfb26ec1fc160c5fbafd09f16d4794c179fccb1053e34a2a"
+    },
+    {
+      "bytes": 2239342,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 18 - Conni und die Detektive.epub",
+      "sha256": "a2720037f7e52cc7732062684029fe055b6baba8bf2427ce1fc0d86a12555a94"
+    },
+    {
+      "bytes": 3028214,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 19 - Conni und der Ferienzirkus.epub",
+      "sha256": "2df4b5c5d8f65bfc6648d0ec1253329d8c7b62f8d2fcfbcdd18a746fa9e08767"
+    },
+    {
+      "bytes": 6839864,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 20 - Conni und die Burg der Vampire.epub",
+      "sha256": "6b60edb7e0c39d6f53d06a952f263b377dd6cf7d003916dc0591110ececd6a70"
+    },
+    {
+      "bytes": 1422959,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 21 - Conni und die grosse Eiszeit.epub",
+      "sha256": "6de2646db3cbca06e500d9dcf781aa5c7997b6c6fa8abdccc249ba622313bed5"
+    },
+    {
+      "bytes": 1444982,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 22 - Conni und das neue Fohlen.epub",
+      "sha256": "6c6dfb8748f25a6520b747ac79fbf741c106ceb192f0e8897b1590809a26195d"
+    },
+    {
+      "bytes": 6651264,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 23 - Conny und die wilden Tiere.epub",
+      "sha256": "8e1f22d0f6dd5d219bd4d6f043579e5792f6cd651a3e1d09304efe2aca52abba"
+    },
+    {
+      "bytes": 1514385,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 24 - Conni und das Klassencamp.epub",
+      "sha256": "b97be1239b20fa693a04f7dba9b88caec57f3e27f348236f09553cc0872431c4"
+    },
+    {
+      "bytes": 3069886,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 25 - Conni und das Familienfest.epub",
+      "sha256": "334cd6fd99bd5b6d88e2ad5ade77da4d149dff51e8aca602e07808bba3a10377"
+    },
+    {
+      "bytes": 4276090,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 26 - Conni geht zum Film.epub",
+      "sha256": "136531a7a9310dfe2350f77e85251cd4f475b567dc885c5658b5a5d75989be0f"
+    },
+    {
+      "bytes": 4247307,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 27 - Conni und das Ponyabenteuer.epub",
+      "sha256": "5255325751c3d0dbfb25d9873156827947d67efb9fd16cdffa44bbf4d1bf0c06"
+    },
+    {
+      "bytes": 1818887,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 28 - Conni loest einen kniffligen Fall.epub",
+      "sha256": "c434f7b442b72dbd903903e3da5592ba7e436c53c22e37ba215eb9f63dd9fc17"
+    },
+    {
+      "bytes": 3435141,
+      "path": "Uncategorized (177 books)/Julie Boehme - Conni 1-29/Boehme, Julia - Conni 29 - Conni und die Katzenliebe.epub",
+      "sha256": "d93fd34973e74d739175563c086641bfdbfb345aa23744a31b6e7cf983b28db0"
+    },
+    {
+      "bytes": 926528,
+      "path": "Uncategorized (177 books)/Julie Clark - Der Tausch – Zwei Frauen - Zwei Tickets - Und nur ein Ausweg/Julie Clark - Der Tausch – Zwei Frauen - Zwei Tickets - Und nur ein Ausweg.epub",
+      "sha256": "73a5341c101238a6bc8e312c5e615651b20f7aaf56d50ab31c0a352250fc186d"
+    },
+    {
+      "bytes": 1144132,
+      "path": "Uncategorized (177 books)/Julie Lescault - Mademoiselle Rosalie und der Tote im Weinkeller/Julie Lescault - Mademoiselle Rosalie und der Tote im Weinkeller.epub",
+      "sha256": "ec800d232829a062e950dcc566adb40aaec2032547bdcf0bd36e2231a73eab43"
+    },
+    {
+      "bytes": 402861,
+      "path": "Uncategorized (177 books)/Jutta Maria Herrmann - Ich bringe den Tod/Jutta Maria Herrmann - Ich bringe den Tod.epub",
+      "sha256": "4bd790bf5ea77ba88d72e0a36cc4b48fb53366039079901116a5f6625a4a3abe"
+    },
+    {
+      "bytes": 943907,
+      "path": "Uncategorized (177 books)/Karne M. McManus - The Cousins/Karne M. McManus - The Cousins.epub",
+      "sha256": "ae73f1979e6a481207766d613043b59ee8ede8e24df1b794e6286e23ee19f886"
+    },
+    {
+      "bytes": 268888,
+      "path": "Uncategorized (177 books)/Kilian Marks - Blinder Fleck/Kilian Marks - Blinder Fleck.epub",
+      "sha256": "7f98f3c3c80d2dbc3cb41d70bfa06f48dac692444756383f980236748ee7c4b0"
+    },
+    {
+      "bytes": 2726196,
+      "path": "Uncategorized (177 books)/Kimberly Belle - Solange du noch lebst/Kimberly Belle - Solange du noch lebst.epub",
+      "sha256": "2c88cc04e31fe02aa4c329a7f24d6452512e725cdda630d57a0ae25e49950235"
+    },
+    {
+      "bytes": 1366863,
+      "path": "Uncategorized (177 books)/Kira Mohn - Kanada 01 - Wild like a River/Kira Mohn - Kanada 01 – Wild like a River.epub",
+      "sha256": "42d7d6a873eef222dfac17fa450f7817c82377cf063b7779018e2f3f7c209668"
+    },
+    {
+      "bytes": 839153,
+      "path": "Uncategorized (177 books)/Kira Mohn - Kanada 02 - Free like the Wind/Kira Mohn - Kanada 02 - Free like the Wind.epub",
+      "sha256": "584bd8dbe7387fa2d4f4cc5176be4cd32e1f755543a0cacd9d34688561644797"
+    },
+    {
+      "bytes": 1021077,
+      "path": "Uncategorized (177 books)/Kolja Menning - Eine Partie Monopolygamie/Kolja Menning - Eine Partie Monopolygamie.epub",
+      "sha256": "448967d38d0a16b52cda3507380c2ff3f0bf471041de1a659b30b48e0a4ed574"
+    },
+    {
+      "bytes": 354104,
+      "path": "Uncategorized (177 books)/Laura Madeleine - Der Duft von Meer und Thymian/Laura Madeleine - Der Duft von Meer und Thymian.epub",
+      "sha256": "3cac767a6cf4156cddb8115ed6dd5183755c734e5221f9b8f0d46668f8eb0220"
+    },
+    {
+      "bytes": 880283,
+      "path": "Uncategorized (177 books)/Leo Born - Mara Billinsky 05 - Vergessene Graeber/Born, Leo - Mara Billinsky 05 - Vergessene Gräber.epub",
+      "sha256": "e4bd2da106b66674bc1b03c8f3f9a60a5d438bb88be8eac8c47bbc797c88e5b0"
+    },
+    {
+      "bytes": 3011773,
+      "path": "Uncategorized (177 books)/Lucy Foley - Sommernacht/Lucy Foley - Sommernacht.epub",
+      "sha256": "c9434c7252fc9cf9f378ee10807e9fd274577fc50aa7bf2fe05a8369a6e2136e"
+    },
+    {
+      "bytes": 425714,
+      "path": "Uncategorized (177 books)/M. C. Beaton - Hamish Macbeth riecht Aerger/M. C. Beaton - Hamish Macbeth riecht Aerger.epub",
+      "sha256": "be446531d051fda95ffd094064e3f56d54dd03a6af2c479380f6a7838d518516"
+    },
+    {
+      "bytes": 971131,
+      "path": "Uncategorized (177 books)/Manfred von Richthofen - Der rote Kampfflieger.epub",
+      "sha256": "42afa1678d0b5ea2714142733b38b05276211bbbfee4cfedd13751b6793c9d30"
+    },
+    {
+      "bytes": 161055,
+      "path": "Uncategorized (177 books)/Mara Miditello - Kento und Mia 01 - Blutige Legenden/Mara Miditello - Kento & Mia 01 - Blutige Legenden.epub",
+      "sha256": "8ebb31dbefafe524cf80136f16130f262fec5e969176d993df917a2aba2405a8"
+    },
+    {
+      "bytes": 833689,
+      "path": "Uncategorized (177 books)/Marah Woolf - HexenSchwesternSaga 3 - Sister of the Night_ Von Ringen und Blut/Sister of the Night_ Von Ringen - Marah Woolf.epub",
+      "sha256": "a30450c6d1c06ef0c526ed32dd8e04734e9321248fa91c677488cbb195f9a464"
+    },
+    {
+      "bytes": 886216,
+      "path": "Uncategorized (177 books)/Marcial Gala - Die Kathedrale der Schwarzen/Marcial Gala - Die Kathedrale der Schwarzen.epub",
+      "sha256": "f65f732e0e332a560c6234d392ae00224cd7c0786f8ef5b4a8a084fed1145baa"
+    },
+    {
+      "bytes": 334649,
+      "path": "Uncategorized (177 books)/Marcus Huennebeck - Im Auge des Moerders/Marcus Hünnebeck - Im Auge des Morders.epub",
+      "sha256": "c7ac3a803060a17731f1d4bde451d838bafeccafafef738e3dceae9513687f4a"
+    },
+    {
+      "bytes": 4711119,
+      "path": "Uncategorized (177 books)/Margaret Owen - Die zwoelf Kasten von Sabor 01 - Knochendiebin/Margaret Owen - Die zwölf Kasten Von Sabor 01 -  Knochendiebin.epub",
+      "sha256": "4817bf360d3ea01e8205a6c72e0facd7990dcfee9d62a85398bf54defb2eb6c0"
+    },
+    {
+      "bytes": 2792306,
+      "path": "Uncategorized (177 books)/Margaret Owen - Die zwoelf Kasten von Sabor 02 - Kraehenzauber/Margaret Owen - Die zwölf Kasten von Sabor 02 - Krähenzauber.epub",
+      "sha256": "a332d2cec6176eeffe0fa0e331c1ca6442763c1ea648a10b5abdde7f4eae8cd9"
+    },
+    {
+      "bytes": 578667,
+      "path": "Uncategorized (177 books)/Marissa Meyer - Renegades 1-2/Marissa Meyer - Renegades 01 - Gefahrlicher Freund.epub",
+      "sha256": "729d6bcd536c1eb71281e5a910722f4bae186b1e75f0d0eada4e80ce39f3aa16"
+    },
+    {
+      "bytes": 988288,
+      "path": "Uncategorized (177 books)/Marissa Meyer - Renegades 1-2/Marissa Meyer - Renegades 02 - Geheimnisvoller Feind.epub",
+      "sha256": "f610863fc6dd573cb25878ab62246607e6e6bb869ba7996a2dc3a7419b4fb512"
+    },
+    {
+      "bytes": 1034667,
+      "path": "Uncategorized (177 books)/Martha Sophie Marcus - Das blaue Medaillon/Martha Sophie Marcus - Das blaue Medaillon.epub",
+      "sha256": "4cb103d83e0c3ce41d1695efa59f5395b587db483813938822793853adb1e956"
+    },
+    {
+      "bytes": 267017,
+      "path": "Uncategorized (177 books)/Martina Straten - Blutmariechen/Blutmariechen (German Edition) - Martina Straten.epub",
+      "sha256": "186e6428af4ad5f9dfd2b95458d98dfeaf79305a63c8f9e74c3c8e3c47cc3d02"
+    },
+    {
+      "bytes": 3144604,
+      "path": "Uncategorized (177 books)/Martina Tischlinger Sammlung/Tischlinger, Martina - Camping mit Mord.epub",
+      "sha256": "cb61f6c9c568062be13c1bb18107b02bfd3f43c47f233b0e9793f0866aa838b7"
+    },
+    {
+      "bytes": 1898236,
+      "path": "Uncategorized (177 books)/Martina Tischlinger Sammlung/Tischlinger, Martina - Paula Frischkes 01 - Kloss mit Soss.epub",
+      "sha256": "fe07c84bc3a3f69e81565c365eb4704f39b4f9462ee02ead5296859554d6f3ad"
+    },
+    {
+      "bytes": 3729721,
+      "path": "Uncategorized (177 books)/Martina Tischlinger Sammlung/Tischlinger, Martina - Paula Frischkes 02 - Saure Zipfel.epub",
+      "sha256": "c1002496282cb726823c400b99a054cb041afe4a372fe03f15e141d88ce6b6ea"
+    },
+    {
+      "bytes": 3698074,
+      "path": "Uncategorized (177 books)/Martina Tischlinger Sammlung/Tischlinger, Martina - Paula Frischkes 03 - Bauernseufzer.epub",
+      "sha256": "82d75a01166a912435d0935ee1a4cf9e3a1abe77697032a9d43519048493d7bc"
+    },
+    {
+      "bytes": 449348,
+      "path": "Uncategorized (177 books)/Martina Tischlinger Sammlung/Tischlinger, Martina - Voodoo für Anfänger.epub",
+      "sha256": "4277ea303e951cdc7620c78cf44840813207760c71c95b33b06116fda9863833"
+    },
+    {
+      "bytes": 346156,
+      "path": "Uncategorized (177 books)/Martina Tischlinger Sammlung/Tischlinger, Martina - Zuckerschneggerla.epub",
+      "sha256": "65c2ebb5429dcf168fe61848530eb93abe3f6746c4da1e74dcac0e49f2ac7a27"
+    },
+    {
+      "bytes": 869967,
+      "path": "Uncategorized (177 books)/Matthias Ernst - Der Therapeut/Matthias Ernst - Der Therapeut.epub",
+      "sha256": "098081f2245584eaf7f27beb4d44a0e480340a2b635f371bfe35c9a15c564490"
+    },
+    {
+      "bytes": 1157295,
+      "path": "Uncategorized (177 books)/Meghan March - Legend-Trilogie 01 - Fall of Legend/Meghan March - Legend-Trilogie 01 - Fall of Legend.epub",
+      "sha256": "089dcb9ab4d89c61f4dc362695f1f6f51af9ff3a6f0c858a197306a1bec58c35"
+    },
+    {
+      "bytes": 1074457,
+      "path": "Uncategorized (177 books)/Meghan March - Legend-Trilogie 02 - House of Scarlett/Meghan March - Legend-Trilogie 02 - House of Scarlett.epub",
+      "sha256": "676b8e0f2b4fd6ccbd9ef40d3642fe234e252d29cac991bfabc631ba58fc9887"
+    },
+    {
+      "bytes": 4984529,
+      "path": "Uncategorized (177 books)/Mein Fliegerleben by Ernst Udet (z-lib.org).epub",
+      "sha256": "b80b55c278638924b310c7ac6a55b5f41107b04f03bfbda3df0b9ff3e7de7bf6"
+    },
+    {
+      "bytes": 354164,
+      "path": "Uncategorized (177 books)/Melina Maris - Sara/Melina Maris - Sara.epub",
+      "sha256": "a33b54743d4954ea82564f88ce18b75cdfaa721a4452f0d4133348f87cc47955"
+    },
+    {
+      "bytes": 641739,
+      "path": "Uncategorized (177 books)/Mella Dumont - Siebenstern 1-2/Dumont, Mella - Siebenstern 01 - Isle of Seven.epub",
+      "sha256": "1bc3ed104bffcfbe6ad99d0727030de1011b644812288a2241bd46108c55e9d8"
+    },
+    {
+      "bytes": 632322,
+      "path": "Uncategorized (177 books)/Mella Dumont - Siebenstern 1-2/Dumont, Mella - Siebenstern 02 - Isle of Us.epub",
+      "sha256": "6a4d01b4cc274261810651ece21c6ac744314c8275e73301662a6356653717c8"
+    },
+    {
+      "bytes": 1027358,
+      "path": "Uncategorized (177 books)/Michael Meisheit - Wir sehen dich sterben/Michael Meisheit - Wir sehen dich sterben.epub",
+      "sha256": "270bbee1889340f06fde39a3edfc5b0891b0f71a8e72582e17d70576b82d3ca3"
+    },
+    {
+      "bytes": 4362503,
+      "path": "Uncategorized (177 books)/Michael Peinkofer - Ork City/Michael Peinkofer - Ork City.epub",
+      "sha256": "5212cebcebff5fb08419f00d81832e1477c3eac132866233b78b7844a732723b"
+    },
+    {
+      "bytes": 2433799,
+      "path": "Uncategorized (177 books)/Michel Bussi - Tage des Zorns/Michel Bussi - Tage des Zorns.epub",
+      "sha256": "1e11439d49baf1909b6f9bce9a849f8b7b79b2bdbe1bebb7211cad81f4ede0f4"
+    },
+    {
+      "bytes": 238407,
+      "path": "Uncategorized (177 books)/Milena Michiko Flaar - Herr Kat spielt Familie/Milena Michiko Flaar - Herr Kat spielt Familie.epub",
+      "sha256": "ce1008497b53f751b1d6b9651528200388ed13fcd1fc4416dd822d6ff661d976"
+    },
+    {
+      "bytes": 679038,
+      "path": "Uncategorized (177 books)/Miriam Georg - Eine hanseatische Familiensaga 01 - Elbleuchten/Miriam Georg - Eine hanseatische Familiensaga 01 - Elbleuchten.epub",
+      "sha256": "97666df5dd9b037d02ed6a6cf159f1d71e8179f22abf3c2f1ad5eb86a746f7dd"
+    },
+    {
+      "bytes": 923492,
+      "path": "Uncategorized (177 books)/Monika Bittl - Man sollte oefter mal ausmisten/Monika Bittl - Man sollte öfter mal ausmisten.epub",
+      "sha256": "a202c7a5c9967b54623e9631c831829b3f0e776f41e1e708e8850ee06ea43b1d"
+    },
+    {
+      "bytes": 572897,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Age of Trinity 19 - Der Ruf der Nacht - Nalini Singh.epub",
+      "sha256": "8cba30ee2193ee7d268f7cd4339dd5e6f1820f85296a72fe7823b9d9f4143416"
+    },
+    {
+      "bytes": 470621,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 01 - Leopardenblut.epub",
+      "sha256": "6134b3b8a5e018ff8342c53611102e88b6382e9da726810ae6e670d191ac0fa4"
+    },
+    {
+      "bytes": 440387,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 02 - Jäger der Nacht.epub",
+      "sha256": "6729170794beaaae61e9cb1ed77c78321b57d13570d70239291921ddeb1832d5"
+    },
+    {
+      "bytes": 495306,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 03 - Eisige Umarmung.epub",
+      "sha256": "06f25db0d4f21bbe23318cf3e326c80d6f3addda4216650f7506faf7add3f637"
+    },
+    {
+      "bytes": 289433,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 04 - Im Feuer der Nacht.epub",
+      "sha256": "a148edec0bf009a7e7c17d789375c4f1e46850dd35af8996d353c1a5a61ac451"
+    },
+    {
+      "bytes": 759511,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 05 - Gefangener der Sinne.epub",
+      "sha256": "b3c72088754789916268856fa12b96ad69f2c8be850dfe85be9137eb8016e708"
+    },
+    {
+      "bytes": 729918,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 06 - Sengende Nähe.epub",
+      "sha256": "c77787e40a74da5301210af756a92d565134b50b8df0e7ad6bc6ead0a59db7cb"
+    },
+    {
+      "bytes": 802191,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 07 - Ruf der Vergangenheit.epub",
+      "sha256": "915461da84a81a54295278fde4f6ee06524b31f2001f853206c15e962b023652"
+    },
+    {
+      "bytes": 765818,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 08 - Fesseln der Erinnerung.epub",
+      "sha256": "552f7b93456f26190c40993c2f5a92c8543cfc55bea104cacc6fcf805365d59f"
+    },
+    {
+      "bytes": 474095,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 09 - Wilde Glut.epub",
+      "sha256": "90a1eb2dd19d43eb1748d28b814659301bef97c951866c965a16414025c1c5bd"
+    },
+    {
+      "bytes": 476877,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 10 - Lockruf des Verlangens.epub",
+      "sha256": "51f3f63dab543879ebacc0ce2f26de7b0f3b4f0214ebb00c9e5c59ef8d32c7df"
+    },
+    {
+      "bytes": 549691,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 11 - Einsame Spur.epub",
+      "sha256": "1a204fe1f36545bf18b347938408bdfe2ed798373939b0b852725c36d8ea9fa2"
+    },
+    {
+      "bytes": 547105,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 12 - Geheimnisvolle Berührung.epub",
+      "sha256": "e04b5653aa7ca243cadfef1d7059cebeb67fd8e6c9580fab11c1c43303b59163"
+    },
+    {
+      "bytes": 1040405,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 13 - Pfade im Nebel.epub",
+      "sha256": "bb631727ed3bf45f7bf0ff4f7604dbafc65931bb5cfdfe2034861540ab5af962"
+    },
+    {
+      "bytes": 1667266,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 14 - Scherben der Hoffnung.epub",
+      "sha256": "35970c1232168bae3910d1a4c75f98c643894da4925e19376404d3c8eab9a39d"
+    },
+    {
+      "bytes": 710685,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 15 - Der letzte Schwur.epub",
+      "sha256": "a8bbc19c0b0648fa0b0d87c0973b6221a39b4ddcfea15683ee049340ccda5a8b"
+    },
+    {
+      "bytes": 740223,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 15.5 - Wilde Umarmung.epub",
+      "sha256": "7c5ab5464cdd47eca32cec968b04e40faabe12f1cb6c924afdba312e5e250011"
+    },
+    {
+      "bytes": 770149,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 16 - Age of Trinity 01 - Silbernes Schweigen.epub",
+      "sha256": "8113a42e1902327383d7a99827ab98d3f3f0a934c56445125c08e1909ec0dac0"
+    },
+    {
+      "bytes": 1286765,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 17 - Age of Trinity 02 - Das Licht des Ozeans.epub",
+      "sha256": "720da61337d06256cebe7628d758e34dc4320e8f41c38e1795de9276fa7007cb"
+    },
+    {
+      "bytes": 700896,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandler 18 - Age of Trinity 03 - Schatten der Erinnerung.epub",
+      "sha256": "878d44d1db6f422e81f72b986838f528419a2016cb5d95a520ba5a80d54dc1fa"
+    },
+    {
+      "bytes": 361203,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandlernovelle - Dunkle Verlockung.epub",
+      "sha256": "8139789af246a52b48d79857d968dad25963fec008a47c29e958b545b87bb553"
+    },
+    {
+      "bytes": 265013,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandlernovelle - Im Netz der Sinnlichkeit.epub",
+      "sha256": "93784f3bffa9172b79855e309e3d2368e0f4214c999fe6b4004b7f4fb17bc024"
+    },
+    {
+      "bytes": 194236,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandlernovelle - Magische Verführung.epub",
+      "sha256": "680522401621cac54aae04973c95ef89a30baf671097f2ab9cffe1f0aa39e3d9"
+    },
+    {
+      "bytes": 252713,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandlernovelle - Pakt der Sehnsucht.epub",
+      "sha256": "c6a56406cae9cc8313c237500dc4f3a818dcbd4829b10c955330c5a02e326e67"
+    },
+    {
+      "bytes": 1483904,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandlernovelle - Versprechen der Dunkelheit.epub",
+      "sha256": "7a5fcef4dfb2c7b575845c1a3aa779cd153de97b77a4c724043b1decb10ceda7"
+    },
+    {
+      "bytes": 337079,
+      "path": "Uncategorized (177 books)/Nalini Singh - Gestaltwandler 1-19 plus Novellen/Nalini Singh - Gestaltwandlernovelle - Zauber des Augenblicks.epub",
+      "sha256": "08d52bd9f2eca97877582442f7bb9e6b890ce2662d49364f02eada70eb1e6f21"
+    },
+    {
+      "bytes": 2285809,
+      "path": "Uncategorized (177 books)/Nathan Winter - Die Alchemie des kalten Feuers/Nathan Winter - Die Alchemie des kalten Feuers.epub",
+      "sha256": "ab79c616013052c21a4ca8852b5c6488e4c2cea77271acea9a01e12d8a2af935"
+    },
+    {
+      "bytes": 3109282,
+      "path": "Uncategorized (177 books)/Noah Richter - 2,5 Grad - Morgen stirbt die Welt/2,5 Grad - Morgen stirbt die Welt_ Roman (German Edition).epub",
+      "sha256": "40fc8aa681eed6cbbd2626dd14f47bbc04e02d27d48b3412b6641496e5a74560"
+    },
+    {
+      "bytes": 6278567,
+      "path": "Uncategorized (177 books)/Noam Chomsky - Rebellion oder Untergang!/Noam Chomsky - Rebellion oder Untergang!_ Ein Aufruf zu globalem Ungehorsam zur Rettung unserer Zivilisation.epub",
+      "sha256": "7ac825cdd0fb42097beab78df8a9ec47c5d311505e27b156e586da808ea27e26"
+    },
+    {
+      "bytes": 1178615,
+      "path": "Uncategorized (177 books)/Olivia Monti - Das Haus/Das Haus_ Kriminalroman (German Edition).epub",
+      "sha256": "0aaa1c23e8eb991123d52bad3439ebcec07a0b0fc3ec4fba5465fd6f24d1f22a"
+    },
+    {
+      "bytes": 1390674,
+      "path": "Uncategorized (177 books)/Oswald Spengler - Der Untergang des Abendlandes.epub",
+      "sha256": "10fefd3db27dcae170dc68f1f4424032dd065c14709183b1310e7d24509dd4c7"
+    },
+    {
+      "bytes": 1781747,
+      "path": "Uncategorized (177 books)/Oyinkan Braithwaite - Meine Schwester, die Serienmoerderin/Oyinkan Braithwaite - Meine Schwester, die Serienmoerderin.epub",
+      "sha256": "ffc796cdfda67ebe77bfc58bf87545e592c6c8fe78b09c885dcd9e18ffe1ddd4"
+    },
+    {
+      "bytes": 548101,
+      "path": "Uncategorized (177 books)/Patricia Highsmith - Ladies - Fruehe Stories/Patricia Highsmith - Ladies - Frühe Stories.epub",
+      "sha256": "a74988f4889e1edc5f58484768029151c6e018e2282053392aca8db87abfeb80"
+    },
+    {
+      "bytes": 1387436,
+      "path": "Uncategorized (177 books)/Patricia Highsmith - Tiefe Wasser/Patricia Highsmith - Tiefe Wasser.epub",
+      "sha256": "7bae99b2058f5d94d507c00113ce1490ec5d95bec58672c7411458ecfa853ec8"
+    },
+    {
+      "bytes": 1176448,
+      "path": "Uncategorized (177 books)/Patricia Walter - Blutroter Schatten/Patricia Walter - Blutroter Schatten.epub",
+      "sha256": "f3f6cc3add412bb6181556fb436b1abe900149f0b6e20d0b845d9e42a12e165c"
+    },
+    {
+      "bytes": 1062167,
+      "path": "Uncategorized (177 books)/Paul Hoffman - Thomas Cale 01 - 03/Hoffman, Paul - Thomas Cale 01 - Die linke Hand Gottes.epub",
+      "sha256": "042654bb57ad70dc2d563303b9eab8c0e07422d6049bda2d03bae9aaa86ed78d"
+    },
+    {
+      "bytes": 880079,
+      "path": "Uncategorized (177 books)/Paul Hoffman - Thomas Cale 01 - 03/Hoffman, Paul - Thomas Cale 02 - Die letzten Gerechten.epub",
+      "sha256": "dcfb3ee6c770b3791930e1b0f697874611b5d73507d3a089acfa26df39b55006"
+    },
+    {
+      "bytes": 1172227,
+      "path": "Uncategorized (177 books)/Paul Hoffman - Thomas Cale 01 - 03/Hoffman, Paul - Thomas Cale 03 - Die Stunde des Erlösers.epub",
+      "sha256": "918d4bfd921eaf37e3875c358c49fa90130a0b1a753a8bb884811e15ea134aa3"
+    },
+    {
+      "bytes": 1073016,
+      "path": "Uncategorized (177 books)/Perry Rhodan 3100 - Sternenruf/PR 3100 - Sternenruf - Christian Montillon.epub",
+      "sha256": "2af7b40393f279affc07467384c595510294f54e1738441587efb9e645033c1a"
+    },
+    {
+      "bytes": 421619,
+      "path": "Uncategorized (177 books)/Perry Rhodan 3101 - Die Letzten der Lemurer/PR 3101 - Die Letzten der Lemurer - Robert Corvus.epub",
+      "sha256": "f42ff4e59e77c0e703c058e019174f07876babd27a9e7286afe9b0c2ac9cfeeb"
+    },
+    {
+      "bytes": 445587,
+      "path": "Uncategorized (177 books)/Perry Rhodan 3102 - Der Eiserne Kontinent/PR 3102 - Der Eiserne Kontinent - Robert Corvus.epub",
+      "sha256": "fb71c54582eb663a1bc1883ce72c3ea5742cc914c68183c39d83e9032e426319"
+    },
+    {
+      "bytes": 436808,
+      "path": "Uncategorized (177 books)/Perry Rhodan 3103 - Angriff des Lichtfressers/PR 3103 - Angriff des Lichtfressers - Christian Montillon.epub",
+      "sha256": "8775bb3eeed8944b18950263a1f257d0321b4aa51141877ddb45bc7c598936dc"
+    },
+    {
+      "bytes": 1044928,
+      "path": "Uncategorized (177 books)/Perry Rhodan 3104 - Der herrliche Diktator/PR 3104 - Der herrliche Diktator - Susan Schwartz.epub",
+      "sha256": "cf84efa59c40163fa83da51dc51e0960e840c64edc05a43027b87072b06c4f23"
+    },
+    {
+      "bytes": 508856,
+      "path": "Uncategorized (177 books)/Perry Rhodan NEO 244 - Iratio/PR NEO 0244 - Iratio - Rudiger Schafer.epub",
+      "sha256": "10d35e28424190841089cb7199973f0dd40891d2c73810d10677bc31b01c7bca"
+    },
+    {
+      "bytes": 595476,
+      "path": "Uncategorized (177 books)/Perry Rhodan Neo 245 - Saturn in Flammen/PR NEO 0245 - Saturn in Flammen - Ben Calvin Hary.epub",
+      "sha256": "63f9a41c8bfa63d696dfdc41133661a6b29cb7ecd6c293b7e33ea6c93a916491"
+    },
+    {
+      "bytes": 1734933,
+      "path": "Uncategorized (177 books)/Philip Kerr - 1984.4/1984.4 (German Edition).epub",
+      "sha256": "f5789dabc0650c6f96509ea5c1b8f2e28ac987351db884520222d48b68880d3d"
+    },
+    {
+      "bytes": 3004869,
+      "path": "Uncategorized (177 books)/Phillip Margolin - Das Gift der Erinnerung/Phillip Margolin - Das Gift der Erinnerung .epub",
+      "sha256": "05b0976415eb26049f3ccc1702699b56715717f469b283d559a4440a10250ace"
+    },
+    {
+      "bytes": 270817,
+      "path": "Uncategorized (177 books)/Planet der Affen by Boulle Pierre (z-lib.org).epub",
+      "sha256": "148efc01d0da6014e55c395efe4bb5799ec0f2a77df04f9d0dcb096319e1a332"
+    },
+    {
+      "bytes": 2140621,
+      "path": "Uncategorized (177 books)/Qiu Miaojin - Aufzeichnungen eines Krokodils/Qiu Miaojin - Aufzeichnungen eines Krokodils.epub",
+      "sha256": "8186e4cff041b1844c9299a28644fc49da0ec8012f335b27fe458a4bf6665f99"
+    },
+    {
+      "bytes": 453482,
+      "path": "Uncategorized (177 books)/Qiu Xiaolong - Oberinspektor Chen 01-06/Xiaolong, Qiu - Chen 01 - Tod einer roten Heldin.epub",
+      "sha256": "b220a7cf7ed257d1a7cd498041c695d0f772ea28695dbad4dbd598b1285f9e24"
+    },
+    {
+      "bytes": 377070,
+      "path": "Uncategorized (177 books)/Qiu Xiaolong - Oberinspektor Chen 01-06/Xiaolong, Qiu - Chen 02 - Die Frau mit dem roten Herzen.epub",
+      "sha256": "9a67b1d4b261d040c2e1bc69b64920231d914ee954de5d98a3d1a5cede59dced"
+    },
+    {
+      "bytes": 473626,
+      "path": "Uncategorized (177 books)/Qiu Xiaolong - Oberinspektor Chen 01-06/Xiaolong, Qiu - Chen 03 - Schwarz auf Rot.epub",
+      "sha256": "6f602d54ecfd1136bd63c86aab49f7c45610b5e9212c6bdc776de0486c6c26a3"
+    },
+    {
+      "bytes": 387845,
+      "path": "Uncategorized (177 books)/Qiu Xiaolong - Oberinspektor Chen 01-06/Xiaolong, Qiu - Chen 04 - Rote Ratten.epub",
+      "sha256": "736cc180472f12c697bde7eb7205a5982fc026ff246f040b4f64afab0c57712f"
+    },
+    {
+      "bytes": 339525,
+      "path": "Uncategorized (177 books)/Qiu Xiaolong - Oberinspektor Chen 01-06/Xiaolong, Qiu - Chen 05 - Blut und rote Seide.epub",
+      "sha256": "7c8fcfec20f7de19a6e21d6de4bf56869a8a10f3af0b9779e8f543dfa4d44961"
+    },
+    {
+      "bytes": 687946,
+      "path": "Uncategorized (177 books)/Qiu Xiaolong - Oberinspektor Chen 01-06/Xiaolong, Qiu - Chen 06 - Toedliches Wasser.epub",
+      "sha256": "ffa5052faf25b398aac584e3038fd278d74ee30a39323b667a69709b842c1718"
+    },
+    {
+      "bytes": 673080,
+      "path": "Uncategorized (177 books)/R. B. Frank - Tartaros Stock 58/R.B. Frank - Tartaros Stock 58.epub",
+      "sha256": "227d1e309d2b845a18da430211eb59c99f7ba9ac7317d5c1eaba2be30c9be533"
+    },
+    {
+      "bytes": 230139,
+      "path": "Uncategorized (177 books)/Raouf Khanfir - Wittgenstein/Raouf Khanfir - Wittgenstein.epub",
+      "sha256": "b25cd20a814c34bcfce98e3615144e9b2f97eaa9e56c9cf847a8576b5fc836b2"
+    },
+    {
+      "bytes": 1250608,
+      "path": "Uncategorized (177 books)/Regine Kolpin - Kraehenfluestern/Regine Kolpin - Krähenflüstern.epub",
+      "sha256": "cefbd704f60afcc9f48d1a65cffd1bc21139b89a3deeed3a0c38d1a00d3b73e0"
+    },
+    {
+      "bytes": 3156101,
+      "path": "Uncategorized (177 books)/Rex Stout - Es klingelte an der Tuer/Rex Stout - Es klingelte an der Tuer.epub",
+      "sha256": "9d1322ef1ebf9d0c3726a7a0162b0251667761c493565a1bcf317ceccf601758"
+    },
+    {
+      "bytes": 1095912,
+      "path": "Uncategorized (177 books)/Ronald M. Hahn - Harry Flynn - Spiel im Dunkel/Ronald M. Hahn - Harry Flynn - Spiel im Dunkel.epub",
+      "sha256": "c4f83fa3693dc5c78325c7a6aac04ad477e410802c54fcd109a5a07c01f2dcc5"
+    },
+    {
+      "bytes": 1262630,
+      "path": "Uncategorized (177 books)/Ruth Ware - Hinter diesen Tueren/Ruth Ware - Hinter diesen Türen.epub",
+      "sha256": "2f4aa14c14558f769dc898006fa8003c5a3e16d17a0ac70db326ade64fab73f1"
+    },
+    {
+      "bytes": 1379145,
+      "path": "Uncategorized (177 books)/S. J. Bennett - Die Faelle Ihrer Majestaet 01 - Das Windsor-Komplott/S. J. Bennett - Die Fälle Ihrer Majestät 01 - Das Windsor-Komplott_ Die Queen ermittelt.epub",
+      "sha256": "1afd54461bd51407358f94c474cadbd9916e2ee8c1b81431931c749cbed5f4fa"
+    },
+    {
+      "bytes": 485686,
+      "path": "Uncategorized (177 books)/Sabine Baumgartner - Verletzte Seelen/Sabine Baumgartner - Verletzte Seelen.epub",
+      "sha256": "68f05b657a55418a2c1760d01c122af7ddb96e90600d79577f8245cda8a54ae5"
+    },
+    {
+      "bytes": 2295201,
+      "path": "Uncategorized (177 books)/Sabine Weiss - Krone der Welt/Sabine Weiss - Krone der Welt.epub",
+      "sha256": "3a02d05eda66a92157e271d91964b77be36816d9923206477624cf5f0039bb5a"
+    },
+    {
+      "bytes": 347117,
+      "path": "Uncategorized (177 books)/Salim Gueler - 1830/Salim Güler - 1830.epub",
+      "sha256": "6a81c359a55143b132e13c6544e9886354c3d67d8ea8638a78add62d6622d130"
+    },
+    {
+      "bytes": 1596741,
+      "path": "Uncategorized (177 books)/Sara Larsson - Dein stummer Schrei/Sara Larsson - Dein stummer Schrei.epub",
+      "sha256": "46f1a039819c19145dd2f0d5dedf6ebf823873998367e28725f93cec4431a64d"
+    },
+    {
+      "bytes": 310907,
+      "path": "Uncategorized (177 books)/Silvia Maute - Mental gegen Krebs/Silvia Maute - Mental gegen Krebs - Mit Mentaltechniken die Heilung unterstützen und die Psyche stärken.epub",
+      "sha256": "6bbe13a48723c9e3b287d3dc92f6fda2966533b8bb350726c1c287e3ee30de67"
+    },
+    {
+      "bytes": 1714433,
+      "path": "Uncategorized (177 books)/Siri Pettersen - Die Rabenringe 02 - Faeulnis/Siri Pettersen - Die Rabenringe 02 - Fäulnis.epub",
+      "sha256": "8a93b260b832ace502a6c0b07d7235a012c0d90f499917fc0fded0f9a9683f84"
+    },
+    {
+      "bytes": 662751,
+      "path": "Uncategorized (177 books)/Stuart Turton - Die sieben Tode der Evelyn Hardcastle/Stuart Turton - Die sieben Tode der Evelyn Hardcastle.epub",
+      "sha256": "c55c382a81870da51f7714ef4836f8f8bb9663c5de729bfe07a97c0cd8927f72"
+    },
+    {
+      "bytes": 2203419,
+      "path": "Uncategorized (177 books)/Susan Andersen - Nicht schon wieder Liebe/Susan Andersen - Nicht schon wieder Liebe.epub",
+      "sha256": "020f1d67ac7d5ecc11c270d8bd4ab0953e8a97291210b2e4eb20a943f478ce26"
+    },
+    {
+      "bytes": 985790,
+      "path": "Uncategorized (177 books)/Susanne Goga - Leo Wechsler 1-7/Goga, Susanne - Leo Wechsler 01 - Leo Berlin.epub",
+      "sha256": "69f59987369e8ff5fa1f828ca9b52ef8d2c226248d129d7dd2bf960243d92594"
+    },
+    {
+      "bytes": 344647,
+      "path": "Uncategorized (177 books)/Susanne Goga - Leo Wechsler 1-7/Goga, Susanne - Leo Wechsler 02 - Tod in Blau.epub",
+      "sha256": "dd118c3d24fdb885a2b0a84ceef666ac0f3f48bde13bcc7d89fd4dfcbbbcd1ea"
+    },
+    {
+      "bytes": 349755,
+      "path": "Uncategorized (177 books)/Susanne Goga - Leo Wechsler 1-7/Goga, Susanne - Leo Wechsler 03 - Die Tote von Charlottenburg.epub",
+      "sha256": "d99b170355ecc2ba935c025f3ea690cf11312f5547c7f620952f501fe6c73472"
+    },
+    {
+      "bytes": 1716725,
+      "path": "Uncategorized (177 books)/Susanne Goga - Leo Wechsler 1-7/Goga, Susanne - Leo Wechsler 04 - Mord in Babelsberg.epub",
+      "sha256": "925606b07f033c1e9938577d223fdeae4f441744fe3e50a4601f041fbf95b7c4"
+    },
+    {
+      "bytes": 583931,
+      "path": "Uncategorized (177 books)/Susanne Goga - Leo Wechsler 1-7/Goga, Susanne - Leo Wechsler 05 - Es geschah in Schöneberg.epub",
+      "sha256": "fc6e845b8ce53abe6347ac1cbbe108eb3c9389eb02664a20d406ebd7ca4619cb"
+    },
+    {
+      "bytes": 1412787,
+      "path": "Uncategorized (177 books)/Susanne Goga - Leo Wechsler 1-7/Goga, Susanne - Leo Wechsler 06 - Nachts am Askanischen Platz.epub",
+      "sha256": "0a99d14d27b7f17d68c5c21ecad852cb7ac4a233445a03697c50c214ccadea3b"
+    },
+    {
+      "bytes": 2305279,
+      "path": "Uncategorized (177 books)/Susanne Goga - Leo Wechsler 1-7/Goga, Susanne - Leo Wechsler 07 - Der Ballhausmörder.epub",
+      "sha256": "ffd5d5652ed43f207190f281798c8128b8699947ed75bd165537d07b644863b1"
+    },
+    {
+      "bytes": 876246,
+      "path": "Uncategorized (177 books)/Sven Frank - Speed Learning/Sven Frank - Speed Learning_ Die Erfolgstechniken für Beruf, Schule und privat.epub",
+      "sha256": "7fa45d681967b333b73df676f9d603bd924edfcf26f7da6d41dde1240fdb858d"
+    },
+    {
+      "bytes": 2059845,
+      "path": "Uncategorized (177 books)/T.C. Boyle - Sprich mit mir/Sprich mit mir - T.C. Boyle.epub",
+      "sha256": "2f29e70a27624de4f69abde9c0e5421bcaf361aa9424aff2c3789f9b3704333f"
+    },
+    {
+      "bytes": 1230482,
+      "path": "Uncategorized (177 books)/T.J. Hudspeth - Magicae Hexeria/T.J. Hudspeth - Magicae Hexeria.epub",
+      "sha256": "c51810cedf97e1d067920050a8b56cd28603cfae90c0f0d72402327d3c20c87a"
+    },
+    {
+      "bytes": 257949,
+      "path": "Uncategorized (177 books)/Thomas Herzberg - Marthas Rache/Thomas Herzberg - Marthas Rache.epub",
+      "sha256": "8c1f99f60d59f765e5967053fdd87fc309ef6746f726eee505ac0eb5ccd74231"
+    },
+    {
+      "bytes": 2885070,
+      "path": "Uncategorized (177 books)/Thomas Ziebula - Paul Stainer 02 - Abels Auferstehung/Thomas Ziebula - Paul Stainer 02 - Abels Auferstehung.epub",
+      "sha256": "c8b01be4b9e5369603ac6a50784ee7f29447a10de168fa46fd64a6365257c84c"
+    },
+    {
+      "bytes": 246856,
+      "path": "Uncategorized (177 books)/Thomas vom Hofe-Schneider - Im Namen Seiner Seele/Thomas vom Hofe-Schneider - Im Namen Seiner Seele.epub",
+      "sha256": "27a89f93712b34017666434755f2c4da03e8d67e46b7df18274f9980c2c5372c"
+    },
+    {
+      "bytes": 2779494,
+      "path": "Uncategorized (177 books)/Tina Frennstedt - Cold Case 01 - Das verschwundene Maedchen/Tina Frennstedt - Cold Case 01 - Das verschwundene Mädchen.epub",
+      "sha256": "a916e754142883f27c2a0715e60e7ece724effdd8ab4b15a38e5ebafe92964d4"
+    },
+    {
+      "bytes": 2279952,
+      "path": "Uncategorized (177 books)/Tina Frennstedt - Cold Case 02 - Das gezeichnete Opfer/Tina Frennstedt - Cold Case 02 - Das gezeichnete Opfer.epub",
+      "sha256": "6790af4d6afe523718007eaa0a2478357a3af19a9fd725f7219ed2c89d7e3399"
+    },
+    {
+      "bytes": 770578,
+      "path": "Uncategorized (177 books)/Tom Clancy - Jack Ryan 23 - Im Visier des Feindes/Tom Clancy - Jack Ryan 23 - Im Visier des Feindes.epub",
+      "sha256": "b5a865ad4ba8074f6ab28eef5692820103407da5962c5b3e1dea6916e09c0a8e"
+    },
+    {
+      "bytes": 1389043,
+      "path": "Uncategorized (177 books)/Un-Su Kim - Die Plotter/Un-Su Kim - Die Plotter.epub",
+      "sha256": "3154f4a2882798b2f319afb8e881fab9710110ab74a2f57f6853675509616aa8"
+    },
+    {
+      "bytes": 2599102,
+      "path": "Uncategorized (177 books)/Volker Duetzer - Hannah Block 01 - Die Unwerten/Volker Dützer - Hannah Bloch 01 - Die Unwerten.epub",
+      "sha256": "95e3196bd210f1820afd3324eb6892aed76df23c1148065e8eb2e693ec372238"
+    },
+    {
+      "bytes": 19582014,
+      "path": "Uncategorized (177 books)/Walter Moers/Zamonien 1_ Die 13 1_2 Leben de - Walter Moers.epub",
+      "sha256": "93f10e247726b4a95e51b8cfa350f8c930f5024623ad04bebeec3f1f06140c76"
+    },
+    {
+      "bytes": 2662809,
+      "path": "Uncategorized (177 books)/Walter Moers/Zamonien 2_ Ensel und Krete - Walter Moers.epub",
+      "sha256": "58551eecf92d92e7988f7c4a92ba2d62d060494430063b94ec452825eeb30002"
+    },
+    {
+      "bytes": 41470414,
+      "path": "Uncategorized (177 books)/Walter Moers/Zamonien 3_ Rumo _ die Wunder i - Walter Moers.epub",
+      "sha256": "d7d0456cda54d5b538a87b39d8c831a5f5614772c3338a637f80a5bb66155e30"
+    },
+    {
+      "bytes": 9503029,
+      "path": "Uncategorized (177 books)/Walter Moers/Zamonien 4_ Die Stadt der traum - Walter Moers.epub",
+      "sha256": "e4afd3cda519449524bed17e396608a17acf7c2f6c7f1f33daa2ce9ff597e885"
+    },
+    {
+      "bytes": 37817151,
+      "path": "Uncategorized (177 books)/Walter Moers/Zamonien 5_ Der Schrecksenmeist - Walter Moers.epub",
+      "sha256": "1655b1c824952697399cd7a1ab1027d271484272bc2eb2cfd12db4a41253fc64"
+    },
+    {
+      "bytes": 13191030,
+      "path": "Uncategorized (177 books)/Walter Moers/Zamonien 6_ Das Labyrinth der T - Walter Moers.epub",
+      "sha256": "e7fee62e2ee792fabd32a9a3949961f6f2a5ae6d242c33b1f7ff3ba727d92a5f"
+    },
+    {
+      "bytes": 18628242,
+      "path": "Uncategorized (177 books)/Walter Moers/Zamonien 7_ Prinzessin Insomnia - Walter Moers.epub",
+      "sha256": "e9173f4b9ed80109fb295025f765db7fa59601ad2174afaa4f48858e6a870675"
+    },
+    {
+      "bytes": 5936822,
+      "path": "Uncategorized (177 books)/Walter Moers/Zamonien 8_ Weihnachten auf der - Walter Moers.epub",
+      "sha256": "9f10e4ba0bcc8ec2609d74b13334fff3b85d5189252e1d9a0230f51669795642"
+    },
+    {
+      "bytes": 4518123,
+      "path": "Uncategorized (177 books)/Walter Moers/Zamonien 9_ Der Bucherdrache - Walter Moers.epub",
+      "sha256": "4431aebcb217de29b52c5e5f9fc405303865a4d2aea1825a09aa19de749b8ffd"
+    },
+    {
+      "bytes": 479669,
+      "path": "Uncategorized (177 books)/William R. Forstchen - Die Welt ohne Strom 1-3/William R. Forstchen - Die Welt ohne Strom 01 - One second after.epub",
+      "sha256": "6e8359b4d4bd3725bf108b4bed60af47c0286968e142919c338201d4bd70979d"
+    },
+    {
+      "bytes": 467455,
+      "path": "Uncategorized (177 books)/William R. Forstchen - Die Welt ohne Strom 1-3/William R. Forstchen - Die Welt ohne Strom 02 - One year after.epub",
+      "sha256": "51d1ad2c347373fc4e64ca02643f0d0dea8281b79bb92cc1a5ab72f801616645"
+    },
+    {
+      "bytes": 1539609,
+      "path": "Uncategorized (177 books)/William R. Forstchen - Die Welt ohne Strom 1-3/William R. Forstchen - Die Welt ohne Strom 03 - The final day.epub",
+      "sha256": "9497258a810338705480e274403f57eadee7faa993362a064018db0c308ea284"
+    },
+    {
+      "bytes": 2412640,
+      "path": "Uncategorized (177 books)/William Ritchey Newton - Hinter den Fassaden von Versailles/Newton, William Ritchey - Hinter den Fassaden von Versailles.epub",
+      "sha256": "d16777af991c00fc2fa3ad0143e880aec728ca5bff812389440b377e6f723f47"
+    },
+    {
+      "bytes": 1142031,
+      "path": "Uncategorized (177 books)/Wolfgang Santjer - Ostfriesenspiess/Wolfgang Santjer - Ostfriesenspiess.epub",
+      "sha256": "05a9a8a698ebd5c0ebac13dfd69a5e6654e706ad5516876a181605093cbe8e89"
+    }
+  ],
+  "source": "/home/steffen/Schreibtisch/Entwicklungen/TestDaten"
+}

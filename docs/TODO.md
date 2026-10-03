@@ -15,7 +15,7 @@
   faire Bedienung mehrerer Aufträge sowie begrenzte KI-Warteplätze prüfen.
   Auf demselben Bestand Parallelität 1–4 mit Antwortzeiten, Speicher und
   Fehlerraten vergleichen. Wiederaufnahme nach Neustart gehört zum offenen
-  [Feature 01](features/feature-01-importjobs.md).
+  [Feature 01 im Backlog](backlog/feature-01-importjobs.md).
 - **Lokale Spracherkennung (ehemals Feature 10):** Lingua an einem beschrifteten,
   repräsentativen Bestand mit Deutsch, Englisch, Niederländisch, gemischten und
   textarmen Büchern auswerten. Genauigkeit der automatischen Übernahmen,

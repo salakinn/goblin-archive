@@ -1,0 +1,23 @@
+{
+  "comparison_group": "3c6f114ca71e1c8777e85d255e262b7bf5f1bb044869da6ad9da004fd16708ff",
+  "dataset_id": "b31ada7982450cc388dc1caffd9b4af7d6cd772bc1f511fe4e7c9d317dd6c37c",
+  "environment_fingerprint": "964a70c588da1a298d21d8b0582927d16e44aa505bfcb4077163ba91099ff8d9",
+  "mode": "baseline",
+  "planned_run_order": [
+    "warmup_ref",
+    "01_ref",
+    "02_ref",
+    "03_ref"
+  ],
+  "previous_compatible_run_id": null,
+  "previous_median_seconds": null,
+  "protocol_id": "import-folder-v1",
+  "protocol_sha256": "e65fef582b1b5f5bcf314e3875cadf75632f6803514a98fb49c510c69ddde2f8",
+  "reference_median_seconds": null,
+  "reference_run_id": null,
+  "required_runs": 3,
+  "revision_a": "d36b384c018d7f7214f2f40cc670034df914415e",
+  "revision_b": null,
+  "runner_sha256": "cd317b376e44b368c5a93ccfddd5e431c29ce2c264d186f6b134ad3ed95c526d",
+  "started_at_utc": "2026-10-03T06:51:33.738777+00:00"
+}

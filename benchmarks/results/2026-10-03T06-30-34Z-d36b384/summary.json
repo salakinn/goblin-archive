@@ -1,0 +1,53 @@
+{
+  "artifacts": {
+    "input_manifest": "input-manifest.json",
+    "preflight": "preflight.json",
+    "report": "result.md"
+  },
+  "comparison": {
+    "historical_time_saved_percent_vs_previous": null,
+    "historical_time_saved_percent_vs_reference": null,
+    "paired_time_saved_percent_ci95": null,
+    "paired_time_saved_percent_median": null,
+    "reliably_faster": null
+  },
+  "comparison_group": null,
+  "dataset_id": null,
+  "declared_differences": [],
+  "environment_fingerprint": null,
+  "finished_at_utc": "2026-10-03T06:30:36.274064+00:00",
+  "limitations": [
+    "Keine Importläufe, Importzeiten oder Speicherpeaks erhoben.",
+    "Keine kompatible import-10k-v1-Referenz vorhanden; frühere Messungen liefen auf anderer Hardware und mit anderem Datensatz."
+  ],
+  "metrics_a": {
+    "backend_peak_rss_bytes_max": null,
+    "backend_peak_rss_bytes_median": null,
+    "coefficient_of_variation": null,
+    "files_per_minute_median": null,
+    "import_total_seconds_max": null,
+    "import_total_seconds_mean": null,
+    "import_total_seconds_median": null,
+    "import_total_seconds_min": null,
+    "import_total_seconds_sample_stddev": null,
+    "invalid_runs": null,
+    "valid_runs": null
+  },
+  "metrics_b": null,
+  "mode": "baseline",
+  "patch_sha256_a": null,
+  "patch_sha256_b": null,
+  "previous_compatible_run_id": null,
+  "protocol_id": "import-10k-v1",
+  "protocol_sha256": null,
+  "reason": "Kein konsistenter Ausgangsbestand mit 10.000 archivierten Büchern verfügbar: das einzige gefundene Goblin-Archiv enthält 38 Bücher; ein versiegeltes 10k-Paket fehlt.",
+  "reference_run_id": null,
+  "revision_a": "d36b384c018d7f7214f2f40cc670034df914415e",
+  "revision_b": null,
+  "run_id": "2026-10-03T06-30-34Z-d36b384",
+  "runner_sha256": null,
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T06:30:34.942028+00:00",
+  "status": "blocked",
+  "validation_passed": null
+}
